@@ -7,13 +7,6 @@
   --foreground: #171717;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
 body {
   color: var(--foreground);
   background: var(--background);
@@ -21,7 +14,8 @@ body {
 }
 
 @layer utilities {
-  .text-balance {
-    text-wrap: balance;
+  .title-font {
+    font-family: 'Sarpanch', sans-serif;
+    @apply text-3xl text-white;
   }
 }
