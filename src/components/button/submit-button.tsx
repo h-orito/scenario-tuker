@@ -1,15 +1,16 @@
 type Props = {
-  label: string
+  children?: React.ReactNode
   disabled?: boolean
 }
 
-export default function SubmitButton({ label, disabled }: Props) {
+export default function SubmitButton({ children, disabled }: Props) {
   return (
-    <input
+    <button
       type='submit'
-      value={label}
       disabled={disabled}
-      className={`primary-button rounded-sm border px-4 py-1`}
-    />
+      className='rounded-lg border bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-600 disabled:bg-blue-200'
+    >
+      {children}
+    </button>
   )
 }

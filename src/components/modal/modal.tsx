@@ -35,7 +35,7 @@ export default function Modal({
         onMouseDown={onMouseDown}
         onMouseUp={onMouseUp}
       >
-        <div className='md:w-screen-md max-h-[90vh] w-[90vw] max-w-[90vw] overflow-y-auto bg-white p-4 md:max-w-screen-md'>
+        <div className='md:w-screen-md max-h-[90vh] min-h-[60vh] w-[95vw] max-w-[95vw] overflow-y-auto bg-white p-4 md:max-w-screen-md'>
           {header && (
             <p className='base-border mb-2 border-b pb-2 text-xl'>{header}</p>
           )}

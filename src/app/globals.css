@@ -13,9 +13,66 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-@layer utilities {
+@layer components {
+  a {
+    @apply no-underline text-blue-500;
+  }
+  
+  h1 {
+    @apply text-2xl font-normal my-4
+  }
+  
+  h2 {
+    @apply text-lg font-normal my-3
+  }
+  
+  h3 {
+    @apply text-sm font-bold my-2
+  }
+  
+  p {
+    @apply leading-5 break-words
+  }
+  
+  .field-label {
+    @apply font-semibold text-base
+  }
+  
+  .field-hr {
+    @apply my-5 mx-4 md:mx-8 border-gray-100
+  }
+  
   .title-font {
     font-family: 'Sarpanch', sans-serif;
-    @apply text-3xl text-white;
+    @apply text-white text-2xl
+  }
+  
+  .introduction {
+    @apply my-4 bg-gray-200 p-4 text-left list-disc
+  }
+
+  .table {
+    @apply w-full table-auto border-collapse border border-slate-300 text-xs
+  }
+
+  .td {
+    @apply border-y border-slate-300 px-4 py-2 
   }
 }
+
+/** react-select */
+.rs__value-container, .rs__indicator {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+.rs__control {
+  min-height: 0 !important;
+}
+
+.rs__option {
+  padding: 0.5rem 1rem;
+}
+

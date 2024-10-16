@@ -1,55 +1,35 @@
-import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import {
-  onAuthStateChanged,
-  auth as firebaseAuth
-} from '../lib/firebase/firebase-config'
-import {
-  removeAuthorizationCookie,
-  setAuthorizationCookie
-} from '../lib/firebase/firebase-auth'
-import { fetchMyself } from '../api/myself-api'
+  getAccessToken,
+  setAccessToken,
+  setRefreshToken,
+  setTokenExpired,
+  getTokenExpired
+} from './auth-cookie'
+import dayjs from '../lib/dayjs/dayjs'
+import { User as FirebaseUser } from 'firebase/auth'
+import { auth as firebaseAuth } from '../lib/firebase/firebase-config'
 
-const useAuth = (): AuthState => {
-  const [authState, setAuthState] = useState<AuthState>({
-    isAuthenticated: false,
-    isSignedIn: false,
-    user: null,
-    userId: null,
-    userName: null,
-    myself: null
-  })
-  useEffect(() => {
-    auth(setAuthState)
-  }, [])
-
-  return authState
+export const setAuthorizationCookie = async (user: FirebaseUser) => {
+  const token = await user.getIdToken(true)
+  await setAccessToken(token)
+  await setRefreshToken(user.refreshToken)
+  const expired = dayjs().add(50, 'm')
+  await setTokenExpired(expired.format())
 }
 
-const auth = async (
-  setAuthState: Dispatch<SetStateAction<AuthState>>
-): Promise<void> => {
-  return new Promise<void>((resolve) => {
-    onAuthStateChanged(firebaseAuth, async (user) => {
-      const state: AuthState = {
-        isAuthenticated: true,
-        isSignedIn: !!user,
-        user: user,
-        userId: user?.uid ?? null,
-        userName: user?.displayName ?? null,
-        myself: null
-      }
-      if (!user) {
-        await removeAuthorizationCookie()
-        setAuthState(state)
-        resolve()
-        return
-      }
-      await setAuthorizationCookie(user)
-      state.myself = await fetchMyself()
-      setAuthState(state)
-      resolve()
-    })
-  })
+export const removeAuthorizationCookie = async () => {
+  await setAccessToken('')
 }
 
-export default useAuth
+export const refreshAccessTokenIfNeeded = async (): Promise<string | null> => {
+  const expired = getTokenExpired()
+  if (!expired || expired === '') return null
+  const ex = dayjs(expired)
+  const now = dayjs()
+  if (now.isSameOrAfter(ex)) {
+    if (!firebaseAuth.currentUser) return null
+    setAuthorizationCookie(firebaseAuth.currentUser)
+  }
+
+  return getAccessToken()
+}

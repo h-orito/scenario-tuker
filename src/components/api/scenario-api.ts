@@ -30,15 +30,35 @@ export const searchScenarios = async (
 }
 
 export const postScenario = async (
-  scenario: Scenario
+  scenario: ScenarioPostRequest
 ): Promise<ScenarioResponse> => {
-  return await postRequest<Scenario, ScenarioResponse>(`scenarios`, scenario)
+  return await postRequest<ScenarioPostRequest, ScenarioResponse>(
+    `scenarios`,
+    scenario
+  )
+}
+
+type ScenarioPostRequest = {
+  id?: number
+  name: string
+  dictionary_names: string[]
+  type: string
+  url: string
+  game_system_id: number | null
+  author_ids: number[]
+  game_master_requirement: string | null
+  player_num_min: number | null
+  player_num_max: number | null
+  required_hours: number | null
 }
 
 export const putScenario = async (
-  scenario: Scenario
+  scenario: ScenarioPostRequest
 ): Promise<ScenarioResponse> => {
-  return await putRequest<Scenario, ScenarioResponse>(`scenarios`, scenario)
+  return await putRequest<ScenarioPostRequest, ScenarioResponse>(
+    `scenarios`,
+    scenario
+  )
 }
 
 export const deleteScenario = async (id: number): Promise<void> => {

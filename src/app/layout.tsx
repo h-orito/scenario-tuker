@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import './globals.css'
-import Header from '@/components/layout/header'
-import Footer from '@/components/layout/footer'
+import { Provider } from 'jotai'
+import React from 'react'
 
 export const metadata: Metadata = {
   title: 'Scenario Tuker',
@@ -33,12 +33,8 @@ export default function RootLayout({
           rel='stylesheet'
         />
       </head>
-      <body>
-        <Header />
-        <div id='portal' className='mx-auto w-full max-w-lg p-2 sm:p-3'>
-          {children}
-        </div>
-        <Footer />
+      <body className='text-xs sm:text-sm'>
+        <Provider>{children}</Provider>
       </body>
     </html>
   )

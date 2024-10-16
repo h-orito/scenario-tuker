@@ -1,5 +1,5 @@
 type Props = {
-  click: (e: any) => void
+  click?: (e: any) => void
   children: React.ReactNode
   className?: string
 }
@@ -7,9 +7,7 @@ type Props = {
 export default function SecondaryButton({ click, children, className }: Props) {
   return (
     <button
-      className={`${
-        className ?? ''
-      } secondary-button rounded-sm border px-4 py-1`}
+      className={`rounded-lg border bg-gray-500 px-4 py-2 font-bold text-white hover:bg-gray-600 disabled:bg-gray-200 ${className}`}
       onClick={click}
     >
       {children}

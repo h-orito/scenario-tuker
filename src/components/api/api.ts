@@ -1,4 +1,4 @@
-import { refreshAccessTokenIfNeeded } from '../lib/firebase/firebase-auth'
+import { refreshAccessTokenIfNeeded } from '../auth/auth'
 
 const getRequest = async <T, U>(
   path: string,
@@ -39,17 +39,22 @@ const request = async <T, U>(
   params?: T,
   options?: RequestInit
 ): Promise<U> => {
-  const accessToken = await refreshAccessTokenIfNeeded()
-  const headers = !!accessToken
-    ? {
+  let headers = {}
+  if (typeof window !== 'undefined') {
+    const accessToken = await refreshAccessTokenIfNeeded()
+    if (!!accessToken) {
+      headers = {
         authorization: `Bearer ${accessToken}`
       }
-    : undefined
+    }
+  }
   const bodyJson = body && JSON.stringify(body)
   let url = `${process.env.NEXT_PUBLIC_API_BASE}${path}`
   if (params) {
-    const query = new URLSearchParams(params)
-    url += `?${query.toString()}`
+    // nullが'null'として出力されてしまうため、nullをfilteringする
+    const p = filterNullProperties(params)
+    const query = new URLSearchParams(p)
+    url += `?${query}`
   }
 
   try {
@@ -73,6 +78,16 @@ const request = async <T, U>(
     console.error(error)
     throw new Error('API request failed')
   }
+}
+
+function filterNullProperties(obj: any) {
+  return Object.keys(obj).reduce(
+    (retObj, key) =>
+      obj[key] === null || obj[key] === undefined
+        ? retObj // null プロパティは無視
+        : Object.assign(retObj, { [key]: obj[key] }), // null でないプロパティのみretObjに追加
+    {}
+  )
 }
 
 export { getRequest, postRequest, putRequest, deleteRequest }

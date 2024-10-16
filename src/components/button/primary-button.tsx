@@ -11,9 +11,11 @@ export default function PrimaryButton({
   children,
   className
 }: Props) {
+  const xClass = className && className.includes('px') ? '' : 'px-4'
+  const yClass = className && className.includes('py') ? '' : 'py-2'
   return (
     <button
-      className={`${className ?? ''} rounded-sm border bg-blue-500 px-4 py-1 text-white hover:bg-blue-600 disabled:bg-blue-200`}
+      className={`rounded-lg border bg-blue-500 ${xClass} ${yClass} font-bold text-white hover:bg-blue-600 disabled:bg-blue-200 ${className ?? ''}`}
       onClick={click}
       disabled={disabled}
     >
