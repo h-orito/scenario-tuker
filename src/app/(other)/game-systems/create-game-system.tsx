@@ -6,6 +6,7 @@ import PrimaryButton from '@/components/button/primary-button'
 import SecondaryButton from '@/components/button/scondary-button'
 import FormLabel from '@/components/form/form-label'
 import Modal from '@/components/modal/modal'
+import NormalNotification from '@/components/notification/normal-notification'
 import GameSystemDictionaryWords from '@/components/pages/game-systems/form/game-system-dictionary-words'
 import { GameSystemFormInput } from '@/components/pages/game-systems/form/game-system-form-input'
 import GameSystemName from '@/components/pages/game-systems/form/game-system-name'
@@ -69,14 +70,14 @@ const CreateGameSystemModal = ({
   // Enter押下で登録させない
   const handleKeyDown = (e: React.KeyboardEvent<HTMLFormElement>) => {
     if (e.key === 'Enter') {
-      e.preventDefault()
+      e.stopPropagation()
     }
   }
 
   return (
     <Modal close={toggleModal} hideFooter>
       <>
-        <h2>シナリオ製作者登録</h2>
+        <h2>ゲームシステム登録</h2>
         <div>
           <form onSubmit={handleSubmit(onSubmit)} onKeyDown={handleKeyDown}>
             <div className='my-6'>
@@ -88,6 +89,9 @@ const CreateGameSystemModal = ({
             </div>
             <div className='my-6'>
               <FormLabel label='検索用ワード（改行区切り）' />
+              <NormalNotification className='text-xs p-1 my-1'>
+                <p>読み仮名などを入れておくことをお勧めします</p>
+              </NormalNotification>
               <GameSystemDictionaryWords control={control} />
             </div>
             <div className='mt-8 flex justify-end gap-2'>

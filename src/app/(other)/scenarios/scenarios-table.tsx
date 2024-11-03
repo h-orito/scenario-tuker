@@ -3,15 +3,19 @@
 import ModifyScenarioModal from '@/app/(other)/scenarios/modify-scenario'
 import { useAuth } from '@/components/auth/use-auth'
 import {
-  AuthorsColumn,
-  baseScenarioTableColumns,
+  AuthorsColumnDef,
   convertToDisplayScenarios,
   DisplayScenario,
-  GameSystemColumn,
-  ScenarioNameColumn,
+  GameMasterColumnDef,
+  GameSystemColumnDef,
+  ParticipateCountColumnDef,
+  PlayerNumColumnDef,
+  RequiredHoursColumnDef,
+  ScenarioNameColumnDef,
   ScenariosTableColumn,
-  ScenariosTableSimpleColumn
+  TypeColumnDef
 } from '@/components/pages/scenarios/scenarios-table'
+import { Filter } from '@/components/table/header'
 import { faPencil, faTrash } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
@@ -19,7 +23,9 @@ import {
   ColumnDef,
   flexRender,
   getCoreRowModel,
+  getFilteredRowModel,
   getPaginationRowModel,
+  getSortedRowModel,
   useReactTable
 } from '@tanstack/react-table'
 import { useMemo, useState } from 'react'
@@ -39,19 +45,31 @@ const ScenariosTable = (props: ScenariosTableProps) => {
     return convertToDisplayScenarios(scenarios)
   }, [convertToDisplayScenarios, scenarios])
 
-  const columns: ColumnDef<DisplayScenario, any>[] = useMemo(() => {
-    const list = baseScenarioTableColumns.concat({
+  const columns: ColumnDef<DisplayScenario, any>[] = [
+    ScenarioNameColumnDef,
+    TypeColumnDef,
+    GameSystemColumnDef,
+    AuthorsColumnDef,
+    GameMasterColumnDef,
+    PlayerNumColumnDef,
+    RequiredHoursColumnDef,
+    ParticipateCountColumnDef,
+    {
       accessorKey: 'editors',
-      header: '編集'
-    })
-    return list
-  }, [])
+      header: '編集',
+      cell: ({ cell }) => <EditColumn cell={cell} reload={reload} />,
+      enableColumnFilter: false
+    }
+  ]
 
   const table = useReactTable<DisplayScenario>({
     data: displayScenarios,
     columns: columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    globalFilterFn: 'includesString',
+    getSortedRowModel: getSortedRowModel(),
     initialState: {
       pagination: {
         pageIndex: 0,
@@ -67,13 +85,20 @@ const ScenariosTable = (props: ScenariosTableProps) => {
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
-                <th key={header.id} className='bg-gray-100 px-4 py-2 text-left'>
-                  {header.isPlaceholder
-                    ? null
-                    : flexRender(
+                <th key={header.id} className='bg-gray-100 px-2 py-2 text-left'>
+                  {header.isPlaceholder ? null : (
+                    <>
+                      {flexRender(
                         header.column.columnDef.header,
                         header.getContext()
                       )}
+                      {header.column.getCanFilter() ? (
+                        <div>
+                          <Filter column={header.column} />
+                        </div>
+                      ) : null}
+                    </>
+                  )}
                 </th>
               ))}
             </tr>
@@ -84,25 +109,20 @@ const ScenariosTable = (props: ScenariosTableProps) => {
             <tr>
               <td
                 colSpan={columns.length}
-                className='border-y border-slate-300 px-4 py-2 text-left'
+                className='border-y border-slate-300 px-2 py-1 text-left'
               >
                 該当するデータがありません
               </td>
             </tr>
           ) : (
             table.getRowModel().rows.map((row) => {
-              const cells = row.getAllCells()
               return (
                 <tr key={row.id}>
-                  <ScenarioNameColumn cell={cells[0]} />
-                  <ScenariosTableSimpleColumn cell={cells[1]} />
-                  <GameSystemColumn cell={cells[2]} />
-                  <AuthorsColumn cell={cells[3]} />
-                  <ScenariosTableSimpleColumn cell={cells[4]} />
-                  <ScenariosTableSimpleColumn cell={cells[5]} />
-                  <ScenariosTableSimpleColumn cell={cells[6]} />
-                  <ScenariosTableSimpleColumn cell={cells[7]} />
-                  <EditColumn cell={cells[8]} reload={reload} />
+                  {row
+                    .getVisibleCells()
+                    .map((cell) =>
+                      flexRender(cell.column.columnDef.cell, cell.getContext())
+                    )}
                 </tr>
               )
             })
@@ -111,7 +131,7 @@ const ScenariosTable = (props: ScenariosTableProps) => {
         {displayScenarios.length > 0 && (
           <tfoot>
             <tr>
-              <th colSpan={columns.length} className='bg-gray-100 px-4 py-2'>
+              <th colSpan={columns.length} className='bg-gray-100 px-2 py-2'>
                 <PaginationFooter table={table} />
               </th>
             </tr>
@@ -153,6 +173,7 @@ const EditColumn = ({ cell, reload }: EditColumnProps) => {
   return (
     <ScenariosTableColumn cell={cell} className='w-8'>
       <PrimaryButton
+        className='py-1'
         click={() => openModifyModal(scenario)}
         disabled={!canModify}
       >
@@ -165,7 +186,11 @@ const EditColumn = ({ cell, reload }: EditColumnProps) => {
           postSave={handlePostSave}
         />
       )}
-      <DangerButton className='ml-1' click={() => {}} disabled={!canModify}>
+      <DangerButton
+        className='ml-1 py-1'
+        click={() => {}}
+        disabled={!canModify}
+      >
         <FontAwesomeIcon icon={faTrash} />
       </DangerButton>
     </ScenariosTableColumn>

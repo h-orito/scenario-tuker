@@ -2,7 +2,7 @@ import { fetchAuthor, fetchAuthorScenarios } from '@/components/api/author-api'
 import SecondaryButton from '@/components/button/scondary-button'
 import Link from 'next/link'
 import AuthorModifyButton from './author-modify-button'
-import ScenariosTable from '@/app/(other)/scenarios/scenarios-table'
+import AuthorScenariosTable from './author-scenarios-table'
 
 const AuthorIdPage = async ({ params }: { params: { id: string } }) => {
   const authorIdStr = params.id
@@ -29,7 +29,7 @@ const AuthorIdPage = async ({ params }: { params: { id: string } }) => {
           </h1>
           <div>
             <h2>製作したシナリオ</h2>
-            <ScenariosTable scenarios={authorScenarios.list} />
+            <AuthorScenariosTable scenarios={authorScenarios.list} />
           </div>
         </div>
       ) : (

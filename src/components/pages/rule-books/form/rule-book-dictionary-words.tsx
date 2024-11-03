@@ -2,13 +2,13 @@
 
 import InputTextarea from '@/components/form/input-textarea'
 import { Control } from 'react-hook-form'
-import { GameSystemFormInput } from './rule-book-form-input'
+import { RuleBookFormInput } from './rule-book-form-input'
 
 type Props = {
-  control: Control<GameSystemFormInput, any>
+  control: Control<RuleBookFormInput, any>
 }
 
-const GameSystemDictionaryWords = ({ control }: Props) => {
+const RuleBookDictionaryWords = ({ control }: Props) => {
   return (
     <InputTextarea
       rows={10}
@@ -35,4 +35,4 @@ const GameSystemDictionaryWords = ({ control }: Props) => {
     />
   )
 }
-export default GameSystemDictionaryWords
+export default RuleBookDictionaryWords

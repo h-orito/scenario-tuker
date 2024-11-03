@@ -3,13 +3,11 @@ import DangerButton from '@/components/button/danger-button'
 import PrimaryButton from '@/components/button/primary-button'
 import {
   DisplayRuleBook,
-  RuleBookTableGameSystemColumn,
-  RuleBookTableRuleBookNameColumn,
   RuleBooksTableColumn,
-  RuleBooksTableSimpleColumn,
   baseRuleBooksTableColumns,
   convertToDisplayRuleBooks
 } from '@/components/pages/rule-books/rule-books-table'
+import { Filter } from '@/components/table/header'
 import PaginationFooter from '@/components/table/pagination-footer'
 import { faPencil, faTrash } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -18,10 +16,13 @@ import {
   ColumnDef,
   flexRender,
   getCoreRowModel,
+  getFilteredRowModel,
   getPaginationRowModel,
+  getSortedRowModel,
   useReactTable
 } from '@tanstack/react-table'
 import { useMemo, useState } from 'react'
+import DeleteRuleBookModal from './delete-rule-book'
 import ModifyRuleBookModal from './modify-rule-book'
 
 type Props = {
@@ -37,7 +38,9 @@ const RuleBooksTable = ({ ruleBooks, reload }: Props) => {
   const columns: ColumnDef<DisplayRuleBook, any>[] = useMemo(() => {
     const list = baseRuleBooksTableColumns.concat({
       accessorKey: 'editors',
-      header: '編集'
+      header: '編集',
+      cell: ({ cell }) => <EditColumn cell={cell} reload={reload} />,
+      enableColumnFilter: false
     })
     return list
   }, [])
@@ -47,6 +50,9 @@ const RuleBooksTable = ({ ruleBooks, reload }: Props) => {
     columns: columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    globalFilterFn: 'includesString',
+    getSortedRowModel: getSortedRowModel(),
     initialState: {
       pagination: {
         pageIndex: 0,
@@ -62,13 +68,20 @@ const RuleBooksTable = ({ ruleBooks, reload }: Props) => {
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
-                <th key={header.id} className='bg-gray-100 px-4 py-2 text-left'>
-                  {header.isPlaceholder
-                    ? null
-                    : flexRender(
+                <th key={header.id} className='bg-gray-100 px-2 py-2 text-left'>
+                  {header.isPlaceholder ? null : (
+                    <>
+                      {flexRender(
                         header.column.columnDef.header,
                         header.getContext()
                       )}
+                      {header.column.getCanFilter() ? (
+                        <div>
+                          <Filter column={header.column} />
+                        </div>
+                      ) : null}
+                    </>
+                  )}
                 </th>
               ))}
             </tr>
@@ -79,20 +92,20 @@ const RuleBooksTable = ({ ruleBooks, reload }: Props) => {
             <tr>
               <td
                 colSpan={columns.length}
-                className='border-y border-slate-300 px-4 py-2 text-left'
+                className='border-y border-slate-300 px-2 py-1 text-left'
               >
                 該当するデータがありません
               </td>
             </tr>
           ) : (
             table.getRowModel().rows.map((row) => {
-              const cells = row.getAllCells()
               return (
                 <tr key={row.id}>
-                  <RuleBookTableRuleBookNameColumn cell={cells[0]} />
-                  <RuleBookTableGameSystemColumn cell={cells[1]} />
-                  <RuleBooksTableSimpleColumn cell={cells[2]} />
-                  <EditColumn cell={cells[3]} reload={reload} />
+                  {row
+                    .getVisibleCells()
+                    .map((cell) =>
+                      flexRender(cell.column.columnDef.cell, cell.getContext())
+                    )}
                 </tr>
               )
             })
@@ -101,7 +114,7 @@ const RuleBooksTable = ({ ruleBooks, reload }: Props) => {
         {displayRuleBooks.length > 0 && (
           <tfoot>
             <tr>
-              <th colSpan={columns.length} className='bg-gray-100 px-4 py-2'>
+              <th colSpan={columns.length} className='bg-gray-100 px-2 py-2'>
                 <PaginationFooter table={table} />
               </th>
             </tr>
@@ -122,9 +135,10 @@ const EditColumn = ({ cell, reload }: EditColumnProps) => {
   const [modifyRuleBook, setModifyRuleBook] = useState<RuleBookResponse | null>(
     null
   )
+  // 編集
   const [isOpenModifyModal, setIsOpenModifyModal] = useState(false)
-  const openModifyModal = (scenario: RuleBookResponse) => {
-    setModifyRuleBook(scenario)
+  const openModifyModal = (ruleBook: RuleBookResponse) => {
+    setModifyRuleBook(ruleBook)
     setIsOpenModifyModal(true)
   }
   const toggleModifyModal = (e: any) => {
@@ -132,17 +146,32 @@ const EditColumn = ({ cell, reload }: EditColumnProps) => {
       setIsOpenModifyModal(!isOpenModifyModal)
     }
   }
-
   const handlePostSave = async (ruleBook: RuleBookResponse) => {
     reload && (await reload())
     setIsOpenModifyModal(false)
+  }
+  // 削除系
+  const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false)
+  const openDeleteModal = (ruleBook: RuleBookResponse) => {
+    setModifyRuleBook(ruleBook)
+    setIsOpenDeleteModal(true)
+  }
+  const toggleDeleteModal = (e: any) => {
+    if (e.target === e.currentTarget) {
+      setIsOpenDeleteModal(!isOpenDeleteModal)
+    }
+  }
+  const handlePostDelete = async () => {
+    reload && (await reload())
+    setIsOpenDeleteModal(false)
   }
 
   const canModify = useAuth().isSignedIn
 
   return (
-    <RuleBooksTableColumn cell={cell} className='flex gap-1'>
+    <RuleBooksTableColumn cell={cell} className='w-8'>
       <PrimaryButton
+        className='py-1'
         click={() => openModifyModal(ruleBook)}
         disabled={!canModify}
       >
@@ -155,9 +184,20 @@ const EditColumn = ({ cell, reload }: EditColumnProps) => {
           postSave={handlePostSave}
         />
       )}
-      <DangerButton click={() => {}} disabled={!canModify}>
+      <DangerButton
+        className='ml-1 py-1'
+        click={() => openDeleteModal(ruleBook)}
+        disabled={!canModify}
+      >
         <FontAwesomeIcon icon={faTrash} />
       </DangerButton>
+      {isOpenDeleteModal && (
+        <DeleteRuleBookModal
+          ruleBook={ruleBook}
+          toggleModal={toggleDeleteModal}
+          postDelete={handlePostDelete}
+        />
+      )}
     </RuleBooksTableColumn>
   )
 }

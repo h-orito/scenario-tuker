@@ -56,7 +56,11 @@ body {
   }
 
   .td {
-    @apply border-y border-slate-300 px-4 py-2 
+    @apply border border-slate-300 px-2 py-1
+  }
+
+  th {
+    @apply border border-slate-300 px-2 py-1
   }
 }
 

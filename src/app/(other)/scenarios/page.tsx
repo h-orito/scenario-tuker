@@ -1,8 +1,19 @@
 'use client'
 
+import { ScenarioType } from '@/@types/scenario-type'
+import ScenariosTable from '@/app/(other)/scenarios/scenarios-table'
+import { fetchScenarios, searchScenarios } from '@/components/api/scenario-api'
+import PrimaryButton from '@/components/button/primary-button'
+import SecondaryButton from '@/components/button/scondary-button'
+import SubmitButton from '@/components/button/submit-button'
+import InputCheckbox from '@/components/form/input-checkbox'
+import InputNumber from '@/components/form/input-number'
+import InputText from '@/components/form/input-text'
+import RadioGroup from '@/components/form/radio-group'
+import { faPlus, faSearch } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Link from 'next/link'
-import { useSearchParams } from 'next/navigation'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import {
   Dispatch,
   forwardRef,
@@ -15,18 +26,6 @@ import {
   useState
 } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
-import { ScenarioType } from '@/@types/scenario-type'
-import { fetchScenarios, searchScenarios } from '@/components/api/scenario-api'
-import PrimaryButton from '@/components/button/primary-button'
-import SecondaryButton from '@/components/button/scondary-button'
-import SubmitButton from '@/components/button/submit-button'
-import InputCheckbox from '@/components/form/input-checkbox'
-import InputNumber from '@/components/form/input-number'
-import InputText from '@/components/form/input-text'
-import RadioGroup from '@/components/form/radio-group'
-import ScenariosTable from '@/app/(other)/scenarios/scenarios-table'
-import { faPlus, faSearch } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import CreateScenarioModal from './create-scenario'
 
 const ScenariosPage = () => {
@@ -168,7 +167,7 @@ const SearchScenarios = forwardRef<SearchScenariosHandle, SearchScenariosProps>(
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLFormElement>) => {
       if (e.key === 'Enter') {
-        e.preventDefault()
+        e.stopPropagation()
       }
     }
 

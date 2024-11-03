@@ -1,50 +1,53 @@
 'use client'
 
-import {
-  AuthorsColumnDef,
-  convertToDisplayScenarios,
-  DisplayScenario,
-  GameMasterColumnDef,
-  ParticipateCountColumnDef,
-  PlayerNumColumnDef,
-  RequiredHoursColumnDef,
-  ScenarioNameColumnDef
-} from '@/components/pages/scenarios/scenarios-table'
+import PrimaryButton from '@/components/button/primary-button'
 import { Filter } from '@/components/table/header'
 import PaginationFooter from '@/components/table/pagination-footer'
+import { faTwitter } from '@fortawesome/free-brands-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
+  Cell,
   ColumnDef,
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
+  Row,
   useReactTable
 } from '@tanstack/react-table'
+import Link from 'next/link'
 import { useMemo } from 'react'
 
 type Props = {
-  scenarios: ScenarioResponse[]
+  users: User[]
 }
 
-const GameSystemScenariosTable = (props: Props) => {
-  const { scenarios } = props
-
-  const displayScenarios = useMemo(() => {
-    return convertToDisplayScenarios(scenarios)
-  }, [convertToDisplayScenarios, scenarios])
-
-  const columns: ColumnDef<DisplayScenario, any>[] = [
-    ScenarioNameColumnDef,
-    AuthorsColumnDef,
-    GameMasterColumnDef,
-    PlayerNumColumnDef,
-    RequiredHoursColumnDef,
-    ParticipateCountColumnDef
-  ]
-
-  const table = useReactTable<DisplayScenario>({
-    data: displayScenarios,
+const UsersTable = ({ users }: Props) => {
+  const columns: ColumnDef<User, any>[] = useMemo(
+    () => [
+      {
+        accessorKey: 'name',
+        header: 'ユーザー',
+        cell: ({ cell }) => <UserNameColumn cell={cell} />,
+        sortingFn: (rowA: Row<User>, rowB: Row<User>) => {
+          return rowA.original.name.localeCompare(rowB.original.name)
+        },
+        filterFn: (row: Row<User>, _: string, filterValue: string) => {
+          return row.original.name.includes(filterValue)
+        }
+      },
+      {
+        accessorKey: 'twitter',
+        header: 'Twitter',
+        cell: ({ cell }) => <TwitterColumn cell={cell} />,
+        enableColumnFilter: false
+      }
+    ],
+    []
+  )
+  const table = useReactTable<User>({
+    data: users,
     columns: columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -60,8 +63,8 @@ const GameSystemScenariosTable = (props: Props) => {
   })
 
   return (
-    <div className='w-full overflow-x-scroll'>
-      <table className='table whitespace-nowrap'>
+    <div>
+      <table className='w-full table-auto border-collapse border border-slate-300 text-xs'>
         <thead>
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
@@ -89,15 +92,16 @@ const GameSystemScenariosTable = (props: Props) => {
           {table.getRowModel().rows.length === 0 ? (
             <tr>
               <td
-                colSpan={columns.length}
-                className='border-y border-slate-300 px-2 py-1 text-left'
+                colSpan={2}
+                className='border-y border-slate-300 px-2 py-2 text-left'
               >
                 該当するデータがありません
               </td>
             </tr>
           ) : (
-            table.getRowModel().rows.map((row) => {
-              return (
+            table
+              .getRowModel()
+              .rows.map((row) => (
                 <tr key={row.id}>
                   {row
                     .getVisibleCells()
@@ -105,14 +109,13 @@ const GameSystemScenariosTable = (props: Props) => {
                       flexRender(cell.column.columnDef.cell, cell.getContext())
                     )}
                 </tr>
-              )
-            })
+              ))
           )}
         </tbody>
-        {displayScenarios.length > 0 && (
+        {users.length > 0 && (
           <tfoot>
             <tr>
-              <th colSpan={columns.length} className='bg-gray-100 px-2 py-2'>
+              <th colSpan={2} className='bg-gray-100 px-2 py-2'>
                 <PaginationFooter table={table} />
               </th>
             </tr>
@@ -123,4 +126,33 @@ const GameSystemScenariosTable = (props: Props) => {
   )
 }
 
-export default GameSystemScenariosTable
+const UserNameColumn = ({ cell }: { cell: Cell<User, unknown> }) => {
+  const user = cell.row.original
+  return (
+    <td className='td text-left'>
+      {user.twitter ? <Link href={`/users/${user.id}`}>{user.name}</Link> : ''}
+    </td>
+  )
+}
+
+const TwitterColumn = ({ cell }: { cell: Cell<User, unknown> }) => {
+  const user = cell.row.original
+  return (
+    <td className='w-8 td text-center'>
+      {user.twitter ? (
+        <Link
+          href={`https://twitter.com/${user.twitter.screen_name}`}
+          target='_blank'
+        >
+          <PrimaryButton>
+            <FontAwesomeIcon icon={faTwitter} />
+          </PrimaryButton>
+        </Link>
+      ) : (
+        ''
+      )}
+    </td>
+  )
+}
+
+export default UsersTable

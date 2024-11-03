@@ -9,6 +9,7 @@ import SecondaryButton from '@/components/button/scondary-button'
 import FormLabel from '@/components/form/form-label'
 import RadioGroup from '@/components/form/radio-group'
 import Modal from '@/components/modal/modal'
+import NormalNotification from '@/components/notification/normal-notification'
 import GameSystemSelect from '@/components/pages/game-systems/game-system-select'
 import RuleBookDictionaryWords from '@/components/pages/rule-books/form/rule-book-dictionary-words'
 import { RuleBookFormInput } from '@/components/pages/rule-books/form/rule-book-form-input'
@@ -85,7 +86,7 @@ const ModifyRuleBookModal = ({
   // Enter押下で登録させない
   const handleKeyDown = (e: React.KeyboardEvent<HTMLFormElement>) => {
     if (e.key === 'Enter') {
-      e.preventDefault()
+      e.stopPropagation()
     }
   }
 
@@ -105,6 +106,9 @@ const ModifyRuleBookModal = ({
             </div>
             <div className='my-6'>
               <FormLabel label='検索用ワード（改行区切り）' />
+              <NormalNotification className='text-xs p-1 my-1'>
+                <p>読み仮名などを入れておくことをお勧めします</p>
+              </NormalNotification>
               <RuleBookDictionaryWords control={control} />
             </div>
             <div className='my-6'>

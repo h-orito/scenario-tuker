@@ -1,6 +1,18 @@
 'use client'
 
 import {
+  fetchGameSystems,
+  searchGameSystems
+} from '@/components/api/game-system-api'
+import PrimaryButton from '@/components/button/primary-button'
+import SecondaryButton from '@/components/button/scondary-button'
+import SubmitButton from '@/components/button/submit-button'
+import InputText from '@/components/form/input-text'
+import { faPlus, faSearch } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import {
   Dispatch,
   ForwardedRef,
   forwardRef,
@@ -8,34 +20,12 @@ import {
   useCallback,
   useEffect,
   useImperativeHandle,
-  useMemo,
   useRef,
   useState
 } from 'react'
-import Link from 'next/link'
 import { SubmitHandler, useForm } from 'react-hook-form'
-import {
-  ColumnDef,
-  flexRender,
-  getCoreRowModel,
-  getPaginationRowModel,
-  useReactTable
-} from '@tanstack/react-table'
-import {
-  fetchGameSystems,
-  searchGameSystems
-} from '@/components/api/game-system-api'
-import SecondaryButton from '@/components/button/scondary-button'
-import SubmitButton from '@/components/button/submit-button'
-import InputText from '@/components/form/input-text'
-import { faPencil, faPlus, faSearch } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import PrimaryButton from '@/components/button/primary-button'
-import { useRouter } from 'next/navigation'
-import PaginationFooter from '@/components/table/pagination-footer'
-import { useAuth } from '@/components/auth/use-auth'
 import CreateGameSystemModal from './create-game-system'
-import ModifyGameSystemModal from './modify-game-system'
+import GameSystemsTable from './game-systems-table'
 
 const GameSystemPage = () => {
   const [gameSystems, setGameSystems] = useState<GameSystem[]>([])
@@ -174,131 +164,3 @@ const SearchGameSystems = forwardRef<
     )
   }
 )
-
-type GameSystemsTableProps = {
-  gameSystems: GameSystem[]
-  reload: () => void
-}
-
-const GameSystemsTable = ({ gameSystems, reload }: GameSystemsTableProps) => {
-  const columns: ColumnDef<GameSystem, any>[] = useMemo(
-    () => [
-      {
-        accessorKey: 'name',
-        header: 'ゲームシステム名'
-      }
-    ],
-    []
-  )
-  const table = useReactTable<GameSystem>({
-    data: gameSystems,
-    columns: columns,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    initialState: {
-      pagination: {
-        pageIndex: 0,
-        pageSize: 10
-      }
-    }
-  })
-
-  const [modifyGameSystem, setModifyGameSystem] = useState<GameSystem | null>(
-    null
-  )
-  const [isOpenModifyModal, setIsOpenModifyModal] = useState(false)
-  const openModifyModal = (gameSystem: GameSystem) => {
-    setModifyGameSystem(gameSystem)
-    setIsOpenModifyModal(true)
-  }
-  const toggleModifyModal = (e: any) => {
-    if (e.target === e.currentTarget) {
-      setIsOpenModifyModal(!isOpenModifyModal)
-    }
-  }
-
-  const postUpdate = useCallback(async (gameSystem: GameSystem) => {
-    setIsOpenModifyModal(false)
-    await reload()
-  }, [])
-
-  const modifiable = useAuth().isSignedIn
-
-  return (
-    <div>
-      <table className='w-full table-auto border-collapse border border-slate-300 text-xs'>
-        <thead>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <tr key={headerGroup.id}>
-              {headerGroup.headers.map((header) => (
-                <th key={header.id} className='bg-gray-100 px-4 py-2 text-left'>
-                  {header.isPlaceholder
-                    ? null
-                    : flexRender(
-                        header.column.columnDef.header,
-                        header.getContext()
-                      )}
-                </th>
-              ))}
-              <th className='w-8 bg-gray-100 px-4 py-2 text-center'>編集</th>
-            </tr>
-          ))}
-        </thead>
-        <tbody>
-          {table.getRowModel().rows.length === 0 ? (
-            <tr>
-              <td
-                colSpan={2}
-                className='border-y border-slate-300 px-4 py-2 text-left'
-              >
-                該当するデータがありません
-              </td>
-            </tr>
-          ) : (
-            table.getRowModel().rows.map((row) => (
-              <tr key={row.id}>
-                {row.getVisibleCells().map((cell) => (
-                  <td
-                    key={cell.id}
-                    className='border-y border-slate-300 px-4 py-2 text-left'
-                  >
-                    <Link href={`/game-systems/${cell.row.original.id}`}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </Link>
-                  </td>
-                ))}
-                <td className='w-8 border-y border-slate-300 px-4 py-2 text-center'>
-                  <PrimaryButton
-                    click={() => openModifyModal(row.original)}
-                    disabled={!modifiable}
-                  >
-                    <FontAwesomeIcon icon={faPencil} />
-                  </PrimaryButton>
-                  {isOpenModifyModal && (
-                    <ModifyGameSystemModal
-                      toggleModal={toggleModifyModal}
-                      postSave={postUpdate}
-                      gameSystem={modifyGameSystem!}
-                    />
-                  )}
-                </td>
-              </tr>
-            ))
-          )}
-        </tbody>
-        {gameSystems.length > 0 && (
-          <tfoot>
-            <tr>
-              <th colSpan={2} className='bg-gray-100 px-4 py-2'>
-                <PaginationFooter table={table} />
-              </th>
-            </tr>
-          </tfoot>
-        )}
-      </table>
-    </div>
-  )
-}

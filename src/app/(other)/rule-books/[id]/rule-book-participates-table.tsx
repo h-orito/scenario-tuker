@@ -1,15 +1,19 @@
 'use client'
 
 import {
-  AuthorsColumnDef,
-  convertToDisplayScenarios,
-  DisplayScenario,
-  GameMasterColumnDef,
-  ParticipateCountColumnDef,
-  PlayerNumColumnDef,
+  DisplayParticipate,
+  GameMasterNameColumnDef,
+  ImpressionColumnDef,
+  MemoColumnDef,
+  PlayerNamesColumnDef,
+  PlayerNumNameColumnDef,
   RequiredHoursColumnDef,
-  ScenarioNameColumnDef
-} from '@/components/pages/scenarios/scenarios-table'
+  RoleColumnDef,
+  ScenarioNameColumnDef,
+  TermNameColumnDef,
+  UserColumnDef,
+  convertToDisplayParticipates
+} from '@/components/pages/participates/participates-table'
 import { Filter } from '@/components/table/header'
 import PaginationFooter from '@/components/table/pagination-footer'
 import {
@@ -24,27 +28,31 @@ import {
 import { useMemo } from 'react'
 
 type Props = {
-  scenarios: ScenarioResponse[]
+  participates: ParticipateResponse[]
 }
 
-const GameSystemScenariosTable = (props: Props) => {
-  const { scenarios } = props
+const RuleBookParticipatesTable = ({ participates }: Props) => {
+  const displayParticipates = useMemo(() => {
+    return convertToDisplayParticipates(participates)
+  }, [convertToDisplayParticipates, participates])
 
-  const displayScenarios = useMemo(() => {
-    return convertToDisplayScenarios(scenarios)
-  }, [convertToDisplayScenarios, scenarios])
+  const columns: ColumnDef<DisplayParticipate, any>[] = useMemo(() => {
+    return [
+      ScenarioNameColumnDef,
+      UserColumnDef,
+      RoleColumnDef,
+      TermNameColumnDef,
+      RequiredHoursColumnDef,
+      PlayerNumNameColumnDef,
+      GameMasterNameColumnDef,
+      PlayerNamesColumnDef,
+      MemoColumnDef,
+      ImpressionColumnDef
+    ]
+  }, [])
 
-  const columns: ColumnDef<DisplayScenario, any>[] = [
-    ScenarioNameColumnDef,
-    AuthorsColumnDef,
-    GameMasterColumnDef,
-    PlayerNumColumnDef,
-    RequiredHoursColumnDef,
-    ParticipateCountColumnDef
-  ]
-
-  const table = useReactTable<DisplayScenario>({
-    data: displayScenarios,
+  const table = useReactTable<DisplayParticipate>({
+    data: displayParticipates,
     columns: columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -97,6 +105,7 @@ const GameSystemScenariosTable = (props: Props) => {
             </tr>
           ) : (
             table.getRowModel().rows.map((row) => {
+              const cells = row.getAllCells()
               return (
                 <tr key={row.id}>
                   {row
@@ -109,7 +118,7 @@ const GameSystemScenariosTable = (props: Props) => {
             })
           )}
         </tbody>
-        {displayScenarios.length > 0 && (
+        {displayParticipates.length > 0 && (
           <tfoot>
             <tr>
               <th colSpan={columns.length} className='bg-gray-100 px-2 py-2'>
@@ -123,4 +132,4 @@ const GameSystemScenariosTable = (props: Props) => {
   )
 }
 
-export default GameSystemScenariosTable
+export default RuleBookParticipatesTable

@@ -60,6 +60,15 @@ const InputText = <
     [field, onKeyUp]
   )
 
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLInputElement>) => {
+      if (e.key === 'Enter') {
+        e.stopPropagation()
+      }
+    },
+    [field]
+  )
+
   const errorMessage = errors[name]?.message as string | undefined
   const borderClass = errorMessage ? 'border-red-500' : 'border-gray-300'
 
@@ -78,6 +87,7 @@ const InputText = <
         onChange={handleChange}
         onBlur={handleBlur}
         onKeyUp={handleKeyUp}
+        onKeyDown={handleKeyDown}
         {...fieldProps}
       />
       {errorMessage && <p className='text-xs text-red-500'>{errorMessage}</p>}

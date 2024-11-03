@@ -1,15 +1,20 @@
 'use client'
 
+import { ScenarioType } from '@/@types/scenario-type'
 import {
-  AuthorsColumnDef,
-  convertToDisplayScenarios,
-  DisplayScenario,
-  GameMasterColumnDef,
-  ParticipateCountColumnDef,
-  PlayerNumColumnDef,
+  DisplayParticipate,
+  GameMasterNameColumnDef,
+  ImpressionColumnDef,
+  MemoColumnDef,
+  PlayerNamesColumnDef,
+  PlayerNumNameColumnDef,
   RequiredHoursColumnDef,
-  ScenarioNameColumnDef
-} from '@/components/pages/scenarios/scenarios-table'
+  RoleColumnDef,
+  RuleBooksColumnDef,
+  TermNameColumnDef,
+  UserColumnDef,
+  convertToDisplayParticipates
+} from '@/components/pages/participates/participates-table'
 import { Filter } from '@/components/table/header'
 import PaginationFooter from '@/components/table/pagination-footer'
 import {
@@ -24,27 +29,36 @@ import {
 import { useMemo } from 'react'
 
 type Props = {
-  scenarios: ScenarioResponse[]
+  participates: ParticipateResponse[]
+  type: LabelValue
 }
 
-const GameSystemScenariosTable = (props: Props) => {
-  const { scenarios } = props
+const ScenarioParticipatesTable = ({ participates, type }: Props) => {
+  const isTrpg = useMemo(() => type.value === ScenarioType.Trpg.value, [type])
+  const displayParticipates = useMemo(() => {
+    return convertToDisplayParticipates(participates)
+  }, [convertToDisplayParticipates, participates])
 
-  const displayScenarios = useMemo(() => {
-    return convertToDisplayScenarios(scenarios)
-  }, [convertToDisplayScenarios, scenarios])
+  const columns: ColumnDef<DisplayParticipate, any>[] = useMemo(() => {
+    let columns: ColumnDef<DisplayParticipate, any>[] = []
+    if (isTrpg) {
+      columns = columns.concat([RuleBooksColumnDef])
+    }
+    return columns.concat([
+      UserColumnDef,
+      RoleColumnDef,
+      TermNameColumnDef,
+      RequiredHoursColumnDef,
+      PlayerNumNameColumnDef,
+      GameMasterNameColumnDef,
+      PlayerNamesColumnDef,
+      MemoColumnDef,
+      ImpressionColumnDef
+    ])
+  }, [type])
 
-  const columns: ColumnDef<DisplayScenario, any>[] = [
-    ScenarioNameColumnDef,
-    AuthorsColumnDef,
-    GameMasterColumnDef,
-    PlayerNumColumnDef,
-    RequiredHoursColumnDef,
-    ParticipateCountColumnDef
-  ]
-
-  const table = useReactTable<DisplayScenario>({
-    data: displayScenarios,
+  const table = useReactTable<DisplayParticipate>({
+    data: displayParticipates,
     columns: columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -109,7 +123,7 @@ const GameSystemScenariosTable = (props: Props) => {
             })
           )}
         </tbody>
-        {displayScenarios.length > 0 && (
+        {displayParticipates.length > 0 && (
           <tfoot>
             <tr>
               <th colSpan={columns.length} className='bg-gray-100 px-2 py-2'>
@@ -123,4 +137,4 @@ const GameSystemScenariosTable = (props: Props) => {
   )
 }
 
-export default GameSystemScenariosTable
+export default ScenarioParticipatesTable

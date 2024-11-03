@@ -1,15 +1,8 @@
-'use client'
-
 import {
-  AuthorsColumnDef,
-  convertToDisplayScenarios,
-  DisplayScenario,
-  GameMasterColumnDef,
-  ParticipateCountColumnDef,
-  PlayerNumColumnDef,
-  RequiredHoursColumnDef,
-  ScenarioNameColumnDef
-} from '@/components/pages/scenarios/scenarios-table'
+  DisplayRuleBook,
+  baseRuleBooksTableColumns,
+  convertToDisplayRuleBooks
+} from '@/components/pages/rule-books/rule-books-table'
 import { Filter } from '@/components/table/header'
 import PaginationFooter from '@/components/table/pagination-footer'
 import {
@@ -24,27 +17,21 @@ import {
 import { useMemo } from 'react'
 
 type Props = {
-  scenarios: ScenarioResponse[]
+  ruleBooks: RuleBookResponse[]
 }
 
-const GameSystemScenariosTable = (props: Props) => {
-  const { scenarios } = props
+const UserRuleBooksTable = ({ ruleBooks }: Props) => {
+  const displayRuleBooks = useMemo(() => {
+    return convertToDisplayRuleBooks(ruleBooks)
+  }, [convertToDisplayRuleBooks, ruleBooks])
 
-  const displayScenarios = useMemo(() => {
-    return convertToDisplayScenarios(scenarios)
-  }, [convertToDisplayScenarios, scenarios])
+  const columns: ColumnDef<DisplayRuleBook, any>[] = useMemo(() => {
+    const list = baseRuleBooksTableColumns
+    return list
+  }, [])
 
-  const columns: ColumnDef<DisplayScenario, any>[] = [
-    ScenarioNameColumnDef,
-    AuthorsColumnDef,
-    GameMasterColumnDef,
-    PlayerNumColumnDef,
-    RequiredHoursColumnDef,
-    ParticipateCountColumnDef
-  ]
-
-  const table = useReactTable<DisplayScenario>({
-    data: displayScenarios,
+  const table = useReactTable<DisplayRuleBook>({
+    data: displayRuleBooks,
     columns: columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -90,7 +77,7 @@ const GameSystemScenariosTable = (props: Props) => {
             <tr>
               <td
                 colSpan={columns.length}
-                className='border-y border-slate-300 px-2 py-1 text-left'
+                className='border-y border-slate-300 px-2 py-2 text-left'
               >
                 該当するデータがありません
               </td>
@@ -109,7 +96,7 @@ const GameSystemScenariosTable = (props: Props) => {
             })
           )}
         </tbody>
-        {displayScenarios.length > 0 && (
+        {displayRuleBooks.length > 0 && (
           <tfoot>
             <tr>
               <th colSpan={columns.length} className='bg-gray-100 px-2 py-2'>
@@ -123,4 +110,4 @@ const GameSystemScenariosTable = (props: Props) => {
   )
 }
 
-export default GameSystemScenariosTable
+export default UserRuleBooksTable

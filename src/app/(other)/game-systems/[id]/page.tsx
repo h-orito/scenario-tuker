@@ -2,9 +2,10 @@ import {
   fetchGameSystem,
   fetchGameSystemScenarios
 } from '@/components/api/game-system-api'
-import GameSystemModifyButton from './game-system-modify-button'
-import Link from 'next/link'
 import SecondaryButton from '@/components/button/scondary-button'
+import NormalNotification from '@/components/notification/normal-notification'
+import Link from 'next/link'
+import GameSystemModifyButton from './game-system-modify-button'
 import GameSystemScenariosTable from './game-system-scenarios-table'
 
 const GameSystemsIdPage = async ({ params }: { params: { id: string } }) => {
@@ -30,14 +31,14 @@ const GameSystemsIdPage = async ({ params }: { params: { id: string } }) => {
           ゲームシステム: {gameSystem.name}
           <GameSystemModifyButton gameSystem={gameSystem} />
         </h1>
-        <div className='mt-6 rounded bg-gray-300 p-2'>
+        <NormalNotification className='mt-6'>
           <p className='mb-2'>検索用ワード</p>
           {gameSystem.dictionary_names.map((word, idx) => (
             <p key={idx} className='text-xs'>
               {word}
             </p>
           ))}
-        </div>
+        </NormalNotification>
         <div className='mt-6'>
           <h2>{gameSystem.name} のシナリオ</h2>
           <GameSystemScenariosTable scenarios={scenarios.list} />

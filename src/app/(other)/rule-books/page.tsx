@@ -114,7 +114,7 @@ const SearchRuleBooks = forwardRef<SearchRuleBooksHandle, SearchRuleBooksProps>(
           })
         }
       },
-      [fetchRuleBooks, searchRuleBooks]
+      [fetchRuleBooks, searchRuleBooks, ruleBookType]
     )
 
     const onSubmit: SubmitHandler<FormInput> = useCallback(

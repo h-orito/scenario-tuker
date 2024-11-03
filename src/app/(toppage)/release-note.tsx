@@ -34,6 +34,11 @@ const ReleaseNoteModal = ({
       <div className='text-left text-xs md:text-sm'>
         <ul className='text-xs leading-7'>
           <li>
+            2024/11/03?
+            全ての表を再精査し、要不要に応じた内容表示、ソート・フィルター機能追加
+          </li>
+          <li>2024/11/03? 別技術全て再構築</li>
+          <li>
             2023/11/29
             同一シナリオの通過記録を上書きでなく別の通過記録として登録できるよう仕様変更
           </li>

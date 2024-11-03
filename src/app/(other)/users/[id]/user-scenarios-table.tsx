@@ -1,17 +1,17 @@
 'use client'
 
+import { ScenarioType } from '@/@types/scenario-type'
 import {
   AuthorsColumnDef,
   convertToDisplayScenarios,
   DisplayScenario,
   GameMasterColumnDef,
-  ParticipateCountColumnDef,
+  GameSystemColumnDef,
   PlayerNumColumnDef,
   RequiredHoursColumnDef,
   ScenarioNameColumnDef
 } from '@/components/pages/scenarios/scenarios-table'
 import { Filter } from '@/components/table/header'
-import PaginationFooter from '@/components/table/pagination-footer'
 import {
   ColumnDef,
   flexRender,
@@ -22,26 +22,32 @@ import {
   useReactTable
 } from '@tanstack/react-table'
 import { useMemo } from 'react'
+import PaginationFooter from '../../../../components/table/pagination-footer'
 
-type Props = {
+type ScenariosTableProps = {
   scenarios: ScenarioResponse[]
+  type: ScenarioType
 }
 
-const GameSystemScenariosTable = (props: Props) => {
-  const { scenarios } = props
+const UserScenariosTable = (props: ScenariosTableProps) => {
+  const { scenarios, type } = props
 
   const displayScenarios = useMemo(() => {
     return convertToDisplayScenarios(scenarios)
   }, [convertToDisplayScenarios, scenarios])
 
-  const columns: ColumnDef<DisplayScenario, any>[] = [
-    ScenarioNameColumnDef,
-    AuthorsColumnDef,
-    GameMasterColumnDef,
-    PlayerNumColumnDef,
-    RequiredHoursColumnDef,
-    ParticipateCountColumnDef
-  ]
+  const columns: ColumnDef<DisplayScenario, any>[] = useMemo(() => {
+    let base = [ScenarioNameColumnDef]
+    if (type === ScenarioType.Trpg) {
+      base = base.concat(GameSystemColumnDef)
+    }
+    return base.concat([
+      AuthorsColumnDef,
+      GameMasterColumnDef,
+      PlayerNumColumnDef,
+      RequiredHoursColumnDef
+    ])
+  }, [type])
 
   const table = useReactTable<DisplayScenario>({
     data: displayScenarios,
@@ -90,7 +96,7 @@ const GameSystemScenariosTable = (props: Props) => {
             <tr>
               <td
                 colSpan={columns.length}
-                className='border-y border-slate-300 px-2 py-1 text-left'
+                className='border-y border-slate-300 px-2 py-2 text-left'
               >
                 該当するデータがありません
               </td>
@@ -123,4 +129,4 @@ const GameSystemScenariosTable = (props: Props) => {
   )
 }
 
-export default GameSystemScenariosTable
+export default UserScenariosTable

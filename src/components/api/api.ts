@@ -72,8 +72,10 @@ const request = async <T, U>(
       console.log(response)
       throw new Error('API Error')
     }
-    const data = await response.json()
-    return data as U
+    // 空の場合があるので json() でなく text() で取得
+    const responseStr = await response.text()
+    const json = responseStr === '' ? {} : JSON.parse(responseStr)
+    return json as U
   } catch (error) {
     console.error(error)
     throw new Error('API request failed')
@@ -90,4 +92,4 @@ function filterNullProperties(obj: any) {
   )
 }
 
-export { getRequest, postRequest, putRequest, deleteRequest }
+export { deleteRequest, getRequest, postRequest, putRequest }

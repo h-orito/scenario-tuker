@@ -1,17 +1,17 @@
 'use client'
 
 import {
-  AuthorsColumnDef,
   convertToDisplayScenarios,
   DisplayScenario,
   GameMasterColumnDef,
+  GameSystemColumnDef,
   ParticipateCountColumnDef,
   PlayerNumColumnDef,
   RequiredHoursColumnDef,
-  ScenarioNameColumnDef
+  ScenarioNameColumnDef,
+  TypeColumnDef
 } from '@/components/pages/scenarios/scenarios-table'
 import { Filter } from '@/components/table/header'
-import PaginationFooter from '@/components/table/pagination-footer'
 import {
   ColumnDef,
   flexRender,
@@ -22,12 +22,13 @@ import {
   useReactTable
 } from '@tanstack/react-table'
 import { useMemo } from 'react'
+import PaginationFooter from '../../../../components/table/pagination-footer'
 
-type Props = {
+type ScenariosTableProps = {
   scenarios: ScenarioResponse[]
 }
 
-const GameSystemScenariosTable = (props: Props) => {
+const AuthorScenariosTable = (props: ScenariosTableProps) => {
   const { scenarios } = props
 
   const displayScenarios = useMemo(() => {
@@ -36,7 +37,8 @@ const GameSystemScenariosTable = (props: Props) => {
 
   const columns: ColumnDef<DisplayScenario, any>[] = [
     ScenarioNameColumnDef,
-    AuthorsColumnDef,
+    TypeColumnDef,
+    GameSystemColumnDef,
     GameMasterColumnDef,
     PlayerNumColumnDef,
     RequiredHoursColumnDef,
@@ -97,6 +99,7 @@ const GameSystemScenariosTable = (props: Props) => {
             </tr>
           ) : (
             table.getRowModel().rows.map((row) => {
+              const cells = row.getAllCells()
               return (
                 <tr key={row.id}>
                   {row
@@ -123,4 +126,4 @@ const GameSystemScenariosTable = (props: Props) => {
   )
 }
 
-export default GameSystemScenariosTable
+export default AuthorScenariosTable

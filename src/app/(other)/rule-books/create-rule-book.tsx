@@ -77,7 +77,7 @@ const CreateRuleBookModal = ({
   // Enter押下で登録させない
   const handleKeyDown = (e: React.KeyboardEvent<HTMLFormElement>) => {
     if (e.key === 'Enter') {
-      e.preventDefault()
+      e.stopPropagation()
     }
   }
 

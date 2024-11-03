@@ -1,56 +1,61 @@
 'use client'
 
+import { ScenarioType } from '@/@types/scenario-type'
 import {
+  AuthorsColumn,
   AuthorsColumnDef,
   convertToDisplayScenarios,
   DisplayScenario,
   GameMasterColumnDef,
+  GameSystemColumn,
+  GameSystemColumnDef,
   ParticipateCountColumnDef,
   PlayerNumColumnDef,
   RequiredHoursColumnDef,
-  ScenarioNameColumnDef
+  ScenarioNameColumn,
+  ScenarioNameColumnDef,
+  ScenariosTableSimpleColumn
 } from '@/components/pages/scenarios/scenarios-table'
-import { Filter } from '@/components/table/header'
-import PaginationFooter from '@/components/table/pagination-footer'
 import {
   ColumnDef,
   flexRender,
   getCoreRowModel,
-  getFilteredRowModel,
   getPaginationRowModel,
-  getSortedRowModel,
   useReactTable
 } from '@tanstack/react-table'
 import { useMemo } from 'react'
+import PaginationFooter from '../../../../components/table/pagination-footer'
 
 type Props = {
   scenarios: ScenarioResponse[]
+  type: LabelValue
 }
 
-const GameSystemScenariosTable = (props: Props) => {
-  const { scenarios } = props
-
+const TrendScenariosTable = ({ scenarios, type }: Props) => {
+  const isTrpg = useMemo(() => type.value === ScenarioType.Trpg.value, [type])
   const displayScenarios = useMemo(() => {
     return convertToDisplayScenarios(scenarios)
   }, [convertToDisplayScenarios, scenarios])
 
-  const columns: ColumnDef<DisplayScenario, any>[] = [
-    ScenarioNameColumnDef,
-    AuthorsColumnDef,
-    GameMasterColumnDef,
-    PlayerNumColumnDef,
-    RequiredHoursColumnDef,
-    ParticipateCountColumnDef
-  ]
+  const columns: ColumnDef<DisplayScenario, any>[] = useMemo(() => {
+    let list = [ScenarioNameColumnDef]
+    if (isTrpg) {
+      list = list.concat([GameSystemColumnDef])
+    }
+    return list.concat([
+      AuthorsColumnDef,
+      GameMasterColumnDef,
+      PlayerNumColumnDef,
+      RequiredHoursColumnDef,
+      ParticipateCountColumnDef
+    ])
+  }, [type])
 
   const table = useReactTable<DisplayScenario>({
     data: displayScenarios,
     columns: columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    globalFilterFn: 'includesString',
-    getSortedRowModel: getSortedRowModel(),
     initialState: {
       pagination: {
         pageIndex: 0,
@@ -66,20 +71,13 @@ const GameSystemScenariosTable = (props: Props) => {
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
-                <th key={header.id} className='bg-gray-100 px-2 py-2 text-left'>
-                  {header.isPlaceholder ? null : (
-                    <>
-                      {flexRender(
+                <th key={header.id} className='bg-gray-100 px-4 py-2 text-left'>
+                  {header.isPlaceholder
+                    ? null
+                    : flexRender(
                         header.column.columnDef.header,
                         header.getContext()
                       )}
-                      {header.column.getCanFilter() ? (
-                        <div>
-                          <Filter column={header.column} />
-                        </div>
-                      ) : null}
-                    </>
-                  )}
                 </th>
               ))}
             </tr>
@@ -90,20 +88,24 @@ const GameSystemScenariosTable = (props: Props) => {
             <tr>
               <td
                 colSpan={columns.length}
-                className='border-y border-slate-300 px-2 py-1 text-left'
+                className='border-y border-slate-300 px-4 py-2 text-left'
               >
                 該当するデータがありません
               </td>
             </tr>
           ) : (
             table.getRowModel().rows.map((row) => {
+              const cells = row.getAllCells()
+              const baseIndex = isTrpg ? 1 : 0
               return (
                 <tr key={row.id}>
-                  {row
-                    .getVisibleCells()
-                    .map((cell) =>
-                      flexRender(cell.column.columnDef.cell, cell.getContext())
-                    )}
+                  <ScenarioNameColumn cell={cells[0]} />
+                  {isTrpg && <GameSystemColumn cell={cells[1]} />}
+                  <AuthorsColumn cell={cells[baseIndex + 1]} />
+                  <ScenariosTableSimpleColumn cell={cells[baseIndex + 2]} />
+                  <ScenariosTableSimpleColumn cell={cells[baseIndex + 3]} />
+                  <ScenariosTableSimpleColumn cell={cells[baseIndex + 4]} />
+                  <ScenariosTableSimpleColumn cell={cells[baseIndex + 5]} />
                 </tr>
               )
             })
@@ -112,7 +114,7 @@ const GameSystemScenariosTable = (props: Props) => {
         {displayScenarios.length > 0 && (
           <tfoot>
             <tr>
-              <th colSpan={columns.length} className='bg-gray-100 px-2 py-2'>
+              <th colSpan={columns.length} className='bg-gray-100 px-4 py-2'>
                 <PaginationFooter table={table} />
               </th>
             </tr>
@@ -123,4 +125,4 @@ const GameSystemScenariosTable = (props: Props) => {
   )
 }
 
-export default GameSystemScenariosTable
+export default TrendScenariosTable

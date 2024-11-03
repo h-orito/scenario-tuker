@@ -12,6 +12,7 @@ import SubmitButton from '@/components/button/submit-button'
 import FormLabel from '@/components/form/form-label'
 import RadioGroup from '@/components/form/radio-group'
 import Modal from '@/components/modal/modal'
+import NormalNotification from '@/components/notification/normal-notification'
 import AuthorsSelect from '@/components/pages/authors/authors-select'
 import GameSystemSelect from '@/components/pages/game-systems/game-system-select'
 import ScenarioDictionaryWords from '@/components/pages/scenarios/form/scenario-dictionary-words'
@@ -124,7 +125,7 @@ const ModifyScenarioModal = ({
   // Enter押下で登録させない
   const handleKeyDown = (e: React.KeyboardEvent<HTMLFormElement>) => {
     if (e.key === 'Enter') {
-      e.preventDefault()
+      e.stopPropagation()
     }
   }
 
@@ -144,6 +145,9 @@ const ModifyScenarioModal = ({
             </div>
             <div className='my-6'>
               <FormLabel label='シナリオ検索用ワード（改行区切り）' />
+              <NormalNotification className='text-xs p-1 my-1'>
+                <p>読み仮名などを入れておくことをお勧めします</p>
+              </NormalNotification>
               <ScenarioDictionaryWords control={control} />
             </div>
             <div className='my-6'>
