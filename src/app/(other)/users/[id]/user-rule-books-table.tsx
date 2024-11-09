@@ -1,11 +1,13 @@
 import {
   DisplayRuleBook,
+  RuleBooksTableColumn,
   baseRuleBooksTableColumns,
   convertToDisplayRuleBooks
 } from '@/components/pages/rule-books/rule-books-table'
 import { Filter } from '@/components/table/header'
 import PaginationFooter from '@/components/table/pagination-footer'
 import {
+  Cell,
   ColumnDef,
   flexRender,
   getCoreRowModel,
@@ -15,20 +17,31 @@ import {
   useReactTable
 } from '@tanstack/react-table'
 import { useMemo } from 'react'
+import UserRuleBookDeleteButton from './user-rule-book-delete-button'
 
 type Props = {
+  canModify: boolean
   ruleBooks: RuleBookResponse[]
+  reload: () => void
 }
 
-const UserRuleBooksTable = ({ ruleBooks }: Props) => {
+const UserRuleBooksTable = ({ canModify, ruleBooks, reload }: Props) => {
   const displayRuleBooks = useMemo(() => {
     return convertToDisplayRuleBooks(ruleBooks)
   }, [convertToDisplayRuleBooks, ruleBooks])
 
   const columns: ColumnDef<DisplayRuleBook, any>[] = useMemo(() => {
     const list = baseRuleBooksTableColumns
+    if (canModify) {
+      return list.concat({
+        accessorKey: 'edit',
+        header: '編集',
+        cell: ({ cell }) => <EditColumn cell={cell} reload={reload} />,
+        enableColumnFilter: false
+      })
+    }
     return list
-  }, [])
+  }, [canModify])
 
   const table = useReactTable<DisplayRuleBook>({
     data: displayRuleBooks,
@@ -53,7 +66,7 @@ const UserRuleBooksTable = ({ ruleBooks }: Props) => {
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
-                <th key={header.id} className='bg-gray-100 px-2 py-2 text-left'>
+                <th key={header.id}>
                   {header.isPlaceholder ? null : (
                     <>
                       {flexRender(
@@ -75,10 +88,7 @@ const UserRuleBooksTable = ({ ruleBooks }: Props) => {
         <tbody>
           {table.getRowModel().rows.length === 0 ? (
             <tr>
-              <td
-                colSpan={columns.length}
-                className='border-y border-slate-300 px-2 py-2 text-left'
-              >
+              <td colSpan={columns.length} className='td text-left'>
                 該当するデータがありません
               </td>
             </tr>
@@ -111,3 +121,21 @@ const UserRuleBooksTable = ({ ruleBooks }: Props) => {
 }
 
 export default UserRuleBooksTable
+
+type EditColumnProps = {
+  cell: Cell<DisplayRuleBook, unknown>
+  reload: () => void
+}
+
+const EditColumn = ({ cell, reload }: EditColumnProps) => {
+  const ruleBook = cell.row.original
+  return (
+    <RuleBooksTableColumn cell={cell} className='w-8'>
+      <UserRuleBookDeleteButton
+        className='py-1'
+        ruleBook={ruleBook}
+        reload={reload}
+      />
+    </RuleBooksTableColumn>
+  )
+}

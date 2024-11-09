@@ -10,7 +10,6 @@ const ScenarioTrendsPage = async ({
   searchParams: { type: string }
 }) => {
   const scenarioTypeStr = searchParams.type
-  console.log(scenarioTypeStr)
   const scenarioType =
     AllScenarioType.find((v) => v.value === scenarioTypeStr) ??
     ScenarioType.Trpg

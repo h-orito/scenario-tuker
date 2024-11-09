@@ -1,3 +1,4 @@
+import { faGoogle, faTwitter } from '@fortawesome/free-brands-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import PrimaryButton from '../button/primary-button'
 import {
@@ -5,7 +6,6 @@ import {
   signInWithTwitter
 } from '../lib/firebase/firebase-auth'
 import Modal from '../modal/modal'
-import { faGoogle, faTwitter } from '@fortawesome/free-brands-svg-icons'
 
 type Props = {
   toggleModal: (e: any) => void
@@ -26,7 +26,7 @@ const SignInModal = ({ toggleModal }: Props) => {
         <div className='my-3'>
           <hr className='mb-3' />
           <PrimaryButton click={signInWithTwitter}>
-            <FontAwesomeIcon icon={faTwitter} />
+            <FontAwesomeIcon icon={faTwitter} className='mr-2' />
             Twitterログイン
           </PrimaryButton>
           <p>
@@ -38,7 +38,7 @@ const SignInModal = ({ toggleModal }: Props) => {
         <div className='my-3'>
           <hr className='mb-3' />
           <PrimaryButton click={signInWithGoogle}>
-            <FontAwesomeIcon icon={faGoogle} />
+            <FontAwesomeIcon icon={faGoogle} className='mr-2' />
             Googleログイン
           </PrimaryButton>
           <p>

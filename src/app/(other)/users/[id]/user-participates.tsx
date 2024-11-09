@@ -1,9 +1,15 @@
 'use client'
 
 import { ScenarioType } from '@/@types/scenario-type'
-import { useEffect, useState } from 'react'
+import { useAuth } from '@/components/auth/use-auth'
+import { useEffect, useMemo, useState } from 'react'
+import ParticipateCreateButton from './participate-create-button'
+import ParticipateSortButton from './participate-sort-button'
+import ParticipatesCreateButton from './participates-create-button'
 import UserParticipatesTable from './user-participates-table'
+import UserRuleBookAddButton from './user-rule-book-add-button'
 import UserRuleBooksTable from './user-rule-books-table'
+import UserScenarioAddButton from './user-scenario-add-button'
 import UserScenariosTable from './user-scenarios-table'
 
 type Props = {
@@ -11,64 +17,53 @@ type Props = {
   participates: Array<ParticipateResponse>
   scenarios: Array<ScenarioResponse>
   ruleBooks: Array<RuleBookResponse>
+  reloadParticipates: () => void
+  reloadScenarios: () => void
+  reloadRuleBooks: () => void
 }
 
 const UserParticipates = ({
   user,
   participates,
   scenarios,
-  ruleBooks
+  ruleBooks,
+  reloadParticipates,
+  reloadScenarios,
+  reloadRuleBooks
 }: Props) => {
   // tab
   const [tab, setTab] = useState<ScenarioType>(ScenarioType.MurderMystery)
   // participates
-  const [murderMysteryParticipates, setMurderMysteryParticipates] = useState<
-    Array<ParticipateResponse>
-  >([])
-  const [trpgParticipates, setTrpgParticipates] = useState<
-    Array<ParticipateResponse>
-  >([])
-  // scenarios
-  const [murderMysteryScenarios, setMurderMysteryScenarios] = useState<
-    Array<ScenarioResponse>
-  >([])
-  const [trpgScenarios, setTrpgScenarios] = useState<Array<ScenarioResponse>>(
-    []
-  )
-  // ruleBooks
-  const [trpgRuleBooks, setTrpgRuleBooks] = useState<Array<RuleBookResponse>>(
-    []
-  )
-
-  useEffect(() => {
-    // participates
-    const murderMysteryParticipates = participates.filter(
+  const mdParticipates = useMemo(() => {
+    return participates.filter(
       (p) => p.scenario.type === ScenarioType.MurderMystery.value
     )
-    setMurderMysteryParticipates(murderMysteryParticipates)
-    const trpgParticipates = participates.filter(
+  }, [participates])
+  const trParticipates = useMemo(() => {
+    return participates.filter(
       (p) => p.scenario.type === ScenarioType.Trpg.value
     )
-    setTrpgParticipates(trpgParticipates)
-    // scenarios
-    const murderMysteryScenarios = scenarios.filter(
-      (s) => s.type === ScenarioType.MurderMystery.value
-    )
-    setMurderMysteryScenarios(murderMysteryScenarios)
-    const trpgScenarios = scenarios.filter(
-      (s) => s.type === ScenarioType.Trpg.value
-    )
-    setTrpgScenarios(trpgScenarios)
-    // ruleBooks
-    setTrpgRuleBooks(ruleBooks)
+  }, [participates])
+
+  // scenarios
+  const mdScenarios = useMemo(() => {
+    return scenarios.filter((s) => s.type === ScenarioType.MurderMystery.value)
+  }, [scenarios])
+  const trScenarios = useMemo(() => {
+    return scenarios.filter((s) => s.type === ScenarioType.Trpg.value)
+  }, [scenarios])
+
+  useEffect(() => {
     // 数が多い方を初期表示する
     setTab(
-      murderMysteryParticipates.length + murderMysteryScenarios.length <
-        trpgParticipates.length + trpgScenarios.length + ruleBooks.length
+      mdParticipates.length + mdScenarios.length <
+        trParticipates.length + trScenarios.length + ruleBooks.length
         ? ScenarioType.Trpg
         : ScenarioType.MurderMystery
     )
-  }, [user, participates, scenarios, ruleBooks])
+  }, [user.id])
+
+  const isMyPage = useAuth().myself?.id === user.id
 
   return (
     <div>
@@ -83,34 +78,117 @@ const UserParticipates = ({
       {tab === ScenarioType.MurderMystery ? (
         <div className='w-full'>
           <h2>{ScenarioType.MurderMystery.label}通過記録</h2>
+          {isMyPage && (
+            <div className='my-2 flex justify-center gap-2'>
+              <ParticipateCreateButton
+                className='text-xs py-1'
+                scenarioType={ScenarioType.MurderMystery}
+                reload={reloadParticipates}
+              />
+              <ParticipatesCreateButton
+                className='text-xs py-1'
+                scenarioType={ScenarioType.MurderMystery}
+                reload={reloadParticipates}
+              />
+              <ParticipateSortButton
+                participates={mdParticipates}
+                className='text-xs py-1'
+                scenarioType={ScenarioType.MurderMystery}
+                reload={reloadParticipates}
+              />
+            </div>
+          )}
           <div className='mb-6'>
             <UserParticipatesTable
-              participates={murderMysteryParticipates}
+              participates={mdParticipates}
               type={ScenarioType.MurderMystery}
+              reload={reloadParticipates}
             />
           </div>
           <h2>所有シナリオ</h2>
+          {isMyPage && (
+            <div className='my-2 flex gap-2 justify-center'>
+              <UserScenarioAddButton
+                className='text-xs py-1'
+                scenarios={mdScenarios}
+                scenarioType={ScenarioType.MurderMystery}
+                reload={reloadScenarios}
+              />
+            </div>
+          )}
           <UserScenariosTable
-            scenarios={murderMysteryScenarios}
+            canModify={isMyPage}
+            scenarios={mdScenarios}
             type={ScenarioType.MurderMystery}
+            reload={reloadScenarios}
           />
         </div>
       ) : (
         <div className='w-full'>
           <h2>{ScenarioType.Trpg.label}通過記録</h2>
           <div className='mb-6'>
+            {isMyPage && (
+              <div className='my-2 flex gap-2 justify-center'>
+                <ParticipateCreateButton
+                  className='text-xs py-1'
+                  scenarioType={ScenarioType.Trpg}
+                  reload={reloadParticipates}
+                />
+                <ParticipatesCreateButton
+                  className='text-xs py-1'
+                  scenarioType={ScenarioType.Trpg}
+                  reload={reloadParticipates}
+                />
+                <ParticipateSortButton
+                  participates={trParticipates}
+                  className='text-xs py-1'
+                  scenarioType={ScenarioType.Trpg}
+                  reload={reloadParticipates}
+                />
+              </div>
+            )}
             <UserParticipatesTable
-              participates={trpgParticipates}
+              participates={trParticipates}
               type={ScenarioType.Trpg}
+              reload={reloadParticipates}
             />
           </div>
           <h2>所有シナリオ</h2>
-          <UserScenariosTable
-            scenarios={trpgScenarios}
-            type={ScenarioType.Trpg}
-          />
+          <div className='mb-6'>
+            {isMyPage && (
+              <div className='my-2 flex gap-2 justify-center'>
+                <UserScenarioAddButton
+                  className='text-xs py-1'
+                  scenarios={mdScenarios}
+                  scenarioType={ScenarioType.Trpg}
+                  reload={reloadScenarios}
+                />
+              </div>
+            )}
+            <UserScenariosTable
+              canModify={isMyPage}
+              scenarios={trScenarios}
+              type={ScenarioType.Trpg}
+              reload={reloadScenarios}
+            />
+          </div>
           <h2>所有ルールブック</h2>
-          <UserRuleBooksTable ruleBooks={trpgRuleBooks} />
+          <div>
+            {isMyPage && (
+              <div className='my-2 flex gap-2 justify-center'>
+                <UserRuleBookAddButton
+                  className='text-xs py-1'
+                  ruleBooks={ruleBooks}
+                  reload={reloadRuleBooks}
+                />
+              </div>
+            )}
+            <UserRuleBooksTable
+              canModify={isMyPage}
+              ruleBooks={ruleBooks}
+              reload={reloadRuleBooks}
+            />
+          </div>
         </div>
       )}
     </div>

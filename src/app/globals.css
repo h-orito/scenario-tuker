@@ -60,7 +60,7 @@ body {
   }
 
   th {
-    @apply border border-slate-300 px-2 py-1
+    @apply border border-slate-300 px-2 py-2 bg-gray-100 text-left
   }
 }
 

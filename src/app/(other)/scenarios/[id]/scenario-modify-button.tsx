@@ -1,10 +1,10 @@
 'use client'
 
+import { useAuth } from '@/components/auth/use-auth'
 import PrimaryButton from '@/components/button/primary-button'
+import useModalState from '@/components/modal/modal-state'
 import { faPencil } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useState } from 'react'
-import { useAuth } from '@/components/auth/use-auth'
 import ModifyScenarioModal from '../modify-scenario'
 
 type Props = {
@@ -12,34 +12,25 @@ type Props = {
 }
 
 const ScenarioModifyButton = ({ scenario }: Props) => {
-  const [isShowModifyModel, setIsShowModifyModel] = useState(false)
-  const openModifyModal = () => {
-    setIsShowModifyModel(true)
-  }
-  const toggleModifyModal = (e: any) => {
-    if (e.target === e.currentTarget) {
-      setIsShowModifyModel(!isShowModifyModel)
-    }
-  }
+  const [isShowModal, openModal, , toggleModal] = useModalState()
+
   const reload = () => {
     location.reload()
   }
 
-  const auth = useAuth()
-
-  if (!auth.isSignedIn) {
+  if (!useAuth().isSignedIn) {
     return <></>
   }
 
   return (
     <>
-      <PrimaryButton className='ml-2 pb-1 pt-0' click={openModifyModal}>
+      <PrimaryButton className='ml-2 pb-1 pt-0' click={openModal}>
         <FontAwesomeIcon icon={faPencil} className='h-4' />
       </PrimaryButton>
-      {isShowModifyModel && (
+      {isShowModal && (
         <ModifyScenarioModal
           scenario={scenario}
-          toggleModal={toggleModifyModal}
+          toggleModal={toggleModal}
           postSave={reload}
         />
       )}

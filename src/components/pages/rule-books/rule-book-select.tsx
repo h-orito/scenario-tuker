@@ -32,13 +32,14 @@ const RuleBookSelect = ({ selected, setSelected }: Props) => {
 
   return (
     <AsyncSelect
+      form='__rulebook' // メニュー非表示時のEnter押下でform submitされるのを防ぐ
+      isClearable
       cacheOptions
-      defaultOptions
       value={selected}
       getOptionLabel={(gs) => gs.name}
       getOptionValue={(gs) => gs.id.toString()}
       loadOptions={handleLoadOptions}
-      placeholder='文字入力で検索できます'
+      placeholder='ルールブック検索'
       onChange={handleChange}
       className='flex-1'
       classNamePrefix={'rs'}

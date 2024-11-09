@@ -21,7 +21,7 @@ const DeleteRuleBookModal = ({
   postDelete: () => void
 }) => {
   return (
-    <Modal close={toggleModal} hideFooter>
+    <Modal close={toggleModal}>
       <>
         <h2>ルールブック削除</h2>
         <p className='my-6'>

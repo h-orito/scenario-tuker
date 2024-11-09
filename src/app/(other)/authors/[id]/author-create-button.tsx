@@ -2,30 +2,22 @@
 
 import { useAuth } from '@/components/auth/use-auth'
 import PrimaryButton from '@/components/button/primary-button'
+import useModalState from '@/components/modal/modal-state'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useState } from 'react'
-import CreateAuthorModal from '../authors/create-author'
+import CreateAuthorModal from '../create-author'
 
 type Props = {
+  className?: string
   postSave: (author: Author) => void
 }
 
-const AuthorCreateButton = ({ postSave }: Props) => {
-  const [isShowModel, setIsShowModel] = useState(false)
-  const openModal = (e: any) => {
-    e.preventDefault()
-    setIsShowModel(true)
-  }
-  const toggleModal = (e: any) => {
-    if (e.target === e.currentTarget) {
-      setIsShowModel(!isShowModel)
-    }
-  }
+const AuthorCreateButton = ({ className, postSave }: Props) => {
+  const [isShowModal, openModal, closeModal, toggleModal] = useModalState()
 
   const handlePostSave = (author: Author) => {
     postSave(author)
-    setIsShowModel(false)
+    closeModal()
   }
 
   const auth = useAuth()
@@ -36,11 +28,11 @@ const AuthorCreateButton = ({ postSave }: Props) => {
 
   return (
     <>
-      <PrimaryButton className='ml-1 py-0' click={openModal}>
+      <PrimaryButton className={className} click={openModal}>
         <FontAwesomeIcon icon={faPlus} className='mr-1' />
         新規
       </PrimaryButton>
-      {isShowModel && (
+      {isShowModal && (
         <CreateAuthorModal
           toggleModal={toggleModal}
           postSave={handlePostSave}

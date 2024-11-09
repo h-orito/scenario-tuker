@@ -1,26 +1,18 @@
 'use client'
 
+import { useAuth } from '@/components/auth/use-auth'
 import PrimaryButton from '@/components/button/primary-button'
+import useModalState from '@/components/modal/modal-state'
 import { faPencil } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import ModifyAuthorModal from '../modify-author'
-import { useState } from 'react'
-import { useAuth } from '@/components/auth/use-auth'
 
 type Props = {
   author: Author
 }
 
 const AuthorModifyButton = ({ author }: Props) => {
-  const [isShowModifyModel, setIsShowModifyModel] = useState(false)
-  const openModifyModal = () => {
-    setIsShowModifyModel(true)
-  }
-  const toggleModifyModal = (e: any) => {
-    if (e.target === e.currentTarget) {
-      setIsShowModifyModel(!isShowModifyModel)
-    }
-  }
+  const [isShowModal, openModal, , toggleModal] = useModalState()
   const reload = () => {
     location.reload()
   }
@@ -33,13 +25,13 @@ const AuthorModifyButton = ({ author }: Props) => {
 
   return (
     <>
-      <PrimaryButton className='ml-2 pb-1 pt-0' click={openModifyModal}>
+      <PrimaryButton className='ml-2 pb-1 pt-0' click={openModal}>
         <FontAwesomeIcon icon={faPencil} className='h-4' />
       </PrimaryButton>
-      {isShowModifyModel && (
+      {isShowModal && (
         <ModifyAuthorModal
           author={author}
-          toggleModal={toggleModifyModal}
+          toggleModal={toggleModal}
           postSave={reload}
         />
       )}

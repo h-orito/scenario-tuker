@@ -1,8 +1,8 @@
 'use client'
 
 import { cloneElement, useState } from 'react'
-import Portal from './portal'
 import SecondaryButton from '../button/scondary-button'
+import Portal from './portal'
 
 type ModalProps = {
   header?: string

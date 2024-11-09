@@ -23,7 +23,8 @@ import ScenarioPlayerCount from '@/components/pages/scenarios/form/scenario-play
 import ScenarioUrl from '@/components/pages/scenarios/form/scenario-url'
 import { useCallback, useEffect, useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
-import AuthorCreateButton from './author-create-button'
+import AuthorCreateButton from '../authors/[id]/author-create-button'
+import GameSystemCreateButton from '../game-systems/[id]/game-system-create-button'
 
 const ModifyScenarioModal = ({
   scenario,
@@ -129,6 +130,10 @@ const ModifyScenarioModal = ({
     }
   }
 
+  const handleCreateGameSystem = (gameSystem: GameSystem) => {
+    setGameSystem(gameSystem)
+  }
+
   const handneCreateAuthor = async (author: Author) => {
     setAuthors([...authors, author])
   }
@@ -136,7 +141,7 @@ const ModifyScenarioModal = ({
   return (
     <Modal close={toggleModal} hideFooter>
       <>
-        <h2>シナリオ製作者登録</h2>
+        <h2>シナリオ編集</h2>
         <div>
           <form onSubmit={handleSubmit(onSubmit)} onKeyDown={handleKeyDown}>
             <div className='my-6'>
@@ -163,10 +168,16 @@ const ModifyScenarioModal = ({
             {type === ScenarioType.Trpg.value && (
               <div className='my-6'>
                 <FormLabel label='ゲームシステム' required />
-                <GameSystemSelect
-                  selected={gameSystem}
-                  setSelected={setGameSystem}
-                />
+                <div className='flex'>
+                  <GameSystemSelect
+                    selected={gameSystem}
+                    setSelected={setGameSystem}
+                  />
+                  <GameSystemCreateButton
+                    className='ml-1 py-0'
+                    postSave={handleCreateGameSystem}
+                  />
+                </div>
               </div>
             )}
             <div className='my-6'>
@@ -177,7 +188,10 @@ const ModifyScenarioModal = ({
               <FormLabel label='シナリオ製作者' />
               <div className='flex'>
                 <AuthorsSelect selected={authors} setSelected={setAuthors} />
-                <AuthorCreateButton postSave={handneCreateAuthor} />
+                <AuthorCreateButton
+                  className='ml-1 py-0'
+                  postSave={handneCreateAuthor}
+                />
               </div>
             </div>
             <div className='my-6'>

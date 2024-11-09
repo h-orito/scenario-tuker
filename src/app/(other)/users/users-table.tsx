@@ -69,7 +69,7 @@ const UsersTable = ({ users }: Props) => {
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
-                <th key={header.id} className='bg-gray-100 px-2 py-2 text-left'>
+                <th key={header.id}>
                   {header.isPlaceholder ? null : (
                     <>
                       {flexRender(
@@ -91,10 +91,7 @@ const UsersTable = ({ users }: Props) => {
         <tbody>
           {table.getRowModel().rows.length === 0 ? (
             <tr>
-              <td
-                colSpan={2}
-                className='border-y border-slate-300 px-2 py-2 text-left'
-              >
+              <td colSpan={2} className='td text-left'>
                 該当するデータがありません
               </td>
             </tr>
@@ -129,7 +126,7 @@ const UsersTable = ({ users }: Props) => {
 const UserNameColumn = ({ cell }: { cell: Cell<User, unknown> }) => {
   const user = cell.row.original
   return (
-    <td className='td text-left'>
+    <td key={cell.id} className='td text-left'>
       {user.twitter ? <Link href={`/users/${user.id}`}>{user.name}</Link> : ''}
     </td>
   )
@@ -138,7 +135,7 @@ const UserNameColumn = ({ cell }: { cell: Cell<User, unknown> }) => {
 const TwitterColumn = ({ cell }: { cell: Cell<User, unknown> }) => {
   const user = cell.row.original
   return (
-    <td className='w-8 td text-center'>
+    <td key={cell.id} className='w-8 td text-center'>
       {user.twitter ? (
         <Link
           href={`https://twitter.com/${user.twitter.screen_name}`}

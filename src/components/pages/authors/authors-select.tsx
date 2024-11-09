@@ -26,6 +26,8 @@ const AuthorsSelect = ({ selected, setSelected }: Props) => {
 
   return (
     <AsyncSelect
+      form='__authors' // メニュー非表示時Enterを押下でform submitされるのを防ぐ
+      isClearable
       isMulti
       cacheOptions
       defaultOptions
@@ -33,7 +35,7 @@ const AuthorsSelect = ({ selected, setSelected }: Props) => {
       getOptionLabel={(gs) => gs.name}
       getOptionValue={(gs) => gs.id.toString()}
       loadOptions={handleLoadOptions}
-      placeholder='文字入力で検索できます'
+      placeholder='製作者検索'
       onChange={handleChange}
       className='flex-1'
       classNamePrefix={'rs'}

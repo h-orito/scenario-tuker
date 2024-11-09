@@ -2,45 +2,35 @@
 
 import { useAuth } from '@/components/auth/use-auth'
 import PrimaryButton from '@/components/button/primary-button'
+import useModalState from '@/components/modal/modal-state'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useState } from 'react'
-import CreateGameSystemModal from '../game-systems/create-game-system'
+import CreateGameSystemModal from '../create-game-system'
 
 type Props = {
+  className?: string
   postSave: (gameSystem: GameSystem) => void
 }
 
-const GameSystemCreateButton = ({ postSave }: Props) => {
-  const [isShowModel, setIsShowModel] = useState(false)
-  const openModal = (e: any) => {
-    e.preventDefault()
-    setIsShowModel(true)
-  }
-  const toggleModal = (e: any) => {
-    if (e.target === e.currentTarget) {
-      setIsShowModel(!isShowModel)
-    }
-  }
+const GameSystemCreateButton = ({ className, postSave }: Props) => {
+  const [isShowModal, openModal, closeModal, toggleModal] = useModalState()
 
   const handlePostSave = (gamesystem: GameSystem) => {
     postSave(gamesystem)
-    setIsShowModel(false)
+    closeModal()
   }
 
-  const auth = useAuth()
-
-  if (!auth.isSignedIn) {
+  if (!useAuth().isSignedIn) {
     return <></>
   }
 
   return (
     <>
-      <PrimaryButton className='ml-1 py-0' click={openModal}>
+      <PrimaryButton className={className} click={openModal}>
         <FontAwesomeIcon icon={faPlus} className='mr-1' />
         新規
       </PrimaryButton>
-      {isShowModel && (
+      {isShowModal && (
         <CreateGameSystemModal
           toggleModal={toggleModal}
           postSave={handlePostSave}

@@ -7,6 +7,7 @@ import {
   GameSystemColumnDef,
   ImpressionColumnDef,
   MemoColumnDef,
+  ParticipatesTableColumn,
   PlayerNamesColumnDef,
   PlayerNumNameColumnDef,
   RequiredHoursColumnDef,
@@ -19,6 +20,7 @@ import {
 import { Filter } from '@/components/table/header'
 import PaginationFooter from '@/components/table/pagination-footer'
 import {
+  Cell,
   ColumnDef,
   flexRender,
   getCoreRowModel,
@@ -28,13 +30,22 @@ import {
   useReactTable
 } from '@tanstack/react-table'
 import { useMemo } from 'react'
+import ParticipateDeleteButton from './participate-delete-button'
+import ParticipateModifyButton from './participate-modify-button'
 
 type Props = {
+  canModify: boolean
   participates: ParticipateResponse[]
   type: ScenarioType
+  reload: () => void
 }
 
-const UserParticipatesTable = ({ participates, type }: Props) => {
+const UserParticipatesTable = ({
+  canModify,
+  participates,
+  type,
+  reload
+}: Props) => {
   const displayParticipates = useMemo(() => {
     return convertToDisplayParticipates(participates)
   }, [convertToDisplayParticipates, participates])
@@ -54,8 +65,16 @@ const UserParticipatesTable = ({ participates, type }: Props) => {
       MemoColumnDef,
       ImpressionColumnDef
     ])
+    if (canModify) {
+      columns = columns.concat({
+        accessorKey: 'edit',
+        header: '編集',
+        cell: ({ cell }) => <EditColumn cell={cell} reload={reload} />,
+        enableColumnFilter: false
+      })
+    }
     return columns
-  }, [type])
+  }, [type, canModify])
 
   const table = useReactTable<DisplayParticipate>({
     data: displayParticipates,
@@ -80,7 +99,7 @@ const UserParticipatesTable = ({ participates, type }: Props) => {
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
-                <th key={header.id} className='bg-gray-100 px-2 py-2 text-left'>
+                <th key={header.id}>
                   {header.isPlaceholder ? null : (
                     <>
                       {flexRender(
@@ -102,10 +121,7 @@ const UserParticipatesTable = ({ participates, type }: Props) => {
         <tbody>
           {table.getRowModel().rows.length === 0 ? (
             <tr>
-              <td
-                colSpan={columns.length}
-                className='border-y border-slate-300 px-2 py-2 text-left'
-              >
+              <td colSpan={columns.length} className='td text-left'>
                 該当するデータがありません
               </td>
             </tr>
@@ -138,3 +154,33 @@ const UserParticipatesTable = ({ participates, type }: Props) => {
 }
 
 export default UserParticipatesTable
+
+type EditColumnProps = {
+  cell: Cell<DisplayParticipate, unknown>
+  reload: () => void
+}
+
+const EditColumn = ({ cell, reload }: EditColumnProps) => {
+  const participate = cell.row.original
+  return (
+    <ParticipatesTableColumn cell={cell} className='w-8'>
+      <div className='flex gap-1'>
+        <ParticipateModifyButton
+          className='py-1'
+          participate={participate}
+          scenarioType={
+            participate.scenario.type === ScenarioType.MurderMystery.value
+              ? ScenarioType.MurderMystery
+              : ScenarioType.Trpg
+          }
+          reload={reload}
+        />
+        <ParticipateDeleteButton
+          className='py-1'
+          participate={participate}
+          reload={reload}
+        />
+      </div>
+    </ParticipatesTableColumn>
+  )
+}

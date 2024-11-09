@@ -2,6 +2,7 @@
 
 import ModifyScenarioModal from '@/app/(other)/scenarios/modify-scenario'
 import { useAuth } from '@/components/auth/use-auth'
+import useModalState from '@/components/modal/modal-state'
 import {
   AuthorsColumnDef,
   convertToDisplayScenarios,
@@ -28,10 +29,11 @@ import {
   getSortedRowModel,
   useReactTable
 } from '@tanstack/react-table'
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import DangerButton from '../../../components/button/danger-button'
 import PrimaryButton from '../../../components/button/primary-button'
 import PaginationFooter from '../../../components/table/pagination-footer'
+import DeleteScenarioModal from './delete-scenario'
 
 type ScenariosTableProps = {
   scenarios: ScenarioResponse[]
@@ -45,22 +47,25 @@ const ScenariosTable = (props: ScenariosTableProps) => {
     return convertToDisplayScenarios(scenarios)
   }, [convertToDisplayScenarios, scenarios])
 
-  const columns: ColumnDef<DisplayScenario, any>[] = [
-    ScenarioNameColumnDef,
-    TypeColumnDef,
-    GameSystemColumnDef,
-    AuthorsColumnDef,
-    GameMasterColumnDef,
-    PlayerNumColumnDef,
-    RequiredHoursColumnDef,
-    ParticipateCountColumnDef,
-    {
-      accessorKey: 'editors',
-      header: '編集',
-      cell: ({ cell }) => <EditColumn cell={cell} reload={reload} />,
-      enableColumnFilter: false
-    }
-  ]
+  const columns: ColumnDef<DisplayScenario, any>[] = useMemo(
+    () => [
+      ScenarioNameColumnDef,
+      TypeColumnDef,
+      GameSystemColumnDef,
+      AuthorsColumnDef,
+      GameMasterColumnDef,
+      PlayerNumColumnDef,
+      RequiredHoursColumnDef,
+      ParticipateCountColumnDef,
+      {
+        accessorKey: 'editors',
+        header: '編集',
+        cell: ({ cell }) => <EditColumn cell={cell} reload={reload} />,
+        enableColumnFilter: false
+      }
+    ],
+    []
+  )
 
   const table = useReactTable<DisplayScenario>({
     data: displayScenarios,
@@ -85,7 +90,7 @@ const ScenariosTable = (props: ScenariosTableProps) => {
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
-                <th key={header.id} className='bg-gray-100 px-2 py-2 text-left'>
+                <th key={header.id}>
                   {header.isPlaceholder ? null : (
                     <>
                       {flexRender(
@@ -107,10 +112,7 @@ const ScenariosTable = (props: ScenariosTableProps) => {
         <tbody>
           {table.getRowModel().rows.length === 0 ? (
             <tr>
-              <td
-                colSpan={columns.length}
-                className='border-y border-slate-300 px-2 py-1 text-left'
-              >
+              <td colSpan={columns.length} className='td text-left'>
                 該当するデータがありません
               </td>
             </tr>
@@ -149,23 +151,26 @@ type EditColumnProps = {
 
 const EditColumn = ({ cell, reload }: EditColumnProps) => {
   const scenario = cell.row.original
-  const [modifyScenario, setModifyScenario] = useState<ScenarioResponse | null>(
-    null
-  )
-  const [isOpenModifyModal, setIsOpenModifyModal] = useState(false)
-  const openModifyModal = (scenario: ScenarioResponse) => {
-    setModifyScenario(scenario)
-    setIsOpenModifyModal(true)
-  }
-  const toggleModifyModal = (e: any) => {
-    if (e.target === e.currentTarget) {
-      setIsOpenModifyModal(!isOpenModifyModal)
-    }
-  }
-
+  const [
+    isShowModifyModal,
+    openModifyModal,
+    closeModifyModal,
+    toggleModifyModal
+  ] = useModalState()
   const handlePostSave = async (scenario: ScenarioResponse) => {
     reload && (await reload())
-    setIsOpenModifyModal(false)
+    closeModifyModal()
+  }
+
+  const [
+    isShowDeleteModal,
+    openDeleteModal,
+    closeDeleteModal,
+    toggleDeleteModal
+  ] = useModalState()
+  const handlePostDelete = async () => {
+    reload && (await reload())
+    closeDeleteModal()
   }
 
   const canModify = useAuth().isSignedIn
@@ -174,25 +179,32 @@ const EditColumn = ({ cell, reload }: EditColumnProps) => {
     <ScenariosTableColumn cell={cell} className='w-8'>
       <PrimaryButton
         className='py-1'
-        click={() => openModifyModal(scenario)}
+        click={openModifyModal}
         disabled={!canModify}
       >
         <FontAwesomeIcon icon={faPencil} />
       </PrimaryButton>
-      {isOpenModifyModal && (
+      {isShowModifyModal && (
         <ModifyScenarioModal
-          scenario={modifyScenario!}
+          scenario={scenario}
           toggleModal={toggleModifyModal}
           postSave={handlePostSave}
         />
       )}
       <DangerButton
         className='ml-1 py-1'
-        click={() => {}}
+        click={openDeleteModal}
         disabled={!canModify}
       >
         <FontAwesomeIcon icon={faTrash} />
       </DangerButton>
+      {isShowDeleteModal && (
+        <DeleteScenarioModal
+          scenario={scenario}
+          toggleModal={toggleDeleteModal}
+          postDelete={handlePostDelete}
+        />
+      )}
     </ScenariosTableColumn>
   )
 }

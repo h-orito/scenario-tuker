@@ -9,10 +9,12 @@ import {
   GameSystemColumnDef,
   PlayerNumColumnDef,
   RequiredHoursColumnDef,
-  ScenarioNameColumnDef
+  ScenarioNameColumnDef,
+  ScenariosTableColumn
 } from '@/components/pages/scenarios/scenarios-table'
 import { Filter } from '@/components/table/header'
 import {
+  Cell,
   ColumnDef,
   flexRender,
   getCoreRowModel,
@@ -23,14 +25,17 @@ import {
 } from '@tanstack/react-table'
 import { useMemo } from 'react'
 import PaginationFooter from '../../../../components/table/pagination-footer'
+import UserScenarioDeleteButton from './user-scenario-delete-button'
 
-type ScenariosTableProps = {
+type Props = {
   scenarios: ScenarioResponse[]
+  canModify: boolean
   type: ScenarioType
+  reload: () => void
 }
 
-const UserScenariosTable = (props: ScenariosTableProps) => {
-  const { scenarios, type } = props
+const UserScenariosTable = (props: Props) => {
+  const { scenarios, type, canModify, reload } = props
 
   const displayScenarios = useMemo(() => {
     return convertToDisplayScenarios(scenarios)
@@ -41,13 +46,22 @@ const UserScenariosTable = (props: ScenariosTableProps) => {
     if (type === ScenarioType.Trpg) {
       base = base.concat(GameSystemColumnDef)
     }
-    return base.concat([
+    base = base.concat([
       AuthorsColumnDef,
       GameMasterColumnDef,
       PlayerNumColumnDef,
       RequiredHoursColumnDef
     ])
-  }, [type])
+    if (canModify) {
+      return base.concat({
+        accessorKey: 'edit',
+        header: '編集',
+        cell: ({ cell }) => <EditColumn cell={cell} reload={reload} />,
+        enableColumnFilter: false
+      })
+    }
+    return base
+  }, [type, canModify])
 
   const table = useReactTable<DisplayScenario>({
     data: displayScenarios,
@@ -72,7 +86,7 @@ const UserScenariosTable = (props: ScenariosTableProps) => {
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
-                <th key={header.id} className='bg-gray-100 px-2 py-2 text-left'>
+                <th key={header.id}>
                   {header.isPlaceholder ? null : (
                     <>
                       {flexRender(
@@ -94,10 +108,7 @@ const UserScenariosTable = (props: ScenariosTableProps) => {
         <tbody>
           {table.getRowModel().rows.length === 0 ? (
             <tr>
-              <td
-                colSpan={columns.length}
-                className='border-y border-slate-300 px-2 py-2 text-left'
-              >
+              <td colSpan={columns.length} className='td text-left'>
                 該当するデータがありません
               </td>
             </tr>
@@ -130,3 +141,21 @@ const UserScenariosTable = (props: ScenariosTableProps) => {
 }
 
 export default UserScenariosTable
+
+type EditColumnProps = {
+  cell: Cell<DisplayScenario, unknown>
+  reload: () => void
+}
+
+const EditColumn = ({ cell, reload }: EditColumnProps) => {
+  const scenario = cell.row.original
+  return (
+    <ScenariosTableColumn cell={cell} className='w-8'>
+      <UserScenarioDeleteButton
+        className='py-1'
+        scenario={scenario}
+        reload={reload}
+      />
+    </ScenariosTableColumn>
+  )
+}

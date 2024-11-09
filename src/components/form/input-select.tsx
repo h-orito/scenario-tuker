@@ -7,6 +7,7 @@ type Props = {
   selected: any
   setSelected: (value: any) => void
   disabled?: boolean
+  onChange?: (value: any) => void
 }
 
 export default function InputSelect({
@@ -15,10 +16,12 @@ export default function InputSelect({
   candidates,
   selected,
   setSelected,
-  disabled
+  disabled,
+  onChange
 }: Props) {
   const handleChange = (value: SingleValue<Option>) => {
     setSelected(value?.value)
+    onChange && onChange(value?.value)
   }
 
   const defaultOptions = candidates.filter((c) => selected === c.value)

@@ -12,7 +12,7 @@ type Props = {
   setSelected: (value: GameSystem | null) => void
 }
 const GameSystemSelect = ({ selected, setSelected }: Props) => {
-  const handleLoadOptions = async (name: string): Promise<GameSystem[]> => {
+  const debouncedLoad = async (name: string) => {
     if (name == null || name === '') {
       const gameSystems = await fetchGameSystems()
       return gameSystems.list
@@ -30,13 +30,15 @@ const GameSystemSelect = ({ selected, setSelected }: Props) => {
 
   return (
     <AsyncSelect
+      form='__gamesystem' // メニュー非表示時のEnterを押下でform submitされるのを防ぐ
+      isClearable
       cacheOptions
       defaultOptions
       value={selected}
       getOptionLabel={(gs) => gs.name}
       getOptionValue={(gs) => gs.id.toString()}
-      loadOptions={handleLoadOptions}
-      placeholder='文字入力で検索できます'
+      loadOptions={debouncedLoad}
+      placeholder='ゲームシステム検索'
       onChange={handleChange}
       className='flex-1'
       classNamePrefix={'rs'}

@@ -1,16 +1,15 @@
 'use client'
 
-import { ScenarioType } from '@/@types/scenario-type'
+import { AllScenarioType, ScenarioType } from '@/@types/scenario-type'
 import ScenariosTable from '@/app/(other)/scenarios/scenarios-table'
 import { fetchScenarios, searchScenarios } from '@/components/api/scenario-api'
-import PrimaryButton from '@/components/button/primary-button'
 import SecondaryButton from '@/components/button/scondary-button'
 import SubmitButton from '@/components/button/submit-button'
 import InputCheckbox from '@/components/form/input-checkbox'
 import InputNumber from '@/components/form/input-number'
 import InputText from '@/components/form/input-text'
 import RadioGroup from '@/components/form/radio-group'
-import { faPlus, faSearch } from '@fortawesome/free-solid-svg-icons'
+import { faSearch } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
@@ -26,17 +25,14 @@ import {
   useState
 } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
-import CreateScenarioModal from './create-scenario'
+import ScenarioCreateButton from './[id]/scenario-create-button'
 
 const ScenariosPage = () => {
   const [scenarios, setScenarios] = useState<ScenarioResponse[]>([])
-  const [isOpenCreateModal, setIsOpenCreateModal] = useState(false)
-  const openCreateModal = () => setIsOpenCreateModal(true)
-  const toggleCreateModal = (e: any) => {
-    if (e.target === e.currentTarget) {
-      setIsOpenCreateModal(!isOpenCreateModal)
-    }
-  }
+  const params = useSearchParams()
+  const type = params.get('type') || ScenarioType.MurderMystery.value
+  const [scenarioType, setScenarioType] = useState(type)
+
   const router = useRouter()
   const postCreate = useCallback((scenario: ScenarioResponse) => {
     router.push(`/scenarios/${scenario.id}`)
@@ -49,19 +45,17 @@ const ScenariosPage = () => {
     <div>
       <title>Scenario Tuker | シナリオ一覧</title>
       <h1>シナリオ一覧</h1>
-      <SearchScenarios ref={searchRef} setScenarios={setScenarios} />
+      <SearchScenarios
+        ref={searchRef}
+        setScenarios={setScenarios}
+        scenarioType={scenarioType}
+        setScenarioType={setScenarioType}
+      />
       <div className='my-4 flex justify-end'>
-        <PrimaryButton click={openCreateModal}>
-          <FontAwesomeIcon icon={faPlus} className='mr-2 h-4' />
-          追加
-        </PrimaryButton>
-        {isOpenCreateModal && (
-          <CreateScenarioModal
-            scenarioType={searchRef.current.getSearchType()}
-            toggleModal={toggleCreateModal}
-            postSave={postCreate}
-          />
-        )}
+        <ScenarioCreateButton
+          scenarioType={scenarioType}
+          postCreate={postCreate}
+        />
       </div>
       <ScenariosTable scenarios={scenarios} reload={search} />
       <div className='mt-4'>
@@ -84,18 +78,16 @@ interface FormInput {
 
 interface SearchScenariosHandle {
   search: () => void
-  getSearchType: () => string
 }
 
 interface SearchScenariosProps {
+  scenarioType: string
+  setScenarioType: Dispatch<SetStateAction<string>>
   setScenarios: Dispatch<SetStateAction<ScenarioResponse[]>>
 }
 
 const SearchScenarios = forwardRef<SearchScenariosHandle, SearchScenariosProps>(
-  ({ setScenarios }, ref) => {
-    const params = useSearchParams()
-    const type = params.get('type') || ScenarioType.MurderMystery.value
-    const [scenarioType, setScenarioType] = useState(type)
+  ({ scenarioType, setScenarioType, setScenarios }, ref) => {
     const [containPlayerCountEmpty, setContainPlayerCountEmpty] =
       useState(false)
     const { control, formState, handleSubmit, getValues, setValue } =
@@ -116,7 +108,7 @@ const SearchScenarios = forwardRef<SearchScenariosHandle, SearchScenariosProps>(
         scenarioType === '' &&
         values.playerCount == null
       )
-    }, [type, getValues])
+    }, [scenarioType, getValues])
     const canSubmit: boolean = !formState.isSubmitting
 
     const search = useCallback(
@@ -154,7 +146,7 @@ const SearchScenarios = forwardRef<SearchScenariosHandle, SearchScenariosProps>(
 
     useImperativeHandle(ref, () => ({
       search: reload,
-      getSearchType: () => scenarioType
+      scenarioType: scenarioType
     }))
 
     useEffect(() => {
@@ -178,13 +170,7 @@ const SearchScenarios = forwardRef<SearchScenariosHandle, SearchScenariosProps>(
           <div className='field my-2'>
             <RadioGroup
               name='scenario-type'
-              candidates={[
-                ...Object.values(ScenarioType).map((type) => ({
-                  label: type.label,
-                  value: type.value
-                })),
-                { label: '両方', value: '' }
-              ]}
+              candidates={[...AllScenarioType, { label: '両方', value: '' }]}
               selected={scenarioType}
               setSelected={setScenarioType}
             />

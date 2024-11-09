@@ -16,7 +16,7 @@ import { RuleBookFormInput } from '@/components/pages/rule-books/form/rule-book-
 import RuleBookName from '@/components/pages/rule-books/form/rule-book-name'
 import { useCallback, useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
-import GameSystemCreateButton from './game-system-create-button'
+import GameSystemCreateButton from '../game-systems/[id]/game-system-create-button'
 
 const ModifyRuleBookModal = ({
   ruleBook,

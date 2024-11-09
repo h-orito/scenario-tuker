@@ -1,6 +1,9 @@
+'use client'
+
 import { useAuth } from '@/components/auth/use-auth'
 import DangerButton from '@/components/button/danger-button'
 import PrimaryButton from '@/components/button/primary-button'
+import useModalState from '@/components/modal/modal-state'
 import {
   DisplayRuleBook,
   RuleBooksTableColumn,
@@ -21,7 +24,7 @@ import {
   getSortedRowModel,
   useReactTable
 } from '@tanstack/react-table'
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import DeleteRuleBookModal from './delete-rule-book'
 import ModifyRuleBookModal from './modify-rule-book'
 
@@ -68,7 +71,7 @@ const RuleBooksTable = ({ ruleBooks, reload }: Props) => {
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
-                <th key={header.id} className='bg-gray-100 px-2 py-2 text-left'>
+                <th key={header.id}>
                   {header.isPlaceholder ? null : (
                     <>
                       {flexRender(
@@ -90,10 +93,7 @@ const RuleBooksTable = ({ ruleBooks, reload }: Props) => {
         <tbody>
           {table.getRowModel().rows.length === 0 ? (
             <tr>
-              <td
-                colSpan={columns.length}
-                className='border-y border-slate-300 px-2 py-1 text-left'
-              >
+              <td colSpan={columns.length} className='td text-left'>
                 該当するデータがありません
               </td>
             </tr>
@@ -132,54 +132,45 @@ type EditColumnProps = {
 
 const EditColumn = ({ cell, reload }: EditColumnProps) => {
   const ruleBook = cell.row.original
-  const [modifyRuleBook, setModifyRuleBook] = useState<RuleBookResponse | null>(
-    null
-  )
+
   // 編集
-  const [isOpenModifyModal, setIsOpenModifyModal] = useState(false)
-  const openModifyModal = (ruleBook: RuleBookResponse) => {
-    setModifyRuleBook(ruleBook)
-    setIsOpenModifyModal(true)
-  }
-  const toggleModifyModal = (e: any) => {
-    if (e.target === e.currentTarget) {
-      setIsOpenModifyModal(!isOpenModifyModal)
-    }
-  }
+  const [
+    isShowModifyModal,
+    openModifyModal,
+    closeModifyModal,
+    toggleModifyModal
+  ] = useModalState()
   const handlePostSave = async (ruleBook: RuleBookResponse) => {
     reload && (await reload())
-    setIsOpenModifyModal(false)
+    closeModifyModal
   }
+
   // 削除系
-  const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false)
-  const openDeleteModal = (ruleBook: RuleBookResponse) => {
-    setModifyRuleBook(ruleBook)
-    setIsOpenDeleteModal(true)
-  }
-  const toggleDeleteModal = (e: any) => {
-    if (e.target === e.currentTarget) {
-      setIsOpenDeleteModal(!isOpenDeleteModal)
-    }
-  }
+  const [
+    isShowDeleteModal,
+    openDeleteModal,
+    closeDeleteModal,
+    toggleDeleteModal
+  ] = useModalState()
   const handlePostDelete = async () => {
     reload && (await reload())
-    setIsOpenDeleteModal(false)
+    closeDeleteModal()
   }
 
   const canModify = useAuth().isSignedIn
 
   return (
-    <RuleBooksTableColumn cell={cell} className='w-8'>
+    <RuleBooksTableColumn key={cell.id} cell={cell} className='w-8'>
       <PrimaryButton
         className='py-1'
-        click={() => openModifyModal(ruleBook)}
+        click={openModifyModal}
         disabled={!canModify}
       >
         <FontAwesomeIcon icon={faPencil} />
       </PrimaryButton>
-      {isOpenModifyModal && (
+      {isShowModifyModal && (
         <ModifyRuleBookModal
-          ruleBook={modifyRuleBook!}
+          ruleBook={ruleBook!}
           toggleModal={toggleModifyModal}
           postSave={handlePostSave}
         />
@@ -191,7 +182,7 @@ const EditColumn = ({ cell, reload }: EditColumnProps) => {
       >
         <FontAwesomeIcon icon={faTrash} />
       </DangerButton>
-      {isOpenDeleteModal && (
+      {isShowDeleteModal && (
         <DeleteRuleBookModal
           ruleBook={ruleBook}
           toggleModal={toggleDeleteModal}

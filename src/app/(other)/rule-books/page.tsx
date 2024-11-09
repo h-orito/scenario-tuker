@@ -7,6 +7,7 @@ import SecondaryButton from '@/components/button/scondary-button'
 import SubmitButton from '@/components/button/submit-button'
 import InputText from '@/components/form/input-text'
 import RadioGroup from '@/components/form/radio-group'
+import useModalState from '@/components/modal/modal-state'
 import { faPlus, faSearch } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Link from 'next/link'
@@ -28,13 +29,7 @@ import RuleBooksTable from './rule-books-table'
 
 const RuleBookPage = () => {
   const [ruleBooks, setRuleBooks] = useState<RuleBookResponse[]>([])
-  const [isOpenCreateModal, setIsOpenCreateModal] = useState(false)
-  const openCreateModal = () => setIsOpenCreateModal(true)
-  const toggleCreateModal = (e: any) => {
-    if (e.target === e.currentTarget) {
-      setIsOpenCreateModal(!isOpenCreateModal)
-    }
-  }
+  const [isShowModal, openModal, , toggleModal] = useModalState()
   const router = useRouter()
   const postCreate = useCallback((ruleBook: RuleBookResponse) => {
     router.push(`/rule-books/${ruleBook.id}`)
@@ -49,13 +44,13 @@ const RuleBookPage = () => {
       <h1>ルールブック一覧</h1>
       <SearchRuleBooks ref={searchRef} setRuleBooks={setRuleBooks} />
       <div className='my-4 flex justify-end'>
-        <PrimaryButton click={openCreateModal}>
+        <PrimaryButton click={openModal}>
           <FontAwesomeIcon icon={faPlus} className='mr-2 h-4' />
           追加
         </PrimaryButton>
-        {isOpenCreateModal && (
+        {isShowModal && (
           <CreateRuleBookModal
-            toggleModal={toggleCreateModal}
+            toggleModal={toggleModal}
             postSave={postCreate}
           />
         )}
