@@ -100,6 +100,7 @@ const UserParticipates = ({
           )}
           <div className='mb-6'>
             <UserParticipatesTable
+              canModify={isMyPage}
               participates={mdParticipates}
               type={ScenarioType.MurderMystery}
               reload={reloadParticipates}
@@ -148,6 +149,7 @@ const UserParticipates = ({
               </div>
             )}
             <UserParticipatesTable
+              canModify={isMyPage}
               participates={trParticipates}
               type={ScenarioType.Trpg}
               reload={reloadParticipates}

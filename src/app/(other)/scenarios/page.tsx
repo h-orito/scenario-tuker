@@ -17,6 +17,7 @@ import {
   Dispatch,
   forwardRef,
   SetStateAction,
+  Suspense,
   useCallback,
   useEffect,
   useImperativeHandle,
@@ -26,8 +27,17 @@ import {
 } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import ScenarioCreateButton from './[id]/scenario-create-button'
-
 const ScenariosPage = () => {
+  return (
+    <Suspense fallback='loading...'>
+      <SuspenseScenariosPage />
+    </Suspense>
+  )
+}
+
+export default ScenariosPage
+
+const SuspenseScenariosPage = () => {
   const [scenarios, setScenarios] = useState<ScenarioResponse[]>([])
   const params = useSearchParams()
   const type = params.get('type') || ScenarioType.MurderMystery.value
@@ -66,8 +76,6 @@ const ScenariosPage = () => {
     </div>
   )
 }
-
-export default ScenariosPage
 
 interface FormInput {
   name: string

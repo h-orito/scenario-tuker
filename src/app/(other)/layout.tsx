@@ -1,8 +1,8 @@
+import Authenticator from '@/components/auth/authenticator'
+import Footer from '@/components/layout/footer'
+import Header from '@/components/layout/header'
 import type { Metadata } from 'next'
 import '../globals.css'
-import Header from '@/components/layout/header'
-import Footer from '@/components/layout/footer'
-import Authenticator from '@/components/auth/authenticator'
 
 export const metadata: Metadata = {
   title: 'Scenario Tuker'

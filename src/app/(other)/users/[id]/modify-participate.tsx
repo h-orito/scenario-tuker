@@ -36,8 +36,17 @@ const ModifyParticipateModal = ({
   const [scenario, setScenario] = useState<ScenarioResponse | null>(
     initialParticipate.scenario
   )
-  const [ruleBooks, setRuleBooks] = useState<RuleBook[]>(
-    initialParticipate.rule_books
+  const [ruleBooks, setRuleBooks] = useState<RuleBookResponse[]>(
+    initialParticipate.rule_books.map((rb) => {
+      return {
+        ...rb,
+        game_system: {
+          id: rb.game_system_id,
+          name: '',
+          dictionary_names: []
+        }
+      }
+    })
   )
   const [roleNames, setRoleNames] = useState<string[]>(
     initialParticipate.role_names
@@ -55,7 +64,7 @@ const ModifyParticipateModal = ({
   const gameSystemId = useMemo(() => {
     if (scenario?.game_system) return scenario.game_system.id
     if (ruleBooks.length <= 0) return null
-    return ruleBooks[0].game_system_id
+    return ruleBooks[0].game_system.id
   }, [scenario, ruleBooks])
 
   const { control, formState, handleSubmit, getValues, setValue, watch } =
