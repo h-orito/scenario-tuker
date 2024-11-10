@@ -19,9 +19,6 @@ import UserParticipates from './user-participates'
 
 const UsersIdPage = ({ params }: { params: { id: string } }) => {
   const userIdStr = params.id
-  if (!userIdStr) {
-    return <div>存在しないユーザーです。</div>
-  }
   const userId = userIdStr ? parseInt(userIdStr) : 0
 
   const [loading, setLoading] = useState(true)

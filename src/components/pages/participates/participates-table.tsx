@@ -6,7 +6,11 @@ import WarnButton from '@/components/button/warn-button'
 import Modal from '@/components/modal/modal'
 import MarkdownNotification from '@/components/notification/markdown-notification'
 import { getSortIcon } from '@/components/table/header'
-import { faComment, faExternalLink } from '@fortawesome/free-solid-svg-icons'
+import {
+  faComment,
+  faExternalLink,
+  faShare
+} from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Cell, Column, ColumnDef, Row } from '@tanstack/react-table'
 import Link from 'next/link'
@@ -194,6 +198,19 @@ export const ImpressionColumn = ({
     }
   }
 
+  const share = () => {
+    const scenarioName = participate.scenario.name
+    const range = participate.impression?.disclosure_range
+    const hasSpoiler = participate.impression?.has_spoiler
+      ? 'ネタバレ含む'
+      : 'ネタバレなし'
+    let url = 'https://twitter.com/share?text='
+    url += encodeURIComponent(`${scenarioName}\n${hasSpoiler}\n`)
+    url += `&url=${encodeURIComponent(`${window.location.origin}/participates/${participate.id}`)}`
+    url += `&hashtags=${encodeURIComponent('ScenarioTuker')}`
+    window.open(url)
+  }
+
   return (
     <ParticipatesTableColumn cell={cell} className='text-left'>
       <>
@@ -220,6 +237,11 @@ export const ImpressionColumn = ({
             impressionContent={impressionContent}
             toggleModal={toggleModal}
           />
+        )}
+        {impression.disclosure_range === DisclosureRange.Everyone.value && (
+          <PrimaryButton click={share} className='py-1 ml-1'>
+            <FontAwesomeIcon icon={faShare} />
+          </PrimaryButton>
         )}
       </>
     </ParticipatesTableColumn>

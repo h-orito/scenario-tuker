@@ -65,59 +65,57 @@ const TrendScenariosTable = ({ scenarios, type }: Props) => {
   })
 
   return (
-    <div className='w-full overflow-x-scroll'>
-      <table className='table whitespace-nowrap'>
-        <thead>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <tr key={headerGroup.id}>
-              {headerGroup.headers.map((header) => (
-                <th key={header.id}>
-                  {header.isPlaceholder
-                    ? null
-                    : flexRender(
-                        header.column.columnDef.header,
-                        header.getContext()
-                      )}
-                </th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody>
-          {table.getRowModel().rows.length === 0 ? (
-            <tr>
-              <td colSpan={columns.length} className='td text-left'>
-                該当するデータがありません
-              </td>
-            </tr>
-          ) : (
-            table.getRowModel().rows.map((row) => {
-              const cells = row.getAllCells()
-              const baseIndex = isTrpg ? 1 : 0
-              return (
-                <tr key={row.id}>
-                  <ScenarioNameColumn cell={cells[0]} />
-                  {isTrpg && <GameSystemColumn cell={cells[1]} />}
-                  <AuthorsColumn cell={cells[baseIndex + 1]} />
-                  <ScenariosTableSimpleColumn cell={cells[baseIndex + 2]} />
-                  <ScenariosTableSimpleColumn cell={cells[baseIndex + 3]} />
-                  <ScenariosTableSimpleColumn cell={cells[baseIndex + 4]} />
-                  <ScenariosTableSimpleColumn cell={cells[baseIndex + 5]} />
-                </tr>
-              )
-            })
-          )}
-        </tbody>
-        {displayScenarios.length > 0 && (
-          <tfoot>
-            <tr>
-              <th colSpan={columns.length} className='bg-gray-100 px-4 py-2'>
-                <PaginationFooter table={table} />
-              </th>
-            </tr>
-          </tfoot>
-        )}
-      </table>
+    <div>
+      <div className='w-full overflow-x-scroll'>
+        <table className='table whitespace-nowrap'>
+          <thead>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <tr key={headerGroup.id}>
+                {headerGroup.headers.map((header) => (
+                  <th key={header.id}>
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                  </th>
+                ))}
+              </tr>
+            ))}
+          </thead>
+          <tbody>
+            {table.getRowModel().rows.length === 0 ? (
+              <tr>
+                <td colSpan={columns.length} className='td text-left'>
+                  該当するデータがありません
+                </td>
+              </tr>
+            ) : (
+              table.getRowModel().rows.map((row) => {
+                const cells = row.getAllCells()
+                const baseIndex = isTrpg ? 1 : 0
+                return (
+                  <tr key={row.id}>
+                    <ScenarioNameColumn cell={cells[0]} />
+                    {isTrpg && <GameSystemColumn cell={cells[1]} />}
+                    <AuthorsColumn cell={cells[baseIndex + 1]} />
+                    <ScenariosTableSimpleColumn cell={cells[baseIndex + 2]} />
+                    <ScenariosTableSimpleColumn cell={cells[baseIndex + 3]} />
+                    <ScenariosTableSimpleColumn cell={cells[baseIndex + 4]} />
+                    <ScenariosTableSimpleColumn cell={cells[baseIndex + 5]} />
+                  </tr>
+                )
+              })
+            )}
+          </tbody>
+        </table>
+      </div>
+      {displayScenarios.length > 0 && (
+        <div className='border-x border-b border-slate-300 px-2 py-2 bg-gray-100 text-xs'>
+          <PaginationFooter table={table} />
+        </div>
+      )}
     </div>
   )
 }
