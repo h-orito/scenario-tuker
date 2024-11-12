@@ -69,7 +69,9 @@ const UserParticipatesTable = ({
       columns = columns.concat({
         accessorKey: 'edit',
         header: '編集',
-        cell: ({ cell }) => <EditColumn cell={cell} reload={reload} />,
+        cell: ({ cell }) => (
+          <EditColumn cell={cell} canModify={canModify} reload={reload} />
+        ),
         enableColumnFilter: false
       })
     }
@@ -158,15 +160,17 @@ export default UserParticipatesTable
 
 type EditColumnProps = {
   cell: Cell<DisplayParticipate, unknown>
+  canModify: boolean
   reload: () => void
 }
 
-const EditColumn = ({ cell, reload }: EditColumnProps) => {
+const EditColumn = ({ cell, canModify, reload }: EditColumnProps) => {
   const participate = cell.row.original
   return (
     <ParticipatesTableColumn cell={cell} className='w-8'>
       <div className='flex gap-1'>
         <ParticipateModifyButton
+          canModify={canModify}
           className='py-1'
           participate={participate}
           scenarioType={

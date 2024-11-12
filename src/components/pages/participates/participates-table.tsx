@@ -18,7 +18,7 @@ import React, { useMemo, useState } from 'react'
 
 export type DisplayParticipate = ParticipateResponse & {}
 
-const sortableHeader =
+export const sortableHeader =
   (headerName: string) =>
   ({ column }: { column: Column<DisplayParticipate, any> }): JSX.Element => {
     return (

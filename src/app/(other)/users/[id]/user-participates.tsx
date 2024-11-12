@@ -6,6 +6,7 @@ import { useEffect, useMemo, useState } from 'react'
 import ParticipateCreateButton from './participate-create-button'
 import ParticipateSortButton from './participate-sort-button'
 import ParticipatesCreateButton from './participates-create-button'
+import ParticipatesModifyButton from './participates-modify-button'
 import UserParticipatesTable from './user-participates-table'
 import UserRuleBookAddButton from './user-rule-book-add-button'
 import UserRuleBooksTable from './user-rule-books-table'
@@ -96,6 +97,12 @@ const UserParticipates = ({
                 scenarioType={ScenarioType.MurderMystery}
                 reload={reloadParticipates}
               />
+              <ParticipatesModifyButton
+                className='text-xs py-1'
+                participates={mdParticipates}
+                reload={reloadParticipates}
+                scenarioType={ScenarioType.MurderMystery}
+              />
             </div>
           )}
           <div className='mb-6'>
@@ -145,6 +152,12 @@ const UserParticipates = ({
                   className='text-xs py-1'
                   scenarioType={ScenarioType.Trpg}
                   reload={reloadParticipates}
+                />
+                <ParticipatesModifyButton
+                  className='text-xs py-1'
+                  participates={trParticipates}
+                  reload={reloadParticipates}
+                  scenarioType={ScenarioType.Trpg}
                 />
               </div>
             )}

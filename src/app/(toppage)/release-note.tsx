@@ -33,11 +33,12 @@ const ReleaseNoteModal = ({
     <Modal header='更新履歴' close={toggleModal}>
       <div className='text-left text-xs md:text-sm'>
         <ul className='text-xs leading-7'>
+          <li>2024/11/13 通過記録の一括編集機能追加</li>
           <li>
-            2024/11/09
+            2024/11/13
             全ての表を再精査し、要不要に応じた内容表示、ソート・フィルター機能追加
           </li>
-          <li>2024/11/09 別技術全て再構築</li>
+          <li>2024/11/13 別技術で全て再実装</li>
           <li>
             2023/11/29
             同一シナリオの通過記録を上書きでなく別の通過記録として登録できるよう仕様変更
