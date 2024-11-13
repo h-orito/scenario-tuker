@@ -143,7 +143,7 @@ const EditColumn = ({ cell, reload }: EditColumnProps) => {
   ] = useModalState()
   const handlePostSave = async (ruleBook: RuleBookResponse) => {
     reload && (await reload())
-    closeModifyModal
+    closeModifyModal()
   }
 
   // 削除系
@@ -178,7 +178,7 @@ const EditColumn = ({ cell, reload }: EditColumnProps) => {
       )}
       <DangerButton
         className='ml-1 py-1'
-        click={() => openDeleteModal(ruleBook)}
+        click={openDeleteModal}
         disabled={!canModify}
       >
         <FontAwesomeIcon icon={faTrash} />

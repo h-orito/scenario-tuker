@@ -48,7 +48,7 @@ const ScenariosSelect = ({
     option: ScenarioResponse,
     rawInput: string
   ): boolean => {
-    return option.name.includes(rawInput)
+    return option.dictionary_names.some((dn) => dn.includes(rawInput))
   }
 
   return (

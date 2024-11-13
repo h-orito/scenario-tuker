@@ -1,44 +1,48 @@
 'use client'
 
-import { fetchRuleBooks, searchRuleBooks } from '@/components/api/rule-book-api'
-import { SingleValue } from 'react-select'
-import AsyncSelect from 'react-select/async'
+import { fetchRuleBooks } from '@/components/api/rule-book-api'
+import { useEffect, useState } from 'react'
+import Select, { SingleValue } from 'react-select'
 
 type Props = {
   selected: RuleBookResponse | null
   setSelected: (value: RuleBookResponse | null) => void
 }
 const RuleBookSelect = ({ selected, setSelected }: Props) => {
-  const handleLoadOptions = async (
-    name: string
-  ): Promise<RuleBookResponse[]> => {
-    if (name == null || name === '') {
+  const [options, setOptions] = useState<RuleBookResponse[]>([])
+
+  useEffect(() => {
+    const fetch = async () => {
       const ruleBooks = await fetchRuleBooks()
-      return ruleBooks.list
-    } else {
-      const ruleBooks = await searchRuleBooks({
-        name,
-        game_system_id: null,
-        game_system_name: null,
-        rule_book_type: null
-      })
-      return ruleBooks.list
+      setOptions(
+        ruleBooks.list.map((r) => ({ ...r, game_system_id: r.game_system.id }))
+      )
     }
-  }
+    fetch()
+  }, [])
 
   const handleChange = (value: SingleValue<RuleBookResponse>) => {
     setSelected(value)
   }
 
+  const handleFilterOption = (
+    option: RuleBookResponse,
+    rawInput: string
+  ): boolean => {
+    return option.dictionary_names.some((dn) => dn.includes(rawInput))
+  }
+
   return (
-    <AsyncSelect
+    <Select
       form='__rulebook' // メニュー非表示時のEnter押下でform submitされるのを防ぐ
       isClearable
-      cacheOptions
+      options={options}
+      filterOption={(option, rawInput) =>
+        handleFilterOption(option.data, rawInput)
+      }
       value={selected}
       getOptionLabel={(gs) => gs.name}
       getOptionValue={(gs) => gs.id.toString()}
-      loadOptions={handleLoadOptions}
       placeholder='ルールブック検索'
       onChange={handleChange}
       className='flex-1'

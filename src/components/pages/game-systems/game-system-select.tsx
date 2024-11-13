@@ -1,27 +1,29 @@
 'use client'
 
-import {
-  fetchGameSystems,
-  searchGameSystems
-} from '@/components/api/game-system-api'
-import { SingleValue } from 'react-select'
-import AsyncSelect from 'react-select/async'
+import { fetchGameSystems } from '@/components/api/game-system-api'
+import { useEffect, useState } from 'react'
+import Select, { SingleValue } from 'react-select'
 
 type Props = {
   selected: GameSystem | null
   setSelected: (value: GameSystem | null) => void
 }
 const GameSystemSelect = ({ selected, setSelected }: Props) => {
-  const debouncedLoad = async (name: string) => {
-    if (name == null || name === '') {
+  const [options, setOptions] = useState<GameSystem[]>([])
+
+  useEffect(() => {
+    const fetch = async () => {
       const gameSystems = await fetchGameSystems()
-      return gameSystems.list
-    } else {
-      const gameSystems = await searchGameSystems({
-        name
-      })
-      return gameSystems.list
+      setOptions(gameSystems.list)
     }
+    fetch()
+  }, [])
+
+  const handleFilterOption = (
+    option: GameSystem,
+    rawInput: string
+  ): boolean => {
+    return option.dictionary_names.some((dn) => dn.includes(rawInput))
   }
 
   const handleChange = (value: SingleValue<GameSystem>) => {
@@ -29,15 +31,16 @@ const GameSystemSelect = ({ selected, setSelected }: Props) => {
   }
 
   return (
-    <AsyncSelect
+    <Select
       form='__gamesystem' // メニュー非表示時のEnterを押下でform submitされるのを防ぐ
       isClearable
-      cacheOptions
-      defaultOptions
+      options={options}
+      filterOption={(option, rawInput) =>
+        handleFilterOption(option.data, rawInput)
+      }
       value={selected}
       getOptionLabel={(gs) => gs.name}
       getOptionValue={(gs) => gs.id.toString()}
-      loadOptions={debouncedLoad}
       placeholder='ゲームシステム検索'
       onChange={handleChange}
       className='flex-1'

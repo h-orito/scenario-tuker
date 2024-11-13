@@ -106,7 +106,10 @@ const CreateRuleBookModal = ({
                   selected={gameSystem}
                   setSelected={setGameSystem}
                 />
-                <GameSystemCreateButton postSave={handleCreateGameSystem} />
+                <GameSystemCreateButton
+                  className='py-1'
+                  postSave={handleCreateGameSystem}
+                />
               </div>
             </div>
             <div className='my-6'>
