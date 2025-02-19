@@ -207,7 +207,7 @@ export const ImpressionColumn = ({
       : 'ネタバレなし'
     let url = 'https://twitter.com/share?text='
     url += encodeURIComponent(`${scenarioName}\n${hasSpoiler}\n`)
-    url += `&url=${encodeURIComponent(`${window.location.origin}/participates/${participate.id}`)}`
+    url += `&url=${encodeURIComponent(`${window.location.origin}/scenario-tuker/participates/${participate.id}`)}`
     url += `&hashtags=${encodeURIComponent('ScenarioTuker')}`
     window.open(url)
   }

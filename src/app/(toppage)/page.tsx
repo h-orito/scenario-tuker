@@ -29,7 +29,10 @@ const Introduction = () => {
   return (
     <>
       <div className='relative hidden md:block'>
-        <img className='h-dvh w-full object-cover' src='/images/top.webp' />
+        <img
+          className='h-dvh w-full object-cover'
+          src='/scenario-tuker/images/top.webp'
+        />
         <p className='title-font absolute right-5 top-[20%] text-right text-[5vw] text-white'>
           Scenario Tuker
         </p>
@@ -44,7 +47,10 @@ const Introduction = () => {
         </p>
       </div>
       <div className='relative md:hidden'>
-        <img className='h-dvh w-full object-cover' src='/images/top-sm.webp' />
+        <img
+          className='h-dvh w-full object-cover'
+          src='/scenario-tuker/images/top-sm.webp'
+        />
         <p className='title-font absolute right-2.5 top-[10%] text-right text-4xl text-white'>
           Scenario Tuker
         </p>

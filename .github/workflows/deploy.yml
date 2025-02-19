@@ -1,0 +1,41 @@
+name: delivery
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feature/oci
+      - main
+jobs:
+  delivery:
+    runs-on: [self-hosted]
+    env:
+      IMAGE_NAME: scenario-tuker-frontend
+    steps:
+      - name: setup
+        run: |
+          docker image prune --force
+
+      - name: clone repository
+        uses: actions/checkout@v2
+
+      - name: build
+        run: >
+          docker build
+          --build-arg FIREBASE_API_KEY=${{ secrets.FIREBASE_API_KEY }} 
+          --build-arg FIREBASE_AUTH_DOMAIN=${{ secrets.FIREBASE_AUTH_DOMAIN }} 
+          --build-arg FIREBASE_DATABASEURL=${{ secrets.FIREBASE_DATABASEURL }} 
+          --build-arg FIREBASE_PROJECTID=${{ secrets.FIREBASE_PROJECTID }} 
+          --build-arg FIREBASE_STORAGEBUCKET=${{ secrets.FIREBASE_STORAGEBUCKET }} 
+          --build-arg FIREBASE_MESSAGINGSENDERID=${{ secrets.FIREBASE_MESSAGINGSENDERID }} 
+          --build-arg FIREBASE_APPID=${{ secrets.FIREBASE_APPID }} 
+          --build-arg API_BASE=${{ secrets.API_BASE }} 
+          --build-arg ENV=${{ secrets.ENV }}
+          -t ghcr.io/h-orito/${{ env.IMAGE_NAME }}:latest .
+      - name: deploy
+        run: |
+          docker login ghcr.io -u h-orito -p ${{ secrets.PACKAGE_PAT }}
+          docker push ghcr.io/h-orito/${{ env.IMAGE_NAME }}
+      - name: release
+        run: |
+          kubectl delete pod -l app=${{ env.IMAGE_NAME }}
