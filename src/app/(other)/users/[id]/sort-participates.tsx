@@ -54,6 +54,7 @@ const SortParticipatesModal = ({
       await putParticipates({
         id: p.id,
         scenario_id: p.scenario?.id ?? 0,
+        game_system_id: p.game_system?.id ?? null,
         rule_book_ids: p.rule_books.map((r) => r.id),
         role_names: p.role_names,
         impression: p.impression,
@@ -319,8 +320,10 @@ const getSortFn = (
       }
     case 'game_system':
       return (a, b) => {
-        const aName = a.scenario?.game_system?.name ?? ''
-        const bName = b.scenario?.game_system?.name ?? ''
+        const aName =
+          a.scenario?.game_systems?.map((gs) => gs.name)?.join() ?? ''
+        const bName =
+          b.scenario?.game_systems?.map((gs) => gs.name)?.join() ?? ''
         return isAsc ? aName.localeCompare(bName) : bName.localeCompare(aName)
       }
     case 'role':

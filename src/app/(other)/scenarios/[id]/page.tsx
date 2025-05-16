@@ -52,11 +52,16 @@ const ScenariosIdPage = async ({ params }: { params: { id: string } }) => {
           <ScenarioModifyButton scenario={scenario} />
         </h1>
         <p>{scenarioType.label}</p>
-        {scenario.game_system && (
+        {scenario.game_systems && scenario.game_systems.length > 0 && (
           <p className='mt-6'>
-            <Link href={`/game-systems/${scenario.game_system.id}`}>
-              {scenario.game_system.name}
-            </Link>
+            {scenario.game_systems.map((gameSystem, idx) => (
+              <span key={idx}>
+                <Link href={`/game-systems/${gameSystem.id}`}>
+                  {gameSystem.name}
+                </Link>
+                {idx < scenario.game_systems.length - 1 && '、'}
+              </span>
+            ))}
           </p>
         )}
         <ScenarioUrl scenario={scenario} />
