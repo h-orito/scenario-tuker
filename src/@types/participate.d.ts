@@ -1,6 +1,7 @@
 type Participate = {
   id: number | null
   scenario_id: number
+  game_system_id: number | null
   user_id: number
   rule_book_ids: Array<number>
   role_names: Array<string>

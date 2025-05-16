@@ -6,13 +6,15 @@ import { useEffect, useMemo, useState } from 'react'
 import Select, { SingleValue } from 'react-select'
 
 type Props = {
-  gameSystemId: number | null
+  gameSystemId?: number | null
+  gameSystemIds?: number[] | null
   scenarioType: ScenarioType
   selected: ScenarioResponse | null
   setSelected: (value: ScenarioResponse | null) => void
 }
 const ScenarioSelect = ({
   gameSystemId,
+  gameSystemIds,
   scenarioType,
   selected,
   setSelected
@@ -20,9 +22,17 @@ const ScenarioSelect = ({
   const [options, setOptions] = useState<ScenarioResponse[]>([])
 
   const filteredOptions = useMemo(() => {
-    if (!gameSystemId) return options
-    return options.filter((o) => o.game_system?.id === gameSystemId)
-  }, [options, gameSystemId])
+    if (!!gameSystemId) {
+      return options.filter((o) =>
+        o.game_systems.some((gs) => gs.id === gameSystemId)
+      )
+    } else if (!!gameSystemIds) {
+      return options.filter((o) =>
+        o.game_systems.every((gs) => gameSystemIds.includes(gs.id))
+      )
+    }
+    return options
+  }, [options, gameSystemId, gameSystemIds])
 
   const handleChange = (value: SingleValue<ScenarioResponse>) => {
     setSelected(value)
@@ -61,7 +71,11 @@ const ScenarioSelect = ({
       }
       value={selected}
       getOptionLabel={(s) =>
-        `${s.name}${s.game_system?.name ? `（${s.game_system.name}）` : ''}`
+        `${s.name}${
+          s.game_systems && s.game_systems.length > 0
+            ? `（${s.game_systems.map((gs) => gs.name).join('、')}）`
+            : ''
+        }`
       }
       getOptionValue={(s) => s.id.toString()}
       placeholder='シナリオ検索'

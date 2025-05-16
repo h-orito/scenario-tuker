@@ -14,7 +14,7 @@ import RadioGroup from '@/components/form/radio-group'
 import Modal from '@/components/modal/modal'
 import NormalNotification from '@/components/notification/normal-notification'
 import AuthorsSelect from '@/components/pages/authors/authors-select'
-import GameSystemSelect from '@/components/pages/game-systems/game-system-select'
+import GameSystemsSelect from '@/components/pages/game-systems/game-systems-select'
 import ScenarioDictionaryWords from '@/components/pages/scenarios/form/scenario-dictionary-words'
 import { ScenarioFormInput } from '@/components/pages/scenarios/form/scenario-form-input'
 import ScenarioName from '@/components/pages/scenarios/form/scenario-name'
@@ -42,7 +42,7 @@ const CreateScenarioModal = ({
     )
   }, [scenarioType])
   const [type, setType] = useState<string>(initialType)
-  const [gameSystem, setGameSystem] = useState<GameSystem | null>(null)
+  const [gameSystems, setGameSystems] = useState<GameSystem[]>([])
   const [authors, setAuthors] = useState<Author[]>([])
   const [gameMasterRequirement, setGameMasterRequirement] = useState<string>(
     GameMasterRequirementType.Empty.value
@@ -76,10 +76,10 @@ const CreateScenarioModal = ({
         dictionary_names: dictionaryNames,
         type: type,
         url: data.url.trim(),
-        game_system_id:
+        game_system_ids:
           type === ScenarioType.MurderMystery.value
-            ? null
-            : (gameSystem?.id ?? null),
+            ? []
+            : gameSystems.map((gs) => gs.id),
         author_ids: authors.map((a) => a.id),
         game_master_requirement: gameMasterRequirement,
         player_num_min:
@@ -89,14 +89,14 @@ const CreateScenarioModal = ({
         required_hours: data.playTime === '' ? null : parseInt(data.playTime)
       })
     },
-    [postAuthor, type, gameSystem, authors, gameMasterRequirement]
+    [postAuthor, type, gameSystems, authors, gameMasterRequirement]
   )
 
   const existsScenario = useCallback(
     async (name: string) => {
       const scenarios = await searchScenarios({
         name,
-        game_system_id: gameSystem?.id ?? null,
+        game_system_id: null,
         game_system_name: null,
         type: type,
         author_name: null,
@@ -124,7 +124,7 @@ const CreateScenarioModal = ({
   }
 
   const handleCreateGameSystem = (gameSystem: GameSystem) => {
-    setGameSystem(gameSystem)
+    setGameSystems(gameSystems.concat(gameSystem))
   }
 
   const handneCreateAuthor = async (author: Author) => {
@@ -162,9 +162,9 @@ const CreateScenarioModal = ({
               <div className='my-6'>
                 <FormLabel label='ゲームシステム' required />
                 <div className='flex'>
-                  <GameSystemSelect
-                    selected={gameSystem}
-                    setSelected={setGameSystem}
+                  <GameSystemsSelect
+                    selected={gameSystems}
+                    setSelected={setGameSystems}
                   />
                   <GameSystemCreateButton
                     className='ml-1 py-0'

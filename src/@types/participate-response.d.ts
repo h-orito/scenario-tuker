@@ -1,6 +1,7 @@
 type ParticipateResponse = {
   id: number
   scenario: ScenarioResponse
+  game_system: GameSystem | null
   user: User
   rule_books: Array<RuleBook>
   role_names: Array<string>

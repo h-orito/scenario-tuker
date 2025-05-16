@@ -4,7 +4,7 @@ type Scenario = {
   dictionary_names: Array<string>
   type: string
   url: string | null
-  game_system_id: number | null
+  game_system_ids: Array<number>
   author_ids: Array<number>
   game_master_requirement: string | null
   player_num_min: number | null

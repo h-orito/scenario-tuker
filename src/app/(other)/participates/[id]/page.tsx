@@ -123,10 +123,10 @@ const ParticipateIdPage = ({ params }: { params: { id: string } }) => {
         <div className='my-6'>
           <p>{scenarioType.label}</p>
         </div>
-        {participate.scenario.game_system && (
+        {participate.game_system && (
           <p className='mt-6'>
-            <Link href={`/game-systems/${participate.scenario.game_system.id}`}>
-              {participate.scenario.game_system.name}
+            <Link href={`/game-systems/${participate.game_system.id}`}>
+              {participate.game_system.name}
             </Link>
           </p>
         )}

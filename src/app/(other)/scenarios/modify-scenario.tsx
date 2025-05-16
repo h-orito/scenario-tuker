@@ -14,14 +14,14 @@ import RadioGroup from '@/components/form/radio-group'
 import Modal from '@/components/modal/modal'
 import NormalNotification from '@/components/notification/normal-notification'
 import AuthorsSelect from '@/components/pages/authors/authors-select'
-import GameSystemSelect from '@/components/pages/game-systems/game-system-select'
+import GameSystemsSelect from '@/components/pages/game-systems/game-systems-select'
 import ScenarioDictionaryWords from '@/components/pages/scenarios/form/scenario-dictionary-words'
 import { ScenarioFormInput } from '@/components/pages/scenarios/form/scenario-form-input'
 import ScenarioName from '@/components/pages/scenarios/form/scenario-name'
 import ScenarioPlayTime from '@/components/pages/scenarios/form/scenario-play-time'
 import ScenarioPlayerCount from '@/components/pages/scenarios/form/scenario-player-count'
 import ScenarioUrl from '@/components/pages/scenarios/form/scenario-url'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import AuthorCreateButton from '../authors/[id]/author-create-button'
 import GameSystemCreateButton from '../game-systems/[id]/game-system-create-button'
@@ -36,10 +36,15 @@ const ModifyScenarioModal = ({
   postSave?: (scenario: ScenarioResponse) => void
 }) => {
   const [type, setType] = useState<string>(scenario.type)
-  const [gameSystem, setGameSystem] = useState<GameSystem | null>(null)
+  const [gameSystems, setGameSystems] = useState<GameSystem[]>(
+    scenario.game_systems
+  )
   const [authors, setAuthors] = useState<Author[]>([])
   const [gameMasterRequirement, setGameMasterRequirement] = useState<string>(
     GameMasterRequirementType.Empty.value
+  )
+  const [initialGameSystems, setInitialGameSystems] = useState<GameSystem[]>(
+    scenario.game_systems
   )
 
   useEffect(() => {
@@ -64,7 +69,15 @@ const ModifyScenarioModal = ({
         playTime: scenario.required_hours?.toString() ?? ''
       }
     })
-  const canSubmit: boolean = !formState.isSubmitting
+  const canSubmit = useMemo(() => {
+    return (
+      !formState.isSubmitting &&
+      (scenario.type !== ScenarioType.Trpg.value ||
+        initialGameSystems.every((igs) =>
+          gameSystems.some((gs) => gs.id === igs.id)
+        ))
+    )
+  }, [formState.isSubmitting, initialGameSystems, gameSystems, scenario.type])
 
   const save = useCallback(
     async (data: ScenarioFormInput) => {
@@ -83,10 +96,10 @@ const ModifyScenarioModal = ({
         dictionary_names: dictionaryNames,
         type: type,
         url: data.url.trim(),
-        game_system_id:
+        game_system_ids:
           type === ScenarioType.MurderMystery.value
-            ? null
-            : (gameSystem?.id ?? null),
+            ? []
+            : gameSystems.map((gs) => gs.id),
         author_ids: authors.map((a) => a.id),
         game_master_requirement: gameMasterRequirement,
         player_num_min:
@@ -96,14 +109,14 @@ const ModifyScenarioModal = ({
         required_hours: data.playTime === '' ? null : parseInt(data.playTime)
       })
     },
-    [postAuthor, type, gameSystem, authors, gameMasterRequirement]
+    [postAuthor, type, gameSystems, authors, gameMasterRequirement]
   )
 
   const existsScenario = useCallback(
     async (name: string) => {
       const scenarios = await searchScenarios({
         name,
-        game_system_id: gameSystem?.id ?? null,
+        game_system_id: null,
         game_system_name: null,
         type: type,
         author_name: null,
@@ -131,7 +144,7 @@ const ModifyScenarioModal = ({
   }
 
   const handleCreateGameSystem = (gameSystem: GameSystem) => {
-    setGameSystem(gameSystem)
+    setGameSystems(gameSystems.concat(gameSystem))
   }
 
   const handneCreateAuthor = async (author: Author) => {
@@ -168,10 +181,14 @@ const ModifyScenarioModal = ({
             {type === ScenarioType.Trpg.value && (
               <div className='my-6'>
                 <FormLabel label='ゲームシステム' required />
+                <NormalNotification className='text-xs p-1 my-1'>
+                  <p>追加のみ可能です。</p>
+                </NormalNotification>
                 <div className='flex'>
-                  <GameSystemSelect
-                    selected={gameSystem}
-                    setSelected={setGameSystem}
+                  <GameSystemsSelect
+                    isClearable={false}
+                    selected={gameSystems}
+                    setSelected={setGameSystems}
                   />
                   <GameSystemCreateButton
                     className='ml-1 py-0'

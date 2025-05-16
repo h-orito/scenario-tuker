@@ -7,8 +7,8 @@ import {
   convertToDisplayScenarios,
   DisplayScenario,
   GameMasterColumnDef,
-  GameSystemColumn,
-  GameSystemColumnDef,
+  GameSystemsColumn,
+  GameSystemsColumnDef,
   ParticipateCountColumnDef,
   PlayerNumColumnDef,
   RequiredHoursColumnDef,
@@ -40,7 +40,7 @@ const TrendScenariosTable = ({ scenarios, type }: Props) => {
   const columns: ColumnDef<DisplayScenario, any>[] = useMemo(() => {
     let list = [ScenarioNameColumnDef]
     if (isTrpg) {
-      list = list.concat([GameSystemColumnDef])
+      list = list.concat([GameSystemsColumnDef])
     }
     return list.concat([
       AuthorsColumnDef,
@@ -98,7 +98,7 @@ const TrendScenariosTable = ({ scenarios, type }: Props) => {
                 return (
                   <tr key={row.id}>
                     <ScenarioNameColumn cell={cells[0]} />
-                    {isTrpg && <GameSystemColumn cell={cells[1]} />}
+                    {isTrpg && <GameSystemsColumn cell={cells[1]} />}
                     <AuthorsColumn cell={cells[baseIndex + 1]} />
                     <ScenariosTableSimpleColumn cell={cells[baseIndex + 2]} />
                     <ScenariosTableSimpleColumn cell={cells[baseIndex + 3]} />

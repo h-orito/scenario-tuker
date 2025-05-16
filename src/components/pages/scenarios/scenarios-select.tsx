@@ -21,7 +21,9 @@ const ScenariosSelect = ({
 
   const filteredOptions = useMemo(() => {
     if (!gameSystemId) return options
-    return options.filter((o) => o.game_system?.id === gameSystemId)
+    return options.filter((o) =>
+      o.game_systems.some((gs) => gs.id === gameSystemId)
+    )
   }, [options, gameSystemId])
 
   const handleChange = (value: MultiValue<ScenarioResponse>) => {
@@ -62,7 +64,7 @@ const ScenariosSelect = ({
       }
       value={selected}
       getOptionLabel={(s) =>
-        `${s.name}${s.game_system?.name ? `（${s.game_system.name}）` : ''}`
+        `${s.name}${s.game_systems && s.game_systems.length > 0 ? `（${s.game_systems.map((gs) => gs.name).join('、')}）` : ''}`
       }
       getOptionValue={(s) => s.id.toString()}
       placeholder='シナリオ検索'

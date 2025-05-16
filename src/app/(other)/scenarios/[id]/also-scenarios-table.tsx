@@ -5,7 +5,7 @@ import {
   convertToDisplayScenarios,
   DisplayScenario,
   GameMasterColumnDef,
-  GameSystemColumnDef,
+  GameSystemsColumnDef,
   ParticipateCountColumnDef,
   PlayerNumColumnDef,
   RequiredHoursColumnDef,
@@ -39,7 +39,7 @@ const AlsoScenariosTable = (props: Props) => {
   const columns: ColumnDef<DisplayScenario, any>[] = [
     ScenarioNameColumnDef,
     TypeColumnDef,
-    GameSystemColumnDef,
+    GameSystemsColumnDef,
     AuthorsColumnDef,
     GameMasterColumnDef,
     PlayerNumColumnDef,

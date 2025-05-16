@@ -4,7 +4,7 @@ import { ScenarioType } from '@/@types/scenario-type'
 import {
   DisplayParticipate,
   GameMasterNameColumnDef,
-  GameSystemColumnDef,
+  GameSystemsColumnDef,
   ImpressionColumnDef,
   MemoColumnDef,
   ParticipatesTableColumn,
@@ -53,7 +53,7 @@ const UserParticipatesTable = ({
   const columns: ColumnDef<DisplayParticipate, any>[] = useMemo(() => {
     let columns = [ScenarioNameColumnDef]
     if (type === ScenarioType.Trpg) {
-      columns = columns.concat([GameSystemColumnDef, RuleBooksColumnDef])
+      columns = columns.concat([GameSystemsColumnDef, RuleBooksColumnDef])
     }
     columns = columns.concat([
       RoleColumnDef,

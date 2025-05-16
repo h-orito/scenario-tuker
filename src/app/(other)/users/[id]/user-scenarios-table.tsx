@@ -6,7 +6,7 @@ import {
   convertToDisplayScenarios,
   DisplayScenario,
   GameMasterColumnDef,
-  GameSystemColumnDef,
+  GameSystemsColumnDef,
   PlayerNumColumnDef,
   RequiredHoursColumnDef,
   ScenarioNameColumnDef,
@@ -44,7 +44,7 @@ const UserScenariosTable = (props: Props) => {
   const columns: ColumnDef<DisplayScenario, any>[] = useMemo(() => {
     let base = [ScenarioNameColumnDef]
     if (type === ScenarioType.Trpg) {
-      base = base.concat(GameSystemColumnDef)
+      base = base.concat(GameSystemsColumnDef)
     }
     base = base.concat([
       AuthorsColumnDef,

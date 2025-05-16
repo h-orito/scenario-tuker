@@ -21,7 +21,7 @@ import {
   AuthorsColumnDef,
   convertToDisplayScenarios,
   DisplayScenario,
-  GameSystemColumnDef,
+  GameSystemsColumnDef,
   ScenarioNameColumnDef,
   ScenariosTableColumn
 } from './scenarios-table'
@@ -77,7 +77,7 @@ const ScenarioSearch = ({
       ScenarioNameColumnDef
     ]
     if (scenarioType === ScenarioType.Trpg) {
-      list.push(GameSystemColumnDef)
+      list.push(GameSystemsColumnDef)
     }
     list.push(AuthorsColumnDef)
     return list

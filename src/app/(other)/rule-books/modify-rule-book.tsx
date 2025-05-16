@@ -10,13 +10,11 @@ import FormLabel from '@/components/form/form-label'
 import RadioGroup from '@/components/form/radio-group'
 import Modal from '@/components/modal/modal'
 import NormalNotification from '@/components/notification/normal-notification'
-import GameSystemSelect from '@/components/pages/game-systems/game-system-select'
 import RuleBookDictionaryWords from '@/components/pages/rule-books/form/rule-book-dictionary-words'
 import { RuleBookFormInput } from '@/components/pages/rule-books/form/rule-book-form-input'
 import RuleBookName from '@/components/pages/rule-books/form/rule-book-name'
 import { useCallback, useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
-import GameSystemCreateButton from '../game-systems/[id]/game-system-create-button'
 
 const ModifyRuleBookModal = ({
   ruleBook,
@@ -27,9 +25,6 @@ const ModifyRuleBookModal = ({
   toggleModal: (e: any) => void
   postSave?: (ruleBook: RuleBookResponse) => void
 }) => {
-  const [gameSystem, setGameSystem] = useState<GameSystem | null>(
-    ruleBook.game_system
-  )
   const [type, setType] = useState<string>(ruleBook.type)
   const { control, formState, handleSubmit } = useForm<RuleBookFormInput>({
     defaultValues: {
@@ -37,7 +32,7 @@ const ModifyRuleBookModal = ({
       dictionaryWords: ruleBook.dictionary_names.join('\n')
     }
   })
-  const canSubmit: boolean = !formState.isSubmitting && gameSystem !== null
+  const canSubmit: boolean = !formState.isSubmitting
 
   const save = useCallback(
     async (data: RuleBookFormInput) => {
@@ -56,7 +51,7 @@ const ModifyRuleBookModal = ({
         name,
         dictionary_names: dictionaryNames,
         type,
-        game_system_id: gameSystem!.id
+        game_system_id: ruleBook.game_system.id
       })
     },
     [postRuleBook]
@@ -66,7 +61,7 @@ const ModifyRuleBookModal = ({
     async (name: string) => {
       const ruleBooks = await searchRuleBooks({
         name: name,
-        game_system_id: gameSystem?.id ?? null,
+        game_system_id: ruleBook.game_system.id,
         game_system_name: null,
         rule_book_type: null
       })
@@ -90,10 +85,6 @@ const ModifyRuleBookModal = ({
     }
   }
 
-  const handleCreateGameSystem = (gameSystem: GameSystem) => {
-    setGameSystem(gameSystem)
-  }
-
   return (
     <Modal close={toggleModal} hideFooter>
       <>
@@ -101,7 +92,7 @@ const ModifyRuleBookModal = ({
         <div>
           <form onSubmit={handleSubmit(onSubmit)} onKeyDown={handleKeyDown}>
             <div className='my-6'>
-              <FormLabel label='ゲームシステム名' required />
+              <FormLabel label='ルールブック名' required />
               <RuleBookName control={control} existsRuleBook={existsRuleBook} />
             </div>
             <div className='my-6'>
@@ -112,16 +103,9 @@ const ModifyRuleBookModal = ({
               <RuleBookDictionaryWords control={control} />
             </div>
             <div className='my-6'>
-              <FormLabel label='ゲームシステム' required />
-              <div className='flex'>
-                <GameSystemSelect
-                  selected={gameSystem}
-                  setSelected={setGameSystem}
-                />
-                <GameSystemCreateButton
-                  className='py-1'
-                  postSave={handleCreateGameSystem}
-                />
+              <FormLabel label='ゲームシステム' />
+              <div className='pt-2'>
+                <p>{ruleBook.game_system.name}</p>
               </div>
             </div>
             <div className='my-6'>

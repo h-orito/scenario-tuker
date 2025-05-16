@@ -8,7 +8,7 @@ import {
   convertToDisplayScenarios,
   DisplayScenario,
   GameMasterColumnDef,
-  GameSystemColumnDef,
+  GameSystemsColumnDef,
   ParticipateCountColumnDef,
   PlayerNumColumnDef,
   RequiredHoursColumnDef,
@@ -51,7 +51,7 @@ const ScenariosTable = (props: ScenariosTableProps) => {
     () => [
       ScenarioNameColumnDef,
       TypeColumnDef,
-      GameSystemColumnDef,
+      GameSystemsColumnDef,
       AuthorsColumnDef,
       GameMasterColumnDef,
       PlayerNumColumnDef,

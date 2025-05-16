@@ -61,6 +61,7 @@ const ModifyParticipatesModal = ({
       await putParticipates({
         id: p.id,
         scenario_id: p.scenario.id,
+        game_system_id: p.game_system?.id ?? null,
         rule_book_ids: p.rule_books.map((rb) => rb.id),
         role_names: p.role_names,
         impression: {
@@ -105,7 +106,7 @@ const ModifyParticipatesModal = ({
   const columns: ColumnDef<DisplayParticipate, any>[] = useMemo(() => {
     let columns = [scenarioNameColumnDef]
     if (scenarioType === ScenarioType.Trpg) {
-      columns = columns.concat([gameSystemColumnDef, ruleBooksColumnDef])
+      columns = columns.concat([gameSystemsColumnDef, ruleBooksColumnDef])
     }
     columns = columns.concat([
       roleNameColumnDef(handleModifyParticipates, skipAutoResetPageIndex),
@@ -308,18 +309,24 @@ const scenarioNameColumnDef: ColumnDef<DisplayParticipate, any> = {
   }
 }
 
-const gameSystemColumnDef: ColumnDef<DisplayParticipate, any> = {
-  id: 'game_system',
-  accessorFn: (row) => row.scenario.game_system?.name ?? '',
+const gameSystemsColumnDef: ColumnDef<DisplayParticipate, any> = {
+  id: 'game_systems',
+  accessorFn: (row) =>
+    row.scenario.game_systems?.map((gs) => gs.name)?.join('、') ?? '',
   header: sortableHeader('ゲームシステム'),
   sortingFn: (a, b) => {
-    const aN = a.original.scenario.game_system?.name ?? ''
-    const bN = b.original.scenario.game_system?.name ?? ''
+    const aN =
+      a.original.scenario.game_systems?.map((gs) => gs.name)?.join('、') ?? ''
+    const bN =
+      b.original.scenario.game_systems?.map((gs) => gs.name)?.join('、') ?? ''
     return aN.localeCompare(bN)
   },
   filterFn: (row, _, filterValue) => {
     return (
-      row.original.scenario.game_system?.name.includes(filterValue) ?? false
+      row.original.scenario.game_systems
+        ?.map((gs) => gs.name)
+        ?.join('、')
+        .includes(filterValue) ?? false
     )
   }
 }

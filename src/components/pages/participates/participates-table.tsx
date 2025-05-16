@@ -96,19 +96,20 @@ export const ParticipatesTableSimpleColumn = ({
   )
 }
 
-export const GameSystemColumn = ({
+export const GameSystemsColumn = ({
   cell
 }: {
   cell: Cell<DisplayParticipate, unknown>
 }) => {
-  const gameSystem = cell.row.original.scenario.game_system
+  const gameSystems = cell.row.original.scenario.game_systems
   return (
     <ParticipatesTableColumn cell={cell} className='text-left'>
-      {gameSystem ? (
-        <Link href={`/game-systems/${gameSystem.id}`}>{gameSystem.name}</Link>
-      ) : (
-        ''
-      )}
+      {gameSystems.map((gameSystem, idx) => (
+        <span key={idx}>
+          <Link href={`/game-systems/${gameSystem.id}`}>{gameSystem.name}</Link>
+          {gameSystems.length - 1 !== idx && <>、</>}
+        </span>
+      ))}
     </ParticipatesTableColumn>
   )
 }
@@ -261,20 +262,25 @@ export const ScenarioNameColumnDef: ColumnDef<DisplayParticipate, any> = {
     return row.original.scenario.name.includes(filterValue)
   }
 }
-export const GameSystemColumnDef: ColumnDef<DisplayParticipate, any> = {
+export const GameSystemsColumnDef: ColumnDef<DisplayParticipate, any> = {
   accessorKey: 'game_system',
   header: sortableHeader('ゲームシステム'),
-  cell: ({ cell }) => <GameSystemColumn cell={cell} />,
+  cell: ({ cell }) => <GameSystemsColumn cell={cell} />,
   sortingFn: (rowA: Row<DisplayParticipate>, rowB: Row<DisplayParticipate>) => {
     return (
-      rowA.original.scenario?.game_system?.name.localeCompare(
-        rowB.original.scenario.game_system?.name ?? ''
-      ) ?? 0
+      rowA.original.scenario?.game_systems
+        ?.map((gs) => gs.name)
+        .join()
+        .localeCompare(
+          rowB.original.scenario.game_systems?.map((gs) => gs.name).join() ?? ''
+        ) ?? 0
     )
   },
   filterFn: (row: Row<ParticipateResponse>, _: string, filterValue: string) => {
     return (
-      row.original.scenario.game_system?.name?.includes(filterValue) ?? false
+      row.original.scenario.game_systems
+        .map((gs) => gs.name)
+        ?.includes(filterValue) ?? false
     )
   }
 }

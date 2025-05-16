@@ -42,6 +42,7 @@ export const deleteParticipates = async (id: number): Promise<void> => {
 type ParticipatePostRequest = {
   id?: number
   scenario_id: number
+  game_system_id: number | null
   rule_book_ids: Array<number>
   role_names: Array<string>
   disp_order?: number

@@ -92,7 +92,7 @@ const CreateRuleBookModal = ({
         <div>
           <form onSubmit={handleSubmit(onSubmit)} onKeyDown={handleKeyDown}>
             <div className='my-6'>
-              <FormLabel label='ゲームシステム名' required />
+              <FormLabel label='ルールブック名' required />
               <RuleBookName control={control} existsRuleBook={existsRuleBook} />
             </div>
             <div className='my-6'>

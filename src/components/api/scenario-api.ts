@@ -44,7 +44,7 @@ type ScenarioPostRequest = {
   dictionary_names: string[]
   type: string
   url: string
-  game_system_id: number | null
+  game_system_ids: number[]
   author_ids: number[]
   game_master_requirement: string | null
   player_num_min: number | null

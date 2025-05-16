@@ -1,8 +1,8 @@
+import { ScenarioType } from '@/@types/scenario-type'
+import UserInfo from '@/app/(toppage)/user-info'
+import PrimaryButton from '@/components/button/primary-button'
 import { Metadata } from 'next'
 import Link from 'next/link'
-import { ScenarioType } from '@/@types/scenario-type'
-import PrimaryButton from '@/components/button/primary-button'
-import UserInfo from '@/app/(toppage)/user-info'
 import ReleaseNote from './release-note'
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -92,9 +92,11 @@ const Users = () => {
         <p className='mb-6 text-xs'>
           ユーザーを検索して通過したシナリオを閲覧することができます。
         </p>
-        <Link href='/users'>
-          <PrimaryButton>ユーザー検索</PrimaryButton>
-        </Link>
+        <div className='flex justify-center'>
+          <Link href='/users'>
+            <PrimaryButton>ユーザー検索</PrimaryButton>
+          </Link>
+        </div>
       </div>
     </div>
   )
@@ -113,14 +115,16 @@ const MurderMystery = () => {
             <br />
             そのシナリオを通過した人がよく通過している他のシナリオも確認できます。
           </p>
-          <Link
-            href={{
-              pathname: '/scenarios',
-              query: { type: ScenarioType.MurderMystery.value }
-            }}
-          >
-            <PrimaryButton>マーダーミステリーシナリオ一覧</PrimaryButton>
-          </Link>
+          <div className='flex justify-center'>
+            <Link
+              href={{
+                pathname: '/scenarios',
+                query: { type: ScenarioType.MurderMystery.value }
+              }}
+            >
+              <PrimaryButton>マーダーミステリーシナリオ一覧</PrimaryButton>
+            </Link>
+          </div>
         </div>
         <div className='flex flex-col justify-end gap-4'>
           <p className='text-xs'>
@@ -130,14 +134,16 @@ const MurderMystery = () => {
             <br />
             そのシナリオを通過した人がよく通過している他のシナリオも確認できます。
           </p>
-          <Link
-            href={{
-              pathname: '/scenarios/trend',
-              query: { type: ScenarioType.MurderMystery.value }
-            }}
-          >
-            <PrimaryButton>人気のマーダーミステリーシナリオ</PrimaryButton>
-          </Link>
+          <div className='flex justify-center'>
+            <Link
+              href={{
+                pathname: '/scenarios/trend',
+                query: { type: ScenarioType.MurderMystery.value }
+              }}
+            >
+              <PrimaryButton>人気のマーダーミステリーシナリオ</PrimaryButton>
+            </Link>
+          </div>
         </div>
       </div>
     </div>
@@ -157,14 +163,16 @@ const Trpg = () => {
             <br />
             そのシナリオを通過した人がよく通過している他のシナリオも確認できます。
           </p>
-          <Link
-            href={{
-              pathname: 'scenarios',
-              query: { type: ScenarioType.Trpg.value }
-            }}
-          >
-            <PrimaryButton>TRPGシナリオ一覧</PrimaryButton>
-          </Link>
+          <div className='flex justify-center'>
+            <Link
+              href={{
+                pathname: 'scenarios',
+                query: { type: ScenarioType.Trpg.value }
+              }}
+            >
+              <PrimaryButton>TRPGシナリオ一覧</PrimaryButton>
+            </Link>
+          </div>
         </div>
         <div className='flex flex-col justify-end gap-4'>
           <p className='text-xs'>
@@ -174,14 +182,16 @@ const Trpg = () => {
             <br />
             そのシナリオを通過した人がよく通過している他のシナリオも確認できます。
           </p>
-          <Link
-            href={{
-              pathname: '/scenarios/trend',
-              query: { type: ScenarioType.Trpg.value }
-            }}
-          >
-            <PrimaryButton>人気のTRPGシナリオ</PrimaryButton>
-          </Link>
+          <div className='flex justify-center'>
+            <Link
+              href={{
+                pathname: '/scenarios/trend',
+                query: { type: ScenarioType.Trpg.value }
+              }}
+            >
+              <PrimaryButton>人気のTRPGシナリオ</PrimaryButton>
+            </Link>
+          </div>
         </div>
         <div className='flex flex-col justify-end gap-4'>
           <p className='text-xs'>
@@ -189,9 +199,11 @@ const Trpg = () => {
             <br />
             ルールブック詳細では、そのルールブックが使用されている通過記録も確認できます。
           </p>
-          <Link href='/rule-books'>
-            <PrimaryButton>ルールブック一覧</PrimaryButton>
-          </Link>
+          <div className='flex justify-center'>
+            <Link href='/rule-books'>
+              <PrimaryButton>ルールブック一覧</PrimaryButton>
+            </Link>
+          </div>
         </div>
         <div className='flex flex-col justify-end gap-4'>
           <p className='text-xs'>
@@ -199,9 +211,11 @@ const Trpg = () => {
             <br />
             ゲームシステム詳細では、そのゲームシステムを利用したシナリオも確認できます。
           </p>
-          <Link href='/game-systems'>
-            <PrimaryButton>ゲームシステム一覧</PrimaryButton>
-          </Link>
+          <div className='flex justify-center'>
+            <Link href='/game-systems'>
+              <PrimaryButton>ゲームシステム一覧</PrimaryButton>
+            </Link>
+          </div>
         </div>
       </div>
     </div>
@@ -218,9 +232,11 @@ const Author = () => {
           <br />
           シナリオ製作者詳細では、その製作者が製作したシナリオも確認できます。
         </p>
-        <Link href='/authors'>
-          <PrimaryButton>シナリオ製作者一覧</PrimaryButton>
-        </Link>
+        <div className='flex justify-center'>
+          <Link href='/authors'>
+            <PrimaryButton>シナリオ製作者一覧</PrimaryButton>
+          </Link>
+        </div>
       </div>
     </div>
   )

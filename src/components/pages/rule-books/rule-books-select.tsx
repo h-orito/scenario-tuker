@@ -7,10 +7,16 @@ import Select, { MultiValue } from 'react-select'
 
 type Props = {
   gameSystemId: number | null
+  gameSystemIds?: number[] | null
   selected: RuleBookResponse[]
   setSelected: (value: RuleBookResponse[]) => void
 }
-const RuleBooksSelect = ({ gameSystemId, selected, setSelected }: Props) => {
+const RuleBooksSelect = ({
+  gameSystemId,
+  gameSystemIds,
+  selected,
+  setSelected
+}: Props) => {
   const [options, setOptions] = useState<RuleBookResponse[]>([])
 
   const handleChange = (value: MultiValue<RuleBookResponse>) => {
@@ -28,9 +34,13 @@ const RuleBooksSelect = ({ gameSystemId, selected, setSelected }: Props) => {
   }, [])
 
   const filteredOptions = useMemo(() => {
-    if (!gameSystemId) return options
-    return options.filter((o) => o.game_system.id === gameSystemId)
-  }, [gameSystemId, options])
+    if (!!gameSystemId) {
+      return options.filter((o) => o.game_system.id === gameSystemId)
+    } else if (!!gameSystemIds) {
+      return options.filter((o) => gameSystemIds.includes(o.game_system.id))
+    }
+    return options
+  }, [gameSystemId, gameSystemIds, options])
 
   const handleFilterOption = (
     option: RuleBookResponse,

@@ -49,6 +49,9 @@ const RemoveScenarioArea = ({
   const [errorMessage, setErrorMesssage] = useState<string | null>(null)
   const [submitting, setSubmitting] = useState(false)
   const del = async (): Promise<void> => {
+    if (!window.confirm('削除してもよろしいですか？')) {
+      return
+    }
     setSubmitting(true)
     const check = await deleteScenarioCheck(scenario.id)
     if (!check.ok) {
@@ -90,6 +93,11 @@ const IntegrateScenarioArea = ({
   const [submitting, setSubmitting] = useState(false)
   const [errorMessage, setErrorMesssage] = useState<string | null>(null)
   const integrate = useCallback(async () => {
+    if (
+      !window.confirm(`${destScenario!.name}に統合してもしてもよろしいですか？`)
+    ) {
+      return
+    }
     try {
       setSubmitting(true)
       await integrateDeleteScenario(scenario.id, destScenario!.id)
@@ -104,6 +112,9 @@ const IntegrateScenarioArea = ({
     <div className='bg-gray-200 my-6 p-4'>
       <h2>別シナリオに統合</h2>
       <p className='my-4'>
+        TRPGの場合、ゲームシステムが全て同じシナリオにのみ統合できます。
+      </p>
+      <p className='my-4'>
         このシナリオを削除し、以下の内容を、指定したシナリオに付け替えます。
         <div className='flex justify-center'>
           <ul className='mt-4 list-disc text-left'>
@@ -114,9 +125,9 @@ const IntegrateScenarioArea = ({
         </div>
       </p>
       <div className='my-4'>
-        <FormLabel label='統合先ルールブック' />
+        <FormLabel label='統合先シナリオ' />
         <ScenarioSelect
-          gameSystemId={scenario.game_system?.id ?? null}
+          gameSystemIds={scenario.game_systems.map((gs) => gs.id)}
           scenarioType={
             scenario.type === ScenarioType.MurderMystery.value
               ? ScenarioType.MurderMystery

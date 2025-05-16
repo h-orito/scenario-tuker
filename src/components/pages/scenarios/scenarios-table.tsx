@@ -94,19 +94,20 @@ export const ScenarioNameColumn = ({
   )
 }
 
-export const GameSystemColumn = ({
+export const GameSystemsColumn = ({
   cell
 }: {
   cell: Cell<DisplayScenario, unknown>
 }) => {
-  const gameSystem = cell.row.original.game_system
+  const gameSystems = cell.row.original.game_systems
   return (
     <ScenariosTableColumn cell={cell} className='text-left'>
-      {gameSystem ? (
-        <Link href={`/game-systems/${gameSystem.id}`}>{gameSystem.name}</Link>
-      ) : (
-        ''
-      )}
+      {gameSystems.map((gameSystem, idx) => (
+        <span key={idx}>
+          <Link href={`/game-systems/${gameSystem.id}`}>{gameSystem.name}</Link>
+          {idx < gameSystems.length - 1 && '、'}
+        </span>
+      ))}
     </ScenariosTableColumn>
   )
 }
@@ -145,19 +146,23 @@ export const TypeColumnDef: ColumnDef<DisplayScenario, any> = {
   header: sortableHeader('種別'),
   cell: ({ cell }) => <ScenariosTableSimpleColumn cell={cell} />
 }
-export const GameSystemColumnDef: ColumnDef<DisplayScenario, any> = {
-  accessorKey: 'game_system',
+export const GameSystemsColumnDef: ColumnDef<DisplayScenario, any> = {
+  accessorKey: 'game_systems',
   header: sortableHeader('ゲームシステム'),
-  cell: ({ cell }) => <GameSystemColumn cell={cell} />,
+  cell: ({ cell }) => <GameSystemsColumn cell={cell} />,
   sortingFn: (rowA: Row<DisplayScenario>, rowB: Row<DisplayScenario>) => {
-    return (
-      rowA.original.game_system?.name.localeCompare(
-        rowB.original.game_system?.name ?? ''
-      ) ?? 0
-    )
+    return rowA.original.game_systems
+      .map((gs) => gs.name)
+      .join(',')
+      .localeCompare(
+        rowB.original.game_systems.map((gs) => gs.name).join(',') ?? ''
+      )
   },
   filterFn: (row: Row<DisplayScenario>, _: string, filterValue: string) => {
-    return row.original.game_system?.name?.includes(filterValue) ?? false
+    return row.original.game_systems
+      .map((gs) => gs.name)
+      .join(',')
+      .includes(filterValue)
   }
 }
 export const AuthorsColumnDef: ColumnDef<DisplayScenario, any> = {

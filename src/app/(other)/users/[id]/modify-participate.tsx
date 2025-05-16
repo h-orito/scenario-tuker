@@ -5,6 +5,7 @@ import SecondaryButton from '@/components/button/scondary-button'
 import SubmitButton from '@/components/button/submit-button'
 import FormLabel from '@/components/form/form-label'
 import Modal from '@/components/modal/modal'
+import GameSystemSelect from '@/components/pages/game-systems/game-system-select'
 import GameMaster from '@/components/pages/participates/form/game-master'
 import Impressions from '@/components/pages/participates/form/impressions'
 import InputFrom from '@/components/pages/participates/form/input-from'
@@ -36,6 +37,9 @@ const ModifyParticipateModal = ({
   const [scenario, setScenario] = useState<ScenarioResponse | null>(
     initialParticipate.scenario
   )
+  const [gameSystem, setGameSystem] = useState<GameSystem | null>(
+    initialParticipate.game_system ?? null
+  )
   const [ruleBooks, setRuleBooks] = useState<RuleBookResponse[]>(
     initialParticipate.rule_books.map((rb) => {
       return {
@@ -60,13 +64,6 @@ const ModifyParticipateModal = ({
     )?.value ?? DisclosureRange.Everyone.value
   )
 
-  // scenario, rule_bookのfiltering用
-  const gameSystemId = useMemo(() => {
-    if (scenario?.game_system) return scenario.game_system.id
-    if (ruleBooks.length <= 0) return null
-    return ruleBooks[0].game_system.id
-  }, [scenario, ruleBooks])
-
   const { control, formState, handleSubmit, getValues, setValue, watch } =
     useForm<ParticipateFormInput>({
       defaultValues: {
@@ -81,14 +78,20 @@ const ModifyParticipateModal = ({
       }
     })
   const canSubmit: boolean = useMemo(() => {
-    return !formState.isSubmitting && scenario != null && roleNames.length > 0
-  }, [formState.isSubmitting, scenario, roleNames])
+    return (
+      !formState.isSubmitting &&
+      scenario != null &&
+      roleNames.length > 0 &&
+      (scenarioType !== ScenarioType.Trpg || gameSystem != null)
+    ) // TRPGの場合はゲームシステムが必要
+  }, [formState.isSubmitting, scenario, roleNames, gameSystem, scenarioType])
 
   const save = useCallback(
     async (data: ParticipateFormInput) => {
       return await putParticipates({
         id: initialParticipate.id,
         scenario_id: scenario?.id ?? 0,
+        game_system_id: gameSystem?.id ?? null,
         rule_book_ids: ruleBooks.map((r) => r.id),
         role_names: roleNames.map((r) => r.trim()),
         impression: {
@@ -133,6 +136,47 @@ const ModifyParticipateModal = ({
     }
   }
 
+  // ゲームシステムとルールブックの整合性担保
+  const handleScenarioChange = (value: ScenarioResponse | null) => {
+    setScenario(value)
+    if (value) {
+      // シナリオに含まれるゲームシステムで絞り込む
+      if (value.game_systems.every((gs) => gs.id !== gameSystem?.id)) {
+        setGameSystem(null)
+      }
+      setRuleBooks(
+        ruleBooks.filter((rb) =>
+          value.game_systems.some((gs) => gs.id === rb.game_system.id)
+        )
+      )
+      // ゲームシステムが1つの場合は自動選択
+      if (value.game_systems.length === 1) {
+        setGameSystem(value.game_systems[0])
+      }
+    }
+  }
+  const handleGameSystemChange = (value: GameSystem | null) => {
+    setGameSystem(value)
+    if (value) {
+      if (ruleBooks.some((rb) => rb.game_system.id !== value.id)) {
+        setRuleBooks(ruleBooks.filter((rb) => rb.game_system.id === value.id))
+      }
+    }
+  }
+  const handleRuleBooksChange = (value: RuleBookResponse[]) => {
+    setRuleBooks(value)
+    if (gameSystem) {
+      if (value.some((rb) => rb.game_system.id !== gameSystem.id)) {
+        setGameSystem(null)
+      }
+    } else {
+      // ゲームシステムが選択されていない場合は自動選択
+      if (value.length === 1) {
+        setGameSystem(value[0].game_system)
+      }
+    }
+  }
+
   return (
     <Modal close={toggleModal} hideFooter>
       <>
@@ -144,19 +188,29 @@ const ModifyParticipateModal = ({
               <ScenarioSelectOrCreate
                 scenarioType={scenarioType}
                 selected={scenario}
-                setSelected={setScenario}
-                gameSystemId={gameSystemId}
+                setSelected={handleScenarioChange}
+                gameSystemId={gameSystem?.id ?? null}
               />
             </div>
             {scenarioType === ScenarioType.Trpg && (
-              <div className='my-6'>
-                <FormLabel label='ルールブック' />
-                <RuleBooksSelect
-                  gameSystemId={gameSystemId}
-                  selected={ruleBooks}
-                  setSelected={setRuleBooks}
-                />
-              </div>
+              <>
+                <div className='my-6'>
+                  <FormLabel label='ゲームシステム' required />
+                  <GameSystemSelect
+                    gameSystemIds={scenario?.game_systems.map((gs) => gs.id)}
+                    selected={gameSystem}
+                    setSelected={handleGameSystemChange}
+                  />
+                </div>
+                <div className='my-6'>
+                  <FormLabel label='ルールブック' />
+                  <RuleBooksSelect
+                    gameSystemId={gameSystem?.id ?? null}
+                    selected={ruleBooks}
+                    setSelected={handleRuleBooksChange}
+                  />
+                </div>
+              </>
             )}
             <div className='my-6'>
               <FormLabel label='役割' required />

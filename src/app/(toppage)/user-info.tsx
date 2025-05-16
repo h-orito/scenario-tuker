@@ -1,13 +1,13 @@
 'use client'
 
-import Link from 'next/link'
-import { useState } from 'react'
 import AccountLinkModal from '@/components/auth/account-link-modal'
-import { useAuth } from '@/components/auth/use-auth'
 import SignInModal from '@/components/auth/sign-in-modal'
+import { useAuth } from '@/components/auth/use-auth'
 import DangerButton from '@/components/button/danger-button'
 import PrimaryButton from '@/components/button/primary-button'
 import { signOut } from '@/components/lib/firebase/firebase-auth'
+import Link from 'next/link'
+import { useState } from 'react'
 
 const UserInfo = () => {
   const authState = useAuth()
@@ -48,9 +48,11 @@ const UserInfo = () => {
                   <br />
                   通過した感想を登録することができます。
                 </p>
-                <Link href={`/users/${authState.myself.id}`}>
-                  <PrimaryButton>マイページ</PrimaryButton>
-                </Link>
+                <div className='flex justify-center'>
+                  <Link href={`/users/${authState.myself.id}`}>
+                    <PrimaryButton>マイページ</PrimaryButton>
+                  </Link>
+                </div>
               </div>
               <div className='flex flex-col justify-end gap-4'>
                 <div>

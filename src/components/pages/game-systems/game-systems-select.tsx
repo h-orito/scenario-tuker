@@ -1,23 +1,24 @@
 'use client'
 
 import { fetchGameSystems } from '@/components/api/game-system-api'
-import { useEffect, useMemo, useState } from 'react'
-import Select, { SingleValue } from 'react-select'
+import { useEffect, useState } from 'react'
+import Select, { MultiValue } from 'react-select'
 
 type Props = {
-  gameSystemIds?: number[]
-  selected: GameSystem | null
-  setSelected: (value: GameSystem | null) => void
+  isClearable?: boolean
+  selected: GameSystem[]
+  setSelected: (value: GameSystem[]) => void
 }
-const GameSystemSelect = ({ gameSystemIds, selected, setSelected }: Props) => {
+const GameSystemsSelect = ({
+  isClearable = true,
+  selected,
+  setSelected
+}: Props) => {
   const [options, setOptions] = useState<GameSystem[]>([])
 
-  const filteredOptions = useMemo(() => {
-    if (!!gameSystemIds) {
-      return options.filter((o) => gameSystemIds.includes(o.id))
-    }
-    return options
-  }, [options, gameSystemIds])
+  const handleChange = (value: MultiValue<GameSystem>) => {
+    setSelected(value.map((v) => v))
+  }
 
   useEffect(() => {
     const fetch = async () => {
@@ -34,21 +35,18 @@ const GameSystemSelect = ({ gameSystemIds, selected, setSelected }: Props) => {
     return option.dictionary_names.some((dn) => dn.includes(rawInput))
   }
 
-  const handleChange = (value: SingleValue<GameSystem>) => {
-    setSelected(value)
-  }
-
   return (
     <Select
-      form='__gamesystem' // メニュー非表示時のEnterを押下でform submitされるのを防ぐ
-      isClearable
-      options={filteredOptions}
+      form='__scenario' // メニュー非表示時のEnter押下でform submitされるのを防ぐ
+      isClearable={isClearable}
+      isMulti
+      options={options}
       filterOption={(option, rawInput) =>
         handleFilterOption(option.data, rawInput)
       }
       value={selected}
       getOptionLabel={(gs) => gs.name}
-      getOptionValue={(gs) => gs.id.toString()}
+      getOptionValue={(s) => s.id.toString()}
       placeholder='ゲームシステム検索'
       onChange={handleChange}
       className='flex-1'
@@ -56,4 +54,4 @@ const GameSystemSelect = ({ gameSystemIds, selected, setSelected }: Props) => {
     />
   )
 }
-export default GameSystemSelect
+export default GameSystemsSelect
