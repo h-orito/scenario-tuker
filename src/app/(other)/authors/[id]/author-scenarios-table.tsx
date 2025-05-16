@@ -4,7 +4,7 @@ import {
   convertToDisplayScenarios,
   DisplayScenario,
   GameMasterColumnDef,
-  GameSystemColumnDef,
+  GameSystemsColumnDef,
   ParticipateCountColumnDef,
   PlayerNumColumnDef,
   RequiredHoursColumnDef,
@@ -38,7 +38,7 @@ const AuthorScenariosTable = (props: ScenariosTableProps) => {
   const columns: ColumnDef<DisplayScenario, any>[] = [
     ScenarioNameColumnDef,
     TypeColumnDef,
-    GameSystemColumnDef,
+    GameSystemsColumnDef,
     GameMasterColumnDef,
     PlayerNumColumnDef,
     RequiredHoursColumnDef,
