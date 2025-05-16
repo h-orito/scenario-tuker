@@ -172,7 +172,7 @@ const Trpg = () => {
           <div className='flex justify-center'>
             <Link
               href={{
-                pathname: 'scenarios',
+                pathname: '/scenarios',
                 query: { type: ScenarioType.Trpg.value }
               }}
             >
