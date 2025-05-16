@@ -33,6 +33,9 @@ const ReleaseNoteModal = ({
     <Modal header='更新履歴' close={toggleModal}>
       <div className='text-left text-xs md:text-sm'>
         <ul className='text-xs leading-7'>
+          <li>
+            2025/05/17 シナリオに複数のゲームシステムを紐付けられるよう変更
+          </li>
           <li>2024/11/13 通過記録の一括編集機能追加</li>
           <li>
             2024/11/13
