@@ -15,7 +15,9 @@ data class ScenarioUrl(
         "twitter.com",
         "x.com",
         "www.dlsite.com",
-        "seesaawiki.jp"
+        "seesaawiki.jp",
+        "www.drivethrurpg.com",
+        "drivethrurpg.com"
     )
 
     fun assert() {
