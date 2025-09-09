@@ -18,7 +18,7 @@
     "eslint-config-prettier": "^9.1.0",
     "firebase": "^10.14.1",
     "jotai": "^2.10.0",
-    "next": "14.2.15",
+    "next": "14.2.32",
     "prettier": "^3.3.3",
     "react": "^18.2.0",
     "react-dom": "^18",
