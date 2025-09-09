@@ -42,7 +42,9 @@ const availableDomains = [
   'twitter.com',
   'x.com',
   'www.dlsite.com',
-  'seesaawiki.jp'
+  'seesaawiki.jp',
+  'drivethrurpg.com',
+  'www.drivethrurpg.com'
 ]
 
 const isAvailableUrl = (url: string): boolean => {

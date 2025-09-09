@@ -33,6 +33,7 @@ const ReleaseNoteModal = ({
     <Modal header='更新履歴' close={toggleModal}>
       <div className='text-left text-xs md:text-sm'>
         <ul className='text-xs leading-7'>
+          <li>2025/09/10 許可URLにdrivethrurpg.comを追加</li>
           <li>
             2025/05/17 シナリオに複数のゲームシステムを紐付けられるよう変更
           </li>
