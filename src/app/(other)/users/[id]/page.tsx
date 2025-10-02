@@ -111,7 +111,7 @@ const UsersIdPage = ({ params }: { params: { id: string } }) => {
         </div>
       </div>
       <div className='mt-8'>
-        <DeleteButton />
+        <DeleteButton user={user} />
       </div>
       <div className='mt-8'>
         <Link href='/users'>

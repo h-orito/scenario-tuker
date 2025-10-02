@@ -1,9 +1,19 @@
 'use client'
 
 import { deleteMyself } from '@/components/api/myself-api'
+import { useAuth } from '@/components/auth/use-auth'
 import DangerButton from '@/components/button/danger-button'
 
-const DeleteButton = () => {
+interface Props {
+  user: User
+}
+
+const DeleteButton = ({ user }: Props) => {
+  const canModify = useAuth().myself?.id === user.id
+  if (!canModify) {
+    return <></>
+  }
+
   const confirmToDelete = async () => {
     if (confirm('ユーザーを削除しますか？この操作は取り消せません。')) {
       await deleteMyself()
