@@ -119,7 +119,6 @@ const UsersTable = ({ users }: Props) => {
 
 const UserNameColumn = ({ cell }: { cell: Cell<User, unknown> }) => {
   const user = cell.row.original
-  console.log(user)
   return (
     <td key={cell.id} className='td text-left'>
       <Link href={`/users/${user.id}`}>{user.name}</Link>
