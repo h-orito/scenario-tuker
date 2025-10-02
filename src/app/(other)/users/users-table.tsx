@@ -17,7 +17,7 @@ import {
   useReactTable
 } from '@tanstack/react-table'
 import Link from 'next/link'
-import { useMemo } from 'react'
+import React, { useMemo } from 'react'
 
 type Props = {
   users: User[]
@@ -96,17 +96,15 @@ const UsersTable = ({ users }: Props) => {
               </td>
             </tr>
           ) : (
-            table
-              .getRowModel()
-              .rows.map((row) => (
-                <tr key={row.id}>
-                  {row
-                    .getVisibleCells()
-                    .map((cell) =>
-                      flexRender(cell.column.columnDef.cell, cell.getContext())
-                    )}
-                </tr>
-              ))
+            table.getRowModel().rows.map((row) => (
+              <tr key={row.id}>
+                {row.getVisibleCells().map((cell) => (
+                  <React.Fragment key={cell.id}>
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </React.Fragment>
+                ))}
+              </tr>
+            ))
           )}
         </tbody>
       </table>
@@ -121,9 +119,10 @@ const UsersTable = ({ users }: Props) => {
 
 const UserNameColumn = ({ cell }: { cell: Cell<User, unknown> }) => {
   const user = cell.row.original
+  console.log(user)
   return (
     <td key={cell.id} className='td text-left'>
-      {user.twitter ? <Link href={`/users/${user.id}`}>{user.name}</Link> : ''}
+      <Link href={`/users/${user.id}`}>{user.name}</Link>
     </td>
   )
 }
