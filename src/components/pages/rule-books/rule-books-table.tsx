@@ -2,6 +2,7 @@ import { AllRuleBookType } from '@/@types/rule-book-type'
 import { getSortIcon } from '@/components/table/header'
 import { Cell, Column, ColumnDef, Row } from '@tanstack/react-table'
 import Link from 'next/link'
+import React from 'react'
 
 export type DisplayRuleBook = RuleBookResponse & {
   game_system_name: string | null
@@ -10,7 +11,7 @@ export type DisplayRuleBook = RuleBookResponse & {
 
 const sortableHeader =
   (headerName: string) =>
-  ({ column }: { column: Column<DisplayRuleBook, any> }): JSX.Element => {
+  ({ column }: { column: Column<DisplayRuleBook, any> }): React.JSX.Element => {
     return (
       <div
         className='cursor-pointer'

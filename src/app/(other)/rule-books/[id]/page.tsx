@@ -9,8 +9,12 @@ import Link from 'next/link'
 import RuleBookModifyButton from './rule-book-modify-button'
 import RuleBookParticipatesTable from './rule-book-participates-table'
 
-const RuleBooksIdPage = async ({ params }: { params: { id: string } }) => {
-  const ruleBookIdStr = params.id
+const RuleBooksIdPage = async ({
+  params
+}: {
+  params: Promise<{ id: string }>
+}) => {
+  const { id: ruleBookIdStr } = await params
   if (!ruleBookIdStr) {
     return <div>存在しないルールブックです。</div>
   }
@@ -69,8 +73,12 @@ const RuleBooksIdPage = async ({ params }: { params: { id: string } }) => {
 
 export default RuleBooksIdPage
 
-export async function generateMetadata({ params }: { params: { id: string } }) {
-  const ruleBookIdStr = params.id
+export async function generateMetadata({
+  params
+}: {
+  params: Promise<{ id: string }>
+}) {
+  const { id: ruleBookIdStr } = await params
   let title = 'Scenario Tuker | ルールブック情報'
   if (!ruleBookIdStr) {
     return { title }

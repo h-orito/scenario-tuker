@@ -8,8 +8,12 @@ import Link from 'next/link'
 import GameSystemModifyButton from './game-system-modify-button'
 import GameSystemScenariosTable from './game-system-scenarios-table'
 
-const GameSystemsIdPage = async ({ params }: { params: { id: string } }) => {
-  const gameSystemIdStr = params.id
+const GameSystemsIdPage = async ({
+  params
+}: {
+  params: Promise<{ id: string }>
+}) => {
+  const { id: gameSystemIdStr } = await params
   if (!gameSystemIdStr) {
     return <div>存在しないシナリオです。</div>
   }

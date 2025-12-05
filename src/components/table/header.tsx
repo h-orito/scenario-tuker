@@ -1,11 +1,11 @@
 import { faSort, faSortDown, faSortUp } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Column, SortDirection } from '@tanstack/react-table'
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 export const getSortIcon = (
   sortDirection: false | SortDirection
-): JSX.Element => {
+): React.JSX.Element => {
   switch (sortDirection) {
     case 'asc':
       return <FontAwesomeIcon icon={faSortUp} className='h-3' />

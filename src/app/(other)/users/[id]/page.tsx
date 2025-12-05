@@ -12,13 +12,13 @@ import MarkdownNotification from '@/components/notification/markdown-notificatio
 import { faTwitter } from '@fortawesome/free-brands-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Link from 'next/link'
-import { useEffect, useMemo, useState } from 'react'
+import { use, useEffect, useMemo, useState } from 'react'
 import DeleteButton from './user-delete-button'
 import UserIntroductionModifyButton from './user-introduction-modify-button'
 import UserParticipates from './user-participates'
 
-const UsersIdPage = ({ params }: { params: { id: string } }) => {
-  const userIdStr = params.id
+const UsersIdPage = ({ params }: { params: Promise<{ id: string }> }) => {
+  const { id: userIdStr } = use(params)
   const userId = userIdStr ? parseInt(userIdStr) : 0
 
   const [loading, setLoading] = useState(true)

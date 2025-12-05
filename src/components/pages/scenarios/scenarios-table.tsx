@@ -18,7 +18,7 @@ export type DisplayScenario = ScenarioResponse & {
 
 const sortableHeader =
   (headerName: string) =>
-  ({ column }: { column: Column<DisplayScenario, any> }): JSX.Element => {
+  ({ column }: { column: Column<DisplayScenario, any> }): React.JSX.Element => {
     return (
       <div
         className='cursor-pointer'

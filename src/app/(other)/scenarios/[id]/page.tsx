@@ -12,8 +12,12 @@ import ScenarioModifyButton from './scenario-modify-button'
 import ScenarioParticipatesTable from './scenario-participates-table'
 import ScenarioUrl from './scenario-url'
 
-const ScenariosIdPage = async ({ params }: { params: { id: string } }) => {
-  const scenarioIdStr = params.id
+const ScenariosIdPage = async ({
+  params
+}: {
+  params: Promise<{ id: string }>
+}) => {
+  const { id: scenarioIdStr } = await params
   if (!scenarioIdStr) {
     return <div>存在しないシナリオです。</div>
   }
@@ -123,8 +127,12 @@ const ScenariosIdPage = async ({ params }: { params: { id: string } }) => {
 
 export default ScenariosIdPage
 
-export async function generateMetadata({ params }: { params: { id: string } }) {
-  const scenarioIdStr = params.id
+export async function generateMetadata({
+  params
+}: {
+  params: Promise<{ id: string }>
+}) {
+  const { id: scenarioIdStr } = await params
   let title = 'Scenario Tuker | シナリオ情報'
   if (!scenarioIdStr) {
     return {

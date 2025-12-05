@@ -7,9 +7,9 @@ import TrendScenariosTable from './trend-scenarios-table'
 const ScenarioTrendsPage = async ({
   searchParams
 }: {
-  searchParams: { type: string }
+  searchParams: Promise<{ type: string }>
 }) => {
-  const scenarioTypeStr = searchParams.type
+  const { type: scenarioTypeStr } = await searchParams
   const scenarioType =
     AllScenarioType.find((v) => v.value === scenarioTypeStr) ??
     ScenarioType.Trpg
@@ -35,9 +35,9 @@ export default ScenarioTrendsPage
 export async function generateMetadata({
   searchParams
 }: {
-  searchParams: { type: string }
+  searchParams: Promise<{ type: string }>
 }) {
-  const scenarioTypeStr = searchParams.type
+  const { type: scenarioTypeStr } = await searchParams
   const scenarioType =
     AllScenarioType.find((v) => v.value === scenarioTypeStr) ??
     ScenarioType.Trpg

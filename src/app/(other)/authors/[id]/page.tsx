@@ -4,8 +4,12 @@ import Link from 'next/link'
 import AuthorModifyButton from './author-modify-button'
 import AuthorScenariosTable from './author-scenarios-table'
 
-const AuthorIdPage = async ({ params }: { params: { id: string } }) => {
-  const authorIdStr = params.id
+const AuthorIdPage = async ({
+  params
+}: {
+  params: Promise<{ id: string }>
+}) => {
+  const { id: authorIdStr } = await params
   if (!authorIdStr) {
     return <div>存在しないシナリオ製作者です。</div>
   }

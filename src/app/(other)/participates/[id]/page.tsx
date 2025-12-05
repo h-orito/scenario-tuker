@@ -17,10 +17,10 @@ import NormalNotification from '@/components/notification/normal-notification'
 import { faComment } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Link from 'next/link'
-import { useEffect, useMemo, useState } from 'react'
+import { use, useEffect, useMemo, useState } from 'react'
 
-const ParticipateIdPage = ({ params }: { params: { id: string } }) => {
-  const participateIdStr = params.id
+const ParticipateIdPage = ({ params }: { params: Promise<{ id: string }> }) => {
+  const { id: participateIdStr } = use(params)
   const participateId = participateIdStr ? parseInt(participateIdStr) : 0
   const [participate, setParticipate] = useState<ParticipateResponse | null>(
     null

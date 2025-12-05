@@ -20,7 +20,7 @@ export type DisplayParticipate = ParticipateResponse & {}
 
 export const sortableHeader =
   (headerName: string) =>
-  ({ column }: { column: Column<DisplayParticipate, any> }): JSX.Element => {
+  ({ column }: { column: Column<DisplayParticipate, any> }): React.JSX.Element => {
     return (
       <div
         className='cursor-pointer'
@@ -152,25 +152,28 @@ export const ImpressionColumn = ({
 }) => {
   const participate = cell.row.original
   const impression = participate.impression
-  if (!impression) {
-    return <ParticipatesTableColumn cell={cell}>{''}</ParticipatesTableColumn>
-  }
-
-  const hasSpoiler = impression.has_spoiler
   const auth = useAuth()
   const canView = useMemo(() => {
+    if (!impression) return false
     if (impression.disclosure_range === DisclosureRange.Everyone.value) {
       return true
     } else if (impression.disclosure_range === DisclosureRange.OnlyMe.value) {
       // 自分だけ見られる
       return auth.myself?.id === participate.user.id
     }
-  }, [participate, auth.myself?.id])
+    return false
+  }, [impression, participate.user.id, auth.myself?.id])
 
   const [impressionContent, setImpressionContent] = useState<string | null>(
     null
   )
   const [isShowModal, setIsShowModal] = useState(false)
+
+  if (!impression) {
+    return <ParticipatesTableColumn cell={cell}>{''}</ParticipatesTableColumn>
+  }
+
+  const hasSpoiler = impression.has_spoiler
   const openModal = () => {
     setIsShowModal(true)
   }
