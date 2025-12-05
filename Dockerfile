@@ -6,6 +6,7 @@ WORKDIR /app
 COPY src src
 COPY tsconfig.json tsconfig.json
 COPY package*.json ./
+COPY pnpm-lock.yaml ./
 COPY next.config.mjs next.config.mjs
 COPY tailwind.config.ts tailwind.config.ts
 COPY postcss.config.mjs postcss.config.mjs
@@ -30,8 +31,9 @@ ENV NEXT_PUBLIC_ENV=${ENV}
 ARG API_BASE
 ENV NEXT_PUBLIC_API_BASE=${API_BASE}
 
-RUN npm ci
-RUN npm run build
+RUN corepack enable && corepack prepare pnpm@latest --activate
+RUN pnpm install --frozen-lockfile
+RUN pnpm build
 
 ENV NODE_ENV=production
 RUN addgroup --system --gid 1001 nodejs
@@ -65,4 +67,4 @@ ENV NEXT_PUBLIC_ENV=${ENV}
 ARG API_BASE
 ENV NEXT_PUBLIC_API_BASE=${API_BASE}
 
-CMD ["npm", "start"]
+CMD ["pnpm", "start"]
