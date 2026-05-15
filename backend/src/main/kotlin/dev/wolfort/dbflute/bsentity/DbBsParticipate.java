@@ -13,71 +13,7 @@ import dev.wolfort.dbflute.allcommon.DbDBMetaInstanceHandler;
 import dev.wolfort.dbflute.exentity.*;
 
 /**
- * The entity of PARTICIPATE as TABLE. <br>
- * <pre>
- * [primary-key]
- *     participate_id
- *
- * [column]
- *     participate_id, scenario_id, game_system_id, user_id, disp_order, participate_term_from, participate_term_to, player_num, game_master, player_names, required_hours, memo, register_datetime, register_trace, update_datetime, update_trace
- *
- * [sequence]
- *     
- *
- * [identity]
- *     participate_id
- *
- * [version-no]
- *     
- *
- * [foreign table]
- *     GAME_SYSTEM, SCENARIO, USER, PARTICIPATE_IMPRESSION(AsOne)
- *
- * [referrer table]
- *     PARTICIPATE_ROLE, PARTICIPATE_RULE_BOOK, PARTICIPATE_IMPRESSION
- *
- * [foreign property]
- *     gameSystem, scenario, user, participateImpressionAsOne
- *
- * [referrer property]
- *     participateRoleList, participateRuleBookList
- *
- * [get/set template]
- * /= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
- * Integer participateId = entity.getParticipateId();
- * Integer scenarioId = entity.getScenarioId();
- * Integer gameSystemId = entity.getGameSystemId();
- * Integer userId = entity.getUserId();
- * Integer dispOrder = entity.getDispOrder();
- * java.time.LocalDate participateTermFrom = entity.getParticipateTermFrom();
- * java.time.LocalDate participateTermTo = entity.getParticipateTermTo();
- * Integer playerNum = entity.getPlayerNum();
- * String gameMaster = entity.getGameMaster();
- * String playerNames = entity.getPlayerNames();
- * Integer requiredHours = entity.getRequiredHours();
- * String memo = entity.getMemo();
- * java.time.LocalDateTime registerDatetime = entity.getRegisterDatetime();
- * String registerTrace = entity.getRegisterTrace();
- * java.time.LocalDateTime updateDatetime = entity.getUpdateDatetime();
- * String updateTrace = entity.getUpdateTrace();
- * entity.setParticipateId(participateId);
- * entity.setScenarioId(scenarioId);
- * entity.setGameSystemId(gameSystemId);
- * entity.setUserId(userId);
- * entity.setDispOrder(dispOrder);
- * entity.setParticipateTermFrom(participateTermFrom);
- * entity.setParticipateTermTo(participateTermTo);
- * entity.setPlayerNum(playerNum);
- * entity.setGameMaster(gameMaster);
- * entity.setPlayerNames(playerNames);
- * entity.setRequiredHours(requiredHours);
- * entity.setMemo(memo);
- * entity.setRegisterDatetime(registerDatetime);
- * entity.setRegisterTrace(registerTrace);
- * entity.setUpdateDatetime(updateDatetime);
- * entity.setUpdateTrace(updateTrace);
- * = = = = = = = = = =/
- * </pre>
+ * The entity of PARTICIPATE as TABLE.
  * @author DBFlute(AutoGenerator)
  */
 public abstract class DbBsParticipate extends AbstractEntity implements DomainEntity, DbEntityDefinedCommonColumn {

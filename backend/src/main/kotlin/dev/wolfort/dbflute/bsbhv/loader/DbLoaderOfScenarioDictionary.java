@@ -7,35 +7,7 @@ import dev.wolfort.dbflute.exbhv.*;
 import dev.wolfort.dbflute.exentity.*;
 
 /**
- * The referrer loader of SCENARIO_DICTIONARY as TABLE. <br>
- * <pre>
- * [primary key]
- *     scenario_dictionary_id
- *
- * [column]
- *     scenario_dictionary_id, scenario_id, scenario_name, register_datetime, register_trace, update_datetime, update_trace
- *
- * [sequence]
- *     
- *
- * [identity]
- *     scenario_dictionary_id
- *
- * [version-no]
- *     
- *
- * [foreign table]
- *     SCENARIO
- *
- * [referrer table]
- *     
- *
- * [foreign property]
- *     scenario
- *
- * [referrer property]
- *     
- * </pre>
+ * The referrer loader of SCENARIO_DICTIONARY as TABLE.
  * @author DBFlute(AutoGenerator)
  */
 public class DbLoaderOfScenarioDictionary {

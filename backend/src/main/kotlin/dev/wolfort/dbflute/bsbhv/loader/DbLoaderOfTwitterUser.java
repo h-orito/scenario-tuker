@@ -7,35 +7,7 @@ import dev.wolfort.dbflute.exbhv.*;
 import dev.wolfort.dbflute.exentity.*;
 
 /**
- * The referrer loader of TWITTER_USER as TABLE. <br>
- * <pre>
- * [primary key]
- *     twitter_user_id
- *
- * [column]
- *     twitter_user_id, user_id, twitter_id, screen_name, access_token, token_secret, register_datetime, register_trace, update_datetime, update_trace
- *
- * [sequence]
- *     
- *
- * [identity]
- *     twitter_user_id
- *
- * [version-no]
- *     
- *
- * [foreign table]
- *     USER
- *
- * [referrer table]
- *     
- *
- * [foreign property]
- *     user
- *
- * [referrer property]
- *     
- * </pre>
+ * The referrer loader of TWITTER_USER as TABLE.
  * @author DBFlute(AutoGenerator)
  */
 public class DbLoaderOfTwitterUser {

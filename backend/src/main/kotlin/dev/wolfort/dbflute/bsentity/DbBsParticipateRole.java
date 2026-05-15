@@ -13,53 +13,7 @@ import dev.wolfort.dbflute.allcommon.DbDBMetaInstanceHandler;
 import dev.wolfort.dbflute.exentity.*;
 
 /**
- * The entity of PARTICIPATE_ROLE as TABLE. <br>
- * <pre>
- * [primary-key]
- *     participate_role_id
- *
- * [column]
- *     participate_role_id, participate_id, participate_role_name, register_datetime, register_trace, update_datetime, update_trace
- *
- * [sequence]
- *     
- *
- * [identity]
- *     participate_role_id
- *
- * [version-no]
- *     
- *
- * [foreign table]
- *     PARTICIPATE
- *
- * [referrer table]
- *     
- *
- * [foreign property]
- *     participate
- *
- * [referrer property]
- *     
- *
- * [get/set template]
- * /= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
- * Integer participateRoleId = entity.getParticipateRoleId();
- * Integer participateId = entity.getParticipateId();
- * String participateRoleName = entity.getParticipateRoleName();
- * java.time.LocalDateTime registerDatetime = entity.getRegisterDatetime();
- * String registerTrace = entity.getRegisterTrace();
- * java.time.LocalDateTime updateDatetime = entity.getUpdateDatetime();
- * String updateTrace = entity.getUpdateTrace();
- * entity.setParticipateRoleId(participateRoleId);
- * entity.setParticipateId(participateId);
- * entity.setParticipateRoleName(participateRoleName);
- * entity.setRegisterDatetime(registerDatetime);
- * entity.setRegisterTrace(registerTrace);
- * entity.setUpdateDatetime(updateDatetime);
- * entity.setUpdateTrace(updateTrace);
- * = = = = = = = = = =/
- * </pre>
+ * The entity of PARTICIPATE_ROLE as TABLE.
  * @author DBFlute(AutoGenerator)
  */
 public abstract class DbBsParticipateRole extends AbstractEntity implements DomainEntity, DbEntityDefinedCommonColumn {

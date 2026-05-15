@@ -9,35 +9,7 @@ import dev.wolfort.dbflute.exentity.*;
 import dev.wolfort.dbflute.cbean.*;
 
 /**
- * The referrer loader of AUTHOR as TABLE. <br>
- * <pre>
- * [primary key]
- *     author_id
- *
- * [column]
- *     author_id, author_name, register_datetime, register_trace, update_datetime, update_trace
- *
- * [sequence]
- *     
- *
- * [identity]
- *     author_id
- *
- * [version-no]
- *     
- *
- * [foreign table]
- *     
- *
- * [referrer table]
- *     SCENARIO_AUTHOR
- *
- * [foreign property]
- *     
- *
- * [referrer property]
- *     scenarioAuthorList
- * </pre>
+ * The referrer loader of AUTHOR as TABLE.
  * @author DBFlute(AutoGenerator)
  */
 public class DbLoaderOfAuthor {

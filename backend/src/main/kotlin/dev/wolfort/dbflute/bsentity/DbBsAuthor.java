@@ -11,51 +11,7 @@ import dev.wolfort.dbflute.allcommon.DbDBMetaInstanceHandler;
 import dev.wolfort.dbflute.exentity.*;
 
 /**
- * The entity of AUTHOR as TABLE. <br>
- * <pre>
- * [primary-key]
- *     author_id
- *
- * [column]
- *     author_id, author_name, register_datetime, register_trace, update_datetime, update_trace
- *
- * [sequence]
- *     
- *
- * [identity]
- *     author_id
- *
- * [version-no]
- *     
- *
- * [foreign table]
- *     
- *
- * [referrer table]
- *     SCENARIO_AUTHOR
- *
- * [foreign property]
- *     
- *
- * [referrer property]
- *     scenarioAuthorList
- *
- * [get/set template]
- * /= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
- * Integer authorId = entity.getAuthorId();
- * String authorName = entity.getAuthorName();
- * java.time.LocalDateTime registerDatetime = entity.getRegisterDatetime();
- * String registerTrace = entity.getRegisterTrace();
- * java.time.LocalDateTime updateDatetime = entity.getUpdateDatetime();
- * String updateTrace = entity.getUpdateTrace();
- * entity.setAuthorId(authorId);
- * entity.setAuthorName(authorName);
- * entity.setRegisterDatetime(registerDatetime);
- * entity.setRegisterTrace(registerTrace);
- * entity.setUpdateDatetime(updateDatetime);
- * entity.setUpdateTrace(updateTrace);
- * = = = = = = = = = =/
- * </pre>
+ * The entity of AUTHOR as TABLE.
  * @author DBFlute(AutoGenerator)
  */
 public abstract class DbBsAuthor extends AbstractEntity implements DomainEntity, DbEntityDefinedCommonColumn {

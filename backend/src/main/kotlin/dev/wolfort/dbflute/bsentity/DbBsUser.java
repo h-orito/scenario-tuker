@@ -13,59 +13,7 @@ import dev.wolfort.dbflute.allcommon.DbDBMetaInstanceHandler;
 import dev.wolfort.dbflute.exentity.*;
 
 /**
- * The entity of USER as TABLE. <br>
- * <pre>
- * [primary-key]
- *     user_id
- *
- * [column]
- *     user_id, user_name, uid, authority, introduction, is_deleted, register_datetime, register_trace, update_datetime, update_trace
- *
- * [sequence]
- *     
- *
- * [identity]
- *     user_id
- *
- * [version-no]
- *     
- *
- * [foreign table]
- *     TWITTER_USER(AsOne)
- *
- * [referrer table]
- *     PARTICIPATE, USER_RULE_BOOK, USER_SCENARIO, TWITTER_USER
- *
- * [foreign property]
- *     twitterUserAsOne
- *
- * [referrer property]
- *     participateList, userRuleBookList, userScenarioList
- *
- * [get/set template]
- * /= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
- * Integer userId = entity.getUserId();
- * String userName = entity.getUserName();
- * String uid = entity.getUid();
- * String authority = entity.getAuthority();
- * String introduction = entity.getIntroduction();
- * Boolean isDeleted = entity.getIsDeleted();
- * java.time.LocalDateTime registerDatetime = entity.getRegisterDatetime();
- * String registerTrace = entity.getRegisterTrace();
- * java.time.LocalDateTime updateDatetime = entity.getUpdateDatetime();
- * String updateTrace = entity.getUpdateTrace();
- * entity.setUserId(userId);
- * entity.setUserName(userName);
- * entity.setUid(uid);
- * entity.setAuthority(authority);
- * entity.setIntroduction(introduction);
- * entity.setIsDeleted(isDeleted);
- * entity.setRegisterDatetime(registerDatetime);
- * entity.setRegisterTrace(registerTrace);
- * entity.setUpdateDatetime(updateDatetime);
- * entity.setUpdateTrace(updateTrace);
- * = = = = = = = = = =/
- * </pre>
+ * The entity of USER as TABLE.
  * @author DBFlute(AutoGenerator)
  */
 public abstract class DbBsUser extends AbstractEntity implements DomainEntity, DbEntityDefinedCommonColumn {

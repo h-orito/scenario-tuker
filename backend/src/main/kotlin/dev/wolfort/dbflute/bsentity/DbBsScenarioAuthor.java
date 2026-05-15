@@ -13,53 +13,7 @@ import dev.wolfort.dbflute.allcommon.DbDBMetaInstanceHandler;
 import dev.wolfort.dbflute.exentity.*;
 
 /**
- * The entity of SCENARIO_AUTHOR as TABLE. <br>
- * <pre>
- * [primary-key]
- *     scenario_author_id
- *
- * [column]
- *     scenario_author_id, scenario_id, author_id, register_datetime, register_trace, update_datetime, update_trace
- *
- * [sequence]
- *     
- *
- * [identity]
- *     scenario_author_id
- *
- * [version-no]
- *     
- *
- * [foreign table]
- *     AUTHOR, SCENARIO
- *
- * [referrer table]
- *     
- *
- * [foreign property]
- *     author, scenario
- *
- * [referrer property]
- *     
- *
- * [get/set template]
- * /= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
- * Integer scenarioAuthorId = entity.getScenarioAuthorId();
- * Integer scenarioId = entity.getScenarioId();
- * Integer authorId = entity.getAuthorId();
- * java.time.LocalDateTime registerDatetime = entity.getRegisterDatetime();
- * String registerTrace = entity.getRegisterTrace();
- * java.time.LocalDateTime updateDatetime = entity.getUpdateDatetime();
- * String updateTrace = entity.getUpdateTrace();
- * entity.setScenarioAuthorId(scenarioAuthorId);
- * entity.setScenarioId(scenarioId);
- * entity.setAuthorId(authorId);
- * entity.setRegisterDatetime(registerDatetime);
- * entity.setRegisterTrace(registerTrace);
- * entity.setUpdateDatetime(updateDatetime);
- * entity.setUpdateTrace(updateTrace);
- * = = = = = = = = = =/
- * </pre>
+ * The entity of SCENARIO_AUTHOR as TABLE.
  * @author DBFlute(AutoGenerator)
  */
 public abstract class DbBsScenarioAuthor extends AbstractEntity implements DomainEntity, DbEntityDefinedCommonColumn {

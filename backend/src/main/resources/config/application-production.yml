@@ -3,8 +3,7 @@ spring:
     url: jdbc:mysql://${MYSQL_HOST}:3306/${SCENARIO_TUKER_DB_NAME}?character_set_server=utf8mb4
     username: ${SCENARIO_TUKER_DB_USERNAME}
     password: ${SCENARIO_TUKER_DB_PASSWORD}
-    driverClassName: com.mysql.jdbc.Driver
-    type: org.apache.tomcat.jdbc.pool.DataSource
+    driverClassName: com.mysql.cj.jdbc.Driver
   messages:
     basename: messages
     cache-duration: -1

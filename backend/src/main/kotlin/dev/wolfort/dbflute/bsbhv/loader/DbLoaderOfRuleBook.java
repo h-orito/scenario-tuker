@@ -9,35 +9,7 @@ import dev.wolfort.dbflute.exentity.*;
 import dev.wolfort.dbflute.cbean.*;
 
 /**
- * The referrer loader of RULE_BOOK as TABLE. <br>
- * <pre>
- * [primary key]
- *     rule_book_id
- *
- * [column]
- *     rule_book_id, game_system_id, rule_book_name, rule_book_type, register_datetime, register_trace, update_datetime, update_trace
- *
- * [sequence]
- *     
- *
- * [identity]
- *     rule_book_id
- *
- * [version-no]
- *     
- *
- * [foreign table]
- *     GAME_SYSTEM
- *
- * [referrer table]
- *     PARTICIPATE_RULE_BOOK, RULE_BOOK_DICTIONARY, USER_RULE_BOOK
- *
- * [foreign property]
- *     gameSystem
- *
- * [referrer property]
- *     participateRuleBookList, ruleBookDictionaryList, userRuleBookList
- * </pre>
+ * The referrer loader of RULE_BOOK as TABLE.
  * @author DBFlute(AutoGenerator)
  */
 public class DbLoaderOfRuleBook {

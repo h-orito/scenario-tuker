@@ -22,35 +22,7 @@ import dev.wolfort.dbflute.bsentity.dbmeta.*;
 import dev.wolfort.dbflute.cbean.*;
 
 /**
- * The behavior of AUTHOR as TABLE. <br>
- * <pre>
- * [primary key]
- *     author_id
- *
- * [column]
- *     author_id, author_name, register_datetime, register_trace, update_datetime, update_trace
- *
- * [sequence]
- *     
- *
- * [identity]
- *     author_id
- *
- * [version-no]
- *     
- *
- * [foreign table]
- *     
- *
- * [referrer table]
- *     SCENARIO_AUTHOR
- *
- * [foreign property]
- *     
- *
- * [referrer property]
- *     scenarioAuthorList
- * </pre>
+ * The behavior of AUTHOR as TABLE.
  * @author DBFlute(AutoGenerator)
  */
 public abstract class DbBsAuthorBhv extends AbstractBehaviorWritable<DbAuthor, DbAuthorCB> {
@@ -122,7 +94,7 @@ public abstract class DbBsAuthorBhv extends AbstractBehaviorWritable<DbAuthor, D
      * </pre>
      * @param cbLambda The callback for condition-bean of DbAuthor. (NotNull)
      * @return The optional entity selected by the condition. (NotNull: if no data, empty entity)
-     * @throws EntityAlreadyDeletedException When get(), required() of return value is called and the value is null, which means entity has already been deleted (not found).
+     * @throws EntityAlreadyDeletedException When get(), alwaysPresent() of return value is called and the value is null, which means entity has already been deleted (not found).
      * @throws EntityDuplicatedException When the entity has been duplicated.
      * @throws SelectEntityConditionNotFoundException When the condition for selecting an entity is not found.
      */
@@ -161,7 +133,7 @@ public abstract class DbBsAuthorBhv extends AbstractBehaviorWritable<DbAuthor, D
      * Select the entity by the primary-key value.
      * @param authorId : PK, ID, NotNull, INT UNSIGNED(10). (NotNull)
      * @return The optional entity selected by the PK. (NotNull: if no data, empty entity)
-     * @throws EntityAlreadyDeletedException When get(), required() of return value is called and the value is null, which means entity has already been deleted (not found).
+     * @throws EntityAlreadyDeletedException When get(), alwaysPresent() of return value is called and the value is null, which means entity has already been deleted (not found).
      * @throws EntityDuplicatedException When the entity has been duplicated.
      * @throws SelectEntityConditionNotFoundException When the condition for selecting an entity is not found.
      */
@@ -653,7 +625,7 @@ public abstract class DbBsAuthorBhv extends AbstractBehaviorWritable<DbAuthor, D
     /**
      * Delete the several entities by query. (NonExclusiveControl)
      * <pre>
-     * <span style="color: #0000C0">authorBhv</span>.<span style="color: #CC4747">queryDelete</span>(author, <span style="color: #553000">cb</span> <span style="color: #90226C; font-weight: bold"><span style="font-size: 120%">-</span>&gt;</span> {
+     * <span style="color: #0000C0">authorBhv</span>.<span style="color: #CC4747">queryDelete</span>(<span style="color: #553000">cb</span> <span style="color: #90226C; font-weight: bold"><span style="font-size: 120%">-</span>&gt;</span> {
      *     <span style="color: #553000">cb</span>.query().setFoo...
      * });
      * </pre>
@@ -902,19 +874,22 @@ public abstract class DbBsAuthorBhv extends AbstractBehaviorWritable<DbAuthor, D
     //                                                                            Accessor
     //                                                                            ========
     @Override
-    @javax.annotation.Resource(name="dbBehaviorCommandInvoker")
+    @org.springframework.beans.factory.annotation.Autowired
+    @org.springframework.beans.factory.annotation.Qualifier("dbBehaviorCommandInvoker")
     public void setBehaviorCommandInvoker(BehaviorCommandInvoker behaviorCommandInvoker) {
         super.setBehaviorCommandInvoker(behaviorCommandInvoker);
     }
 
     @Override
-    @javax.annotation.Resource(name="dbBehaviorSelector")
+    @org.springframework.beans.factory.annotation.Autowired
+    @org.springframework.beans.factory.annotation.Qualifier("dbBehaviorSelector")
     public void setBehaviorSelector(BehaviorSelector behaviorSelector) {
         super.setBehaviorSelector(behaviorSelector);
     }
 
     @Override
-    @javax.annotation.Resource(name="dbCommonColumnAutoSetupper")
+    @org.springframework.beans.factory.annotation.Autowired
+    @org.springframework.beans.factory.annotation.Qualifier("dbCommonColumnAutoSetupper")
     public void setCommonColumnAutoSetupper(CommonColumnAutoSetupper commonColumnAutoSetupper) {
         super.setCommonColumnAutoSetupper(commonColumnAutoSetupper);
     }

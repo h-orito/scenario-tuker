@@ -13,59 +13,7 @@ import dev.wolfort.dbflute.allcommon.DbDBMetaInstanceHandler;
 import dev.wolfort.dbflute.exentity.*;
 
 /**
- * The entity of TWITTER_USER as TABLE. <br>
- * <pre>
- * [primary-key]
- *     twitter_user_id
- *
- * [column]
- *     twitter_user_id, user_id, twitter_id, screen_name, access_token, token_secret, register_datetime, register_trace, update_datetime, update_trace
- *
- * [sequence]
- *     
- *
- * [identity]
- *     twitter_user_id
- *
- * [version-no]
- *     
- *
- * [foreign table]
- *     USER
- *
- * [referrer table]
- *     
- *
- * [foreign property]
- *     user
- *
- * [referrer property]
- *     
- *
- * [get/set template]
- * /= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
- * Integer twitterUserId = entity.getTwitterUserId();
- * Integer userId = entity.getUserId();
- * String twitterId = entity.getTwitterId();
- * String screenName = entity.getScreenName();
- * String accessToken = entity.getAccessToken();
- * String tokenSecret = entity.getTokenSecret();
- * java.time.LocalDateTime registerDatetime = entity.getRegisterDatetime();
- * String registerTrace = entity.getRegisterTrace();
- * java.time.LocalDateTime updateDatetime = entity.getUpdateDatetime();
- * String updateTrace = entity.getUpdateTrace();
- * entity.setTwitterUserId(twitterUserId);
- * entity.setUserId(userId);
- * entity.setTwitterId(twitterId);
- * entity.setScreenName(screenName);
- * entity.setAccessToken(accessToken);
- * entity.setTokenSecret(tokenSecret);
- * entity.setRegisterDatetime(registerDatetime);
- * entity.setRegisterTrace(registerTrace);
- * entity.setUpdateDatetime(updateDatetime);
- * entity.setUpdateTrace(updateTrace);
- * = = = = = = = = = =/
- * </pre>
+ * The entity of TWITTER_USER as TABLE.
  * @author DBFlute(AutoGenerator)
  */
 public abstract class DbBsTwitterUser extends AbstractEntity implements DomainEntity, DbEntityDefinedCommonColumn {

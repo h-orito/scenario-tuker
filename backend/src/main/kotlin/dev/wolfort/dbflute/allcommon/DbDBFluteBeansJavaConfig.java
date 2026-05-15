@@ -36,7 +36,16 @@ public class DbDBFluteBeansJavaConfig {
     //                                                                   =================
     @Bean(name="dbIntroduction")
     public DbDBFluteInitializer createDBFluteInitializer() { // no lazy for initialize-only component
-        return new dev.wolfort.dbflute.allcommon.DbDBFluteInitializer(_dataSource);
+        hookInitialization();
+        return newDBFluteInitializer(_dataSource);
+    }
+
+    protected void hookInitialization() { // you can override for e.g. DBFluteConfig settings
+        // do nothing as default
+    }
+
+    protected DbDBFluteInitializer newDBFluteInitializer(DataSource dataSource) {
+        return new dev.wolfort.dbflute.allcommon.DbDBFluteInitializer(dataSource);
     }
 
     @Bean(name="dbInvokerAssistant")

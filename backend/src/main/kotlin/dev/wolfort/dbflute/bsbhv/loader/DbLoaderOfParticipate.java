@@ -9,35 +9,7 @@ import dev.wolfort.dbflute.exentity.*;
 import dev.wolfort.dbflute.cbean.*;
 
 /**
- * The referrer loader of PARTICIPATE as TABLE. <br>
- * <pre>
- * [primary key]
- *     participate_id
- *
- * [column]
- *     participate_id, scenario_id, game_system_id, user_id, disp_order, participate_term_from, participate_term_to, player_num, game_master, player_names, required_hours, memo, register_datetime, register_trace, update_datetime, update_trace
- *
- * [sequence]
- *     
- *
- * [identity]
- *     participate_id
- *
- * [version-no]
- *     
- *
- * [foreign table]
- *     GAME_SYSTEM, SCENARIO, USER, PARTICIPATE_IMPRESSION(AsOne)
- *
- * [referrer table]
- *     PARTICIPATE_ROLE, PARTICIPATE_RULE_BOOK, PARTICIPATE_IMPRESSION
- *
- * [foreign property]
- *     gameSystem, scenario, user, participateImpressionAsOne
- *
- * [referrer property]
- *     participateRoleList, participateRuleBookList
- * </pre>
+ * The referrer loader of PARTICIPATE as TABLE.
  * @author DBFlute(AutoGenerator)
  */
 public class DbLoaderOfParticipate {

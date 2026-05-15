@@ -4,8 +4,8 @@ import dev.wolfort.scenariotuker.fw.security.ScenarioTukerUser
 import org.dbflute.hook.AccessContext
 import org.springframework.web.servlet.HandlerInterceptor
 import java.time.LocalDateTime
-import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpServletResponse
+import jakarta.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletResponse
 
 
 class AccessContextInterceptor : HandlerInterceptor {

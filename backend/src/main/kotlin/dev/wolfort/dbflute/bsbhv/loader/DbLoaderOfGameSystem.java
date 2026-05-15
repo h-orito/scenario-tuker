@@ -9,35 +9,7 @@ import dev.wolfort.dbflute.exentity.*;
 import dev.wolfort.dbflute.cbean.*;
 
 /**
- * The referrer loader of GAME_SYSTEM as TABLE. <br>
- * <pre>
- * [primary key]
- *     game_system_id
- *
- * [column]
- *     game_system_id, game_system_name, register_datetime, register_trace, update_datetime, update_trace
- *
- * [sequence]
- *     
- *
- * [identity]
- *     game_system_id
- *
- * [version-no]
- *     
- *
- * [foreign table]
- *     
- *
- * [referrer table]
- *     GAME_SYSTEM_DICTIONARY, PARTICIPATE, RULE_BOOK, SCENARIO_GAME_SYSTEM
- *
- * [foreign property]
- *     
- *
- * [referrer property]
- *     gameSystemDictionaryList, participateList, ruleBookList, scenarioGameSystemList
- * </pre>
+ * The referrer loader of GAME_SYSTEM as TABLE.
  * @author DBFlute(AutoGenerator)
  */
 public class DbLoaderOfGameSystem {

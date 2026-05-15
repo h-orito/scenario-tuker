@@ -13,53 +13,7 @@ import dev.wolfort.dbflute.allcommon.DbDBMetaInstanceHandler;
 import dev.wolfort.dbflute.exentity.*;
 
 /**
- * The entity of PARTICIPATE_RULE_BOOK as TABLE. <br>
- * <pre>
- * [primary-key]
- *     participate_rule_book_id
- *
- * [column]
- *     participate_rule_book_id, participate_id, rule_book_id, register_datetime, register_trace, update_datetime, update_trace
- *
- * [sequence]
- *     
- *
- * [identity]
- *     participate_rule_book_id
- *
- * [version-no]
- *     
- *
- * [foreign table]
- *     PARTICIPATE, RULE_BOOK
- *
- * [referrer table]
- *     
- *
- * [foreign property]
- *     participate, ruleBook
- *
- * [referrer property]
- *     
- *
- * [get/set template]
- * /= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
- * Integer participateRuleBookId = entity.getParticipateRuleBookId();
- * Integer participateId = entity.getParticipateId();
- * Integer ruleBookId = entity.getRuleBookId();
- * java.time.LocalDateTime registerDatetime = entity.getRegisterDatetime();
- * String registerTrace = entity.getRegisterTrace();
- * java.time.LocalDateTime updateDatetime = entity.getUpdateDatetime();
- * String updateTrace = entity.getUpdateTrace();
- * entity.setParticipateRuleBookId(participateRuleBookId);
- * entity.setParticipateId(participateId);
- * entity.setRuleBookId(ruleBookId);
- * entity.setRegisterDatetime(registerDatetime);
- * entity.setRegisterTrace(registerTrace);
- * entity.setUpdateDatetime(updateDatetime);
- * entity.setUpdateTrace(updateTrace);
- * = = = = = = = = = =/
- * </pre>
+ * The entity of PARTICIPATE_RULE_BOOK as TABLE.
  * @author DBFlute(AutoGenerator)
  */
 public abstract class DbBsParticipateRuleBook extends AbstractEntity implements DomainEntity, DbEntityDefinedCommonColumn {
