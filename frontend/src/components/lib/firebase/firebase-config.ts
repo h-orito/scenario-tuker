@@ -1,10 +1,10 @@
-import { initializeApp, getApps, FirebaseApp } from 'firebase/app'
+import { initializeApp, getApps, FirebaseApp } from '@firebase/app'
 import {
   getAuth,
   User,
   Auth,
   onAuthStateChanged as firebaseOnAuthStateChanged
-} from 'firebase/auth'
+} from '@firebase/auth'
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,

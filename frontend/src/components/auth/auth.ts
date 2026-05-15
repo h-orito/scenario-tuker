@@ -6,7 +6,7 @@ import {
   getTokenExpired
 } from './auth-cookie'
 import dayjs from '../lib/dayjs/dayjs'
-import { User as FirebaseUser } from 'firebase/auth'
+import { User as FirebaseUser } from '@firebase/auth'
 import { auth as firebaseAuth } from '../lib/firebase/firebase-config'
 
 export const setAuthorizationCookie = async (user: FirebaseUser) => {
