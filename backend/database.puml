@@ -1,0 +1,164 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+entity User {
+    * user_id: int unsigned <<generated>>
+    --
+    * user_name: varchar(50)
+    introduction: text
+}
+
+entity TwitterUser {
+	* twitter_user_id: int unsigned <<generated>>
+	--
+	* user_id: int unsigned <<foreign key>>
+	* twitter_id: varchar(255)
+	* screen_name: varchar(255)
+	* access_token: varchar(255)
+	* token_secret: varchar(255)
+}
+
+User ||-right-|| TwitterUser
+
+entity GameSystem {
+	* game_system_id: int unsigned <<generated>>
+	--
+	* game_system_name: varchar(255) <<unique>>
+}
+
+entity GameSystemDictionary {
+    * game_system_dictionary_id: int unsigned <<generated>>
+    --
+    * game_system_id: int unsigned <<foreign key>>
+    * game_system_name: varchar(255)
+}
+
+GameSystemDictionary }|-right-|| GameSystem
+
+entity RuleBook {
+    * rule_book_id: int unsigned <<generated>>
+    --
+    * game_system_id: int unsigned <<foreign key>>
+    * rule_book_name: varchar(255)
+    * rule_book_type: varchar(50)
+}
+
+GameSystem ||-left-o{ RuleBook
+
+entity RuleBookDictionary {
+    * rule_book_dictionary_id: int unsigned <<generated>>
+    --
+    * rule_book_id: int unsigned <<foreign key>>
+    * rule_book_name: varchar(255)
+}
+
+RuleBookDictionary }|--down-|| RuleBook
+
+entity UserRuleBook {
+	* user_rule_book_id: int unsigned <<generated>>
+	--
+	* user_id: int unsigned <<foreign key>>
+	* rule_book_id: int unsigned <<foreign key>>
+}
+
+UserRuleBook }o-down-o| RuleBook
+UserRuleBook }o-right-o| User
+
+entity Scenario {
+    * scenario_id: int unsigned <<generated>>
+    --
+    * scenario_name: varchar(255)
+    * scenario_type: varchar(50)
+    scenario_url: varchar(255)
+    game_master_requirement: int unsigned <<foreign key>>
+    player_num_min: varchar(50)
+    player_num_max: int unsigned
+}
+
+GameSystem ||-right-o{ Scenario
+
+entity UserScenario {
+	* user_scenario_id: int unsigned <<generated>>
+	--
+	* user_id: int unsigned <<foreign key>>
+	* scenario_id: int unsigned <<foreign key>>
+}
+
+User |o-down-o{ UserScenario
+Scenario |o-up-o{ UserScenario
+
+entity Author {
+	* author_id: int unsigned <<generated>>
+	--
+	* author_name: varchar(100)
+}
+
+entity ScenarioAuthor {
+	* scenario_author_id: int unsigned <<generated>>
+	--
+	* scenario_id: int unsigned <<foreign key>>
+	* author_id: int unsigned <<foreign key>>
+}
+
+Scenario ||-down-o{ ScenarioAuthor
+ScenarioAuthor }o-down-|| Author
+
+entity ScenarioDictionary {
+    * scenario_dictionary_id: int unsigned <<generated>>
+    --
+    * scenario_id: int unsigned <<foreign key>>
+    * scenario_name: varchar(255) <<unique>>
+}
+
+Scenario ||-right-|{ ScenarioDictionary
+
+entity Participate {
+    * participate_id: int unsigned <<generated>>
+    --
+    * scenario_id: int unsigned <<foreign key>>
+    * user_id: int unsigned <<foreign key>>
+    * disp_order: int unsigned
+    participate_term_from: date
+    participate_term_to: date
+    player_num: int unsigned
+    game_master: varchar(255)
+    player_members: varchar(255)
+    required_hours: int unsigned
+    memo: varchar(255)
+}
+
+User ||-down-o{ Participate
+Participate }o-|| Scenario
+Participate -[hidden]down- GameSystem
+
+entity ParticipateRole {
+    * participate_role_id: int unsigned <<generated>>
+    --
+    * participate_id: int unsigned <<foreign key>>
+    * participate_role_name: varchar(50)
+}
+
+Participate ||--down--|{ ParticipateRole
+
+entity ParticipateImpression {
+	* participate_impression_id: int unsigned <<generated>>
+	--
+	* participate_id: int unsigned <<foreign key>>
+	* has_spoiler: boolean
+	* disclosure_range: varchar(50)
+	* impression: text
+}
+
+Participate ||--down--o| ParticipateImpression
+
+entity ParticipateRuleBook {
+	* participate_rule_book_id: int unsigned <<generated>>
+	--
+	* participate_id: int unsigned <<foreign key>>
+	* rule_book_id: int unsigned <<foreign key>>
+}
+
+ParticipateRuleBook }o-down-|| Participate
+ParticipateRuleBook }o-left-|| RuleBook
+
+@enduml
