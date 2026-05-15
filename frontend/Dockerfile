@@ -31,7 +31,7 @@ ENV NEXT_PUBLIC_ENV=${ENV}
 ARG API_BASE
 ENV NEXT_PUBLIC_API_BASE=${API_BASE}
 
-RUN corepack enable && corepack prepare pnpm@latest --activate
+RUN corepack enable
 RUN pnpm install --frozen-lockfile
 RUN pnpm build
 
