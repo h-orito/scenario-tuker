@@ -1,0 +1,61 @@
+name: delivery (frontend)
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - 'frontend/**'
+      - '.github/workflows/deploy-frontend.yml'
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04-arm
+    permissions:
+      contents: read
+      packages: write
+    env:
+      IMAGE_NAME: scenario-tuker-frontend
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build image
+        run: >
+          docker build
+          --build-arg FIREBASE_API_KEY=${{ secrets.FIREBASE_API_KEY }}
+          --build-arg FIREBASE_AUTH_DOMAIN=${{ secrets.FIREBASE_AUTH_DOMAIN }}
+          --build-arg FIREBASE_DATABASEURL=${{ secrets.FIREBASE_DATABASEURL }}
+          --build-arg FIREBASE_PROJECTID=${{ secrets.FIREBASE_PROJECTID }}
+          --build-arg FIREBASE_STORAGEBUCKET=${{ secrets.FIREBASE_STORAGEBUCKET }}
+          --build-arg FIREBASE_MESSAGINGSENDERID=${{ secrets.FIREBASE_MESSAGINGSENDERID }}
+          --build-arg FIREBASE_APPID=${{ secrets.FIREBASE_APPID }}
+          --build-arg API_BASE=${{ secrets.API_BASE }}
+          --build-arg ENV=${{ secrets.ENV }}
+          -t ghcr.io/h-orito/${{ env.IMAGE_NAME }}:latest .
+
+      - name: Push image
+        run: docker push ghcr.io/h-orito/${{ env.IMAGE_NAME }}
+
+  deploy:
+    needs: build
+    runs-on: [self-hosted, k8s]
+    steps:
+      - name: Setup kubectl
+        uses: azure/setup-kubectl@v4
+        with:
+          version: latest
+
+      - name: Restart deployment
+        run: kubectl rollout restart deployment/scenario-tuker-frontend -n default
