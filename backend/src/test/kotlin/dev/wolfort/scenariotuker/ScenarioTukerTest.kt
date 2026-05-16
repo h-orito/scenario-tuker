@@ -18,7 +18,6 @@ open class ScenarioTukerTest {
     fun setUp() {
         // firebase関連はmockにする
         whenever(firebaseConfig.init()).then { }
-        whenever(firebaseConfig.firebaseDatabase()).thenReturn(null)
         // set access context
         setAccessContext()
     }
