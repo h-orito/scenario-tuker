@@ -13,55 +13,7 @@ import dev.wolfort.dbflute.allcommon.DbDBMetaInstanceHandler;
 import dev.wolfort.dbflute.exentity.*;
 
 /**
- * The entity of RULE_BOOK as TABLE. <br>
- * <pre>
- * [primary-key]
- *     rule_book_id
- *
- * [column]
- *     rule_book_id, game_system_id, rule_book_name, rule_book_type, register_datetime, register_trace, update_datetime, update_trace
- *
- * [sequence]
- *     
- *
- * [identity]
- *     rule_book_id
- *
- * [version-no]
- *     
- *
- * [foreign table]
- *     GAME_SYSTEM
- *
- * [referrer table]
- *     PARTICIPATE_RULE_BOOK, RULE_BOOK_DICTIONARY, USER_RULE_BOOK
- *
- * [foreign property]
- *     gameSystem
- *
- * [referrer property]
- *     participateRuleBookList, ruleBookDictionaryList, userRuleBookList
- *
- * [get/set template]
- * /= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
- * Integer ruleBookId = entity.getRuleBookId();
- * Integer gameSystemId = entity.getGameSystemId();
- * String ruleBookName = entity.getRuleBookName();
- * String ruleBookType = entity.getRuleBookType();
- * java.time.LocalDateTime registerDatetime = entity.getRegisterDatetime();
- * String registerTrace = entity.getRegisterTrace();
- * java.time.LocalDateTime updateDatetime = entity.getUpdateDatetime();
- * String updateTrace = entity.getUpdateTrace();
- * entity.setRuleBookId(ruleBookId);
- * entity.setGameSystemId(gameSystemId);
- * entity.setRuleBookName(ruleBookName);
- * entity.setRuleBookType(ruleBookType);
- * entity.setRegisterDatetime(registerDatetime);
- * entity.setRegisterTrace(registerTrace);
- * entity.setUpdateDatetime(updateDatetime);
- * entity.setUpdateTrace(updateTrace);
- * = = = = = = = = = =/
- * </pre>
+ * The entity of RULE_BOOK as TABLE.
  * @author DBFlute(AutoGenerator)
  */
 public abstract class DbBsRuleBook extends AbstractEntity implements DomainEntity, DbEntityDefinedCommonColumn {

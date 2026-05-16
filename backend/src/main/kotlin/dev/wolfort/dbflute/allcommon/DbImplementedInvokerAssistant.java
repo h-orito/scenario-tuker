@@ -439,11 +439,12 @@ public class DbImplementedInvokerAssistant implements InvokerAssistant {
     protected ResourceParameter createResourceParameter() {
         ResourceParameter parameter = newResourceParameter();
         parameter.setOutsideSqlPackage(DbDBFluteConfig.getInstance().getOutsideSqlPackage());
-        parameter.setMappingDateTimeZoneProvider(DbDBFluteConfig.getInstance().getMappingDateTimeZoneProvider());
+        parameter.setMappingDateTimeZoneProvider(DbDBFluteConfig.getInstance().getMappingDateTimeZoneProvider()); // since 1.1.0
         parameter.setLogDatePattern(DbDBFluteConfig.getInstance().getLogDatePattern());
         parameter.setLogTimestampPattern(DbDBFluteConfig.getInstance().getLogTimestampPattern());
         parameter.setLogTimePattern(DbDBFluteConfig.getInstance().getLogTimePattern());
         parameter.setLogTimeZoneProvider(DbDBFluteConfig.getInstance().getLogTimeZoneProvider());
+        parameter.setBehaviorLogMaskProvider(DbDBFluteConfig.getInstance().getBehaviorLogMaskProvider()); // since 1.2.7
         parameter.setInternalDebug(DbDBFluteConfig.getInstance().isInternalDebug());
         return parameter;
     }

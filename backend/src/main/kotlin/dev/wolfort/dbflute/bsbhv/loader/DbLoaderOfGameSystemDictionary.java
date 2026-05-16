@@ -7,35 +7,7 @@ import dev.wolfort.dbflute.exbhv.*;
 import dev.wolfort.dbflute.exentity.*;
 
 /**
- * The referrer loader of GAME_SYSTEM_DICTIONARY as TABLE. <br>
- * <pre>
- * [primary key]
- *     game_system_dictionary_id
- *
- * [column]
- *     game_system_dictionary_id, game_system_id, game_system_name, register_datetime, register_trace, update_datetime, update_trace
- *
- * [sequence]
- *     
- *
- * [identity]
- *     game_system_dictionary_id
- *
- * [version-no]
- *     
- *
- * [foreign table]
- *     GAME_SYSTEM
- *
- * [referrer table]
- *     
- *
- * [foreign property]
- *     gameSystem
- *
- * [referrer property]
- *     
- * </pre>
+ * The referrer loader of GAME_SYSTEM_DICTIONARY as TABLE.
  * @author DBFlute(AutoGenerator)
  */
 public class DbLoaderOfGameSystemDictionary {

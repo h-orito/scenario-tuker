@@ -7,35 +7,7 @@ import dev.wolfort.dbflute.exbhv.*;
 import dev.wolfort.dbflute.exentity.*;
 
 /**
- * The referrer loader of PARTICIPATE_ROLE as TABLE. <br>
- * <pre>
- * [primary key]
- *     participate_role_id
- *
- * [column]
- *     participate_role_id, participate_id, participate_role_name, register_datetime, register_trace, update_datetime, update_trace
- *
- * [sequence]
- *     
- *
- * [identity]
- *     participate_role_id
- *
- * [version-no]
- *     
- *
- * [foreign table]
- *     PARTICIPATE
- *
- * [referrer table]
- *     
- *
- * [foreign property]
- *     participate
- *
- * [referrer property]
- *     
- * </pre>
+ * The referrer loader of PARTICIPATE_ROLE as TABLE.
  * @author DBFlute(AutoGenerator)
  */
 public class DbLoaderOfParticipateRole {

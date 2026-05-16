@@ -22,35 +22,7 @@ import dev.wolfort.dbflute.bsentity.dbmeta.*;
 import dev.wolfort.dbflute.cbean.*;
 
 /**
- * The behavior of TWITTER_USER as TABLE. <br>
- * <pre>
- * [primary key]
- *     twitter_user_id
- *
- * [column]
- *     twitter_user_id, user_id, twitter_id, screen_name, access_token, token_secret, register_datetime, register_trace, update_datetime, update_trace
- *
- * [sequence]
- *     
- *
- * [identity]
- *     twitter_user_id
- *
- * [version-no]
- *     
- *
- * [foreign table]
- *     USER
- *
- * [referrer table]
- *     
- *
- * [foreign property]
- *     user
- *
- * [referrer property]
- *     
- * </pre>
+ * The behavior of TWITTER_USER as TABLE.
  * @author DBFlute(AutoGenerator)
  */
 public abstract class DbBsTwitterUserBhv extends AbstractBehaviorWritable<DbTwitterUser, DbTwitterUserCB> {
@@ -122,7 +94,7 @@ public abstract class DbBsTwitterUserBhv extends AbstractBehaviorWritable<DbTwit
      * </pre>
      * @param cbLambda The callback for condition-bean of DbTwitterUser. (NotNull)
      * @return The optional entity selected by the condition. (NotNull: if no data, empty entity)
-     * @throws EntityAlreadyDeletedException When get(), required() of return value is called and the value is null, which means entity has already been deleted (not found).
+     * @throws EntityAlreadyDeletedException When get(), alwaysPresent() of return value is called and the value is null, which means entity has already been deleted (not found).
      * @throws EntityDuplicatedException When the entity has been duplicated.
      * @throws SelectEntityConditionNotFoundException When the condition for selecting an entity is not found.
      */
@@ -161,7 +133,7 @@ public abstract class DbBsTwitterUserBhv extends AbstractBehaviorWritable<DbTwit
      * Select the entity by the primary-key value.
      * @param twitterUserId : PK, ID, NotNull, INT UNSIGNED(10). (NotNull)
      * @return The optional entity selected by the PK. (NotNull: if no data, empty entity)
-     * @throws EntityAlreadyDeletedException When get(), required() of return value is called and the value is null, which means entity has already been deleted (not found).
+     * @throws EntityAlreadyDeletedException When get(), alwaysPresent() of return value is called and the value is null, which means entity has already been deleted (not found).
      * @throws EntityDuplicatedException When the entity has been duplicated.
      * @throws SelectEntityConditionNotFoundException When the condition for selecting an entity is not found.
      */
@@ -190,7 +162,7 @@ public abstract class DbBsTwitterUserBhv extends AbstractBehaviorWritable<DbTwit
      * Select the entity by the unique-key value.
      * @param userId : UQ, NotNull, INT UNSIGNED(10), FK to user. (NotNull)
      * @return The optional entity selected by the unique key. (NotNull: if no data, empty entity)
-     * @throws EntityAlreadyDeletedException When get(), required() of return value is called and the value is null, which means entity has already been deleted (not found).
+     * @throws EntityAlreadyDeletedException When get(), alwaysPresent() of return value is called and the value is null, which means entity has already been deleted (not found).
      * @throws EntityDuplicatedException When the entity has been duplicated.
      * @throws SelectEntityConditionNotFoundException When the condition for selecting an entity is not found.
      */
@@ -630,7 +602,7 @@ public abstract class DbBsTwitterUserBhv extends AbstractBehaviorWritable<DbTwit
     /**
      * Delete the several entities by query. (NonExclusiveControl)
      * <pre>
-     * <span style="color: #0000C0">twitterUserBhv</span>.<span style="color: #CC4747">queryDelete</span>(twitterUser, <span style="color: #553000">cb</span> <span style="color: #90226C; font-weight: bold"><span style="font-size: 120%">-</span>&gt;</span> {
+     * <span style="color: #0000C0">twitterUserBhv</span>.<span style="color: #CC4747">queryDelete</span>(<span style="color: #553000">cb</span> <span style="color: #90226C; font-weight: bold"><span style="font-size: 120%">-</span>&gt;</span> {
      *     <span style="color: #553000">cb</span>.query().setFoo...
      * });
      * </pre>
@@ -879,19 +851,22 @@ public abstract class DbBsTwitterUserBhv extends AbstractBehaviorWritable<DbTwit
     //                                                                            Accessor
     //                                                                            ========
     @Override
-    @javax.annotation.Resource(name="dbBehaviorCommandInvoker")
+    @org.springframework.beans.factory.annotation.Autowired
+    @org.springframework.beans.factory.annotation.Qualifier("dbBehaviorCommandInvoker")
     public void setBehaviorCommandInvoker(BehaviorCommandInvoker behaviorCommandInvoker) {
         super.setBehaviorCommandInvoker(behaviorCommandInvoker);
     }
 
     @Override
-    @javax.annotation.Resource(name="dbBehaviorSelector")
+    @org.springframework.beans.factory.annotation.Autowired
+    @org.springframework.beans.factory.annotation.Qualifier("dbBehaviorSelector")
     public void setBehaviorSelector(BehaviorSelector behaviorSelector) {
         super.setBehaviorSelector(behaviorSelector);
     }
 
     @Override
-    @javax.annotation.Resource(name="dbCommonColumnAutoSetupper")
+    @org.springframework.beans.factory.annotation.Autowired
+    @org.springframework.beans.factory.annotation.Qualifier("dbCommonColumnAutoSetupper")
     public void setCommonColumnAutoSetupper(CommonColumnAutoSetupper commonColumnAutoSetupper) {
         super.setCommonColumnAutoSetupper(commonColumnAutoSetupper);
     }

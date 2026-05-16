@@ -27,17 +27,14 @@ public class DbDBCurrent {
 
     protected DBDef _currentDBDef;
     {
-        _currentDBDef = DBDef.codeOf("mysql");
-        if (_currentDBDef == null) {
-            _currentDBDef = DBDef.Unknown;
-        }
+        _currentDBDef = DBDef.of("mysql").orElse(DBDef.Unknown);
     }
 
     // ===================================================================================
     //                                                                         Constructor
     //                                                                         ===========
     /**
-     * Constructor.
+     * Only for singleton.
      */
     private DbDBCurrent() {
     }
@@ -46,8 +43,8 @@ public class DbDBCurrent {
     //                                                                           Singleton
     //                                                                           =========
     /**
-     * Get singleton instance.
-     * @return Singleton instance. (NotNull)
+     * Get the saved singleton instance.
+     * @return always same instance. (NotNull)
      */
     public static DbDBCurrent getInstance() {
         return _instance;

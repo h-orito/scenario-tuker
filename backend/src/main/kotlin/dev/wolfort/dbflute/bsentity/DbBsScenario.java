@@ -11,63 +11,7 @@ import dev.wolfort.dbflute.allcommon.DbDBMetaInstanceHandler;
 import dev.wolfort.dbflute.exentity.*;
 
 /**
- * The entity of SCENARIO as TABLE. <br>
- * <pre>
- * [primary-key]
- *     scenario_id
- *
- * [column]
- *     scenario_id, scenario_name, scenario_type, scenario_url, game_master_requirement, player_num_min, player_num_max, required_hours, register_datetime, register_trace, update_datetime, update_trace
- *
- * [sequence]
- *     
- *
- * [identity]
- *     scenario_id
- *
- * [version-no]
- *     
- *
- * [foreign table]
- *     
- *
- * [referrer table]
- *     PARTICIPATE, SCENARIO_AUTHOR, SCENARIO_DICTIONARY, SCENARIO_GAME_SYSTEM, USER_SCENARIO
- *
- * [foreign property]
- *     
- *
- * [referrer property]
- *     participateList, scenarioAuthorList, scenarioDictionaryList, scenarioGameSystemList, userScenarioList
- *
- * [get/set template]
- * /= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
- * Integer scenarioId = entity.getScenarioId();
- * String scenarioName = entity.getScenarioName();
- * String scenarioType = entity.getScenarioType();
- * String scenarioUrl = entity.getScenarioUrl();
- * String gameMasterRequirement = entity.getGameMasterRequirement();
- * Integer playerNumMin = entity.getPlayerNumMin();
- * Integer playerNumMax = entity.getPlayerNumMax();
- * Integer requiredHours = entity.getRequiredHours();
- * java.time.LocalDateTime registerDatetime = entity.getRegisterDatetime();
- * String registerTrace = entity.getRegisterTrace();
- * java.time.LocalDateTime updateDatetime = entity.getUpdateDatetime();
- * String updateTrace = entity.getUpdateTrace();
- * entity.setScenarioId(scenarioId);
- * entity.setScenarioName(scenarioName);
- * entity.setScenarioType(scenarioType);
- * entity.setScenarioUrl(scenarioUrl);
- * entity.setGameMasterRequirement(gameMasterRequirement);
- * entity.setPlayerNumMin(playerNumMin);
- * entity.setPlayerNumMax(playerNumMax);
- * entity.setRequiredHours(requiredHours);
- * entity.setRegisterDatetime(registerDatetime);
- * entity.setRegisterTrace(registerTrace);
- * entity.setUpdateDatetime(updateDatetime);
- * entity.setUpdateTrace(updateTrace);
- * = = = = = = = = = =/
- * </pre>
+ * The entity of SCENARIO as TABLE.
  * @author DBFlute(AutoGenerator)
  */
 public abstract class DbBsScenario extends AbstractEntity implements DomainEntity, DbEntityDefinedCommonColumn {

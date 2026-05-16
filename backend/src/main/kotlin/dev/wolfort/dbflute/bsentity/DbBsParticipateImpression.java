@@ -13,57 +13,7 @@ import dev.wolfort.dbflute.allcommon.DbDBMetaInstanceHandler;
 import dev.wolfort.dbflute.exentity.*;
 
 /**
- * The entity of PARTICIPATE_IMPRESSION as TABLE. <br>
- * <pre>
- * [primary-key]
- *     participate_impression_id
- *
- * [column]
- *     participate_impression_id, participate_id, has_spoiler, disclosure_range, impression, register_datetime, register_trace, update_datetime, update_trace
- *
- * [sequence]
- *     
- *
- * [identity]
- *     participate_impression_id
- *
- * [version-no]
- *     
- *
- * [foreign table]
- *     PARTICIPATE
- *
- * [referrer table]
- *     
- *
- * [foreign property]
- *     participate
- *
- * [referrer property]
- *     
- *
- * [get/set template]
- * /= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
- * Integer participateImpressionId = entity.getParticipateImpressionId();
- * Integer participateId = entity.getParticipateId();
- * Boolean hasSpoiler = entity.getHasSpoiler();
- * String disclosureRange = entity.getDisclosureRange();
- * String impression = entity.getImpression();
- * java.time.LocalDateTime registerDatetime = entity.getRegisterDatetime();
- * String registerTrace = entity.getRegisterTrace();
- * java.time.LocalDateTime updateDatetime = entity.getUpdateDatetime();
- * String updateTrace = entity.getUpdateTrace();
- * entity.setParticipateImpressionId(participateImpressionId);
- * entity.setParticipateId(participateId);
- * entity.setHasSpoiler(hasSpoiler);
- * entity.setDisclosureRange(disclosureRange);
- * entity.setImpression(impression);
- * entity.setRegisterDatetime(registerDatetime);
- * entity.setRegisterTrace(registerTrace);
- * entity.setUpdateDatetime(updateDatetime);
- * entity.setUpdateTrace(updateTrace);
- * = = = = = = = = = =/
- * </pre>
+ * The entity of PARTICIPATE_IMPRESSION as TABLE.
  * @author DBFlute(AutoGenerator)
  */
 public abstract class DbBsParticipateImpression extends AbstractEntity implements DomainEntity, DbEntityDefinedCommonColumn {

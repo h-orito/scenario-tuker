@@ -7,35 +7,7 @@ import dev.wolfort.dbflute.exbhv.*;
 import dev.wolfort.dbflute.exentity.*;
 
 /**
- * The referrer loader of SCENARIO_AUTHOR as TABLE. <br>
- * <pre>
- * [primary key]
- *     scenario_author_id
- *
- * [column]
- *     scenario_author_id, scenario_id, author_id, register_datetime, register_trace, update_datetime, update_trace
- *
- * [sequence]
- *     
- *
- * [identity]
- *     scenario_author_id
- *
- * [version-no]
- *     
- *
- * [foreign table]
- *     AUTHOR, SCENARIO
- *
- * [referrer table]
- *     
- *
- * [foreign property]
- *     author, scenario
- *
- * [referrer property]
- *     
- * </pre>
+ * The referrer loader of SCENARIO_AUTHOR as TABLE.
  * @author DBFlute(AutoGenerator)
  */
 public class DbLoaderOfScenarioAuthor {

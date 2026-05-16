@@ -7,35 +7,7 @@ import dev.wolfort.dbflute.exbhv.*;
 import dev.wolfort.dbflute.exentity.*;
 
 /**
- * The referrer loader of USER_RULE_BOOK as TABLE. <br>
- * <pre>
- * [primary key]
- *     user_rule_book_id
- *
- * [column]
- *     user_rule_book_id, user_id, rule_book_id, register_datetime, register_trace, update_datetime, update_trace
- *
- * [sequence]
- *     
- *
- * [identity]
- *     user_rule_book_id
- *
- * [version-no]
- *     
- *
- * [foreign table]
- *     RULE_BOOK, USER
- *
- * [referrer table]
- *     
- *
- * [foreign property]
- *     ruleBook, user
- *
- * [referrer property]
- *     
- * </pre>
+ * The referrer loader of USER_RULE_BOOK as TABLE.
  * @author DBFlute(AutoGenerator)
  */
 public class DbLoaderOfUserRuleBook {

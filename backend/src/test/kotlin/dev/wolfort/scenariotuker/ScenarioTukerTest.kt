@@ -1,24 +1,23 @@
 package dev.wolfort.scenariotuker
 
-import com.nhaarman.mockitokotlin2.whenever
+import org.mockito.kotlin.whenever
 import dev.wolfort.scenariotuker.fw.config.FirebaseConfig
 import dev.wolfort.scenariotuker.fw.interceptor.ScenarioTukerUserInfoUtil
 import dev.wolfort.scenariotuker.fw.security.ScenarioTukerUser
 import org.dbflute.hook.AccessContext
 import org.junit.jupiter.api.BeforeEach
-import org.springframework.boot.test.mock.mockito.MockBean
+import org.springframework.test.context.bean.override.mockito.MockitoBean
 import java.time.LocalDateTime
 
 open class ScenarioTukerTest {
 
-    @MockBean
+    @MockitoBean
     lateinit var firebaseConfig: FirebaseConfig
 
     @BeforeEach
     fun setUp() {
         // firebase関連はmockにする
         whenever(firebaseConfig.init()).then { }
-        whenever(firebaseConfig.firebaseDatabase()).thenReturn(null)
         // set access context
         setAccessContext()
     }

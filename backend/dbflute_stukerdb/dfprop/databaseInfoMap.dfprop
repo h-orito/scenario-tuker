@@ -16,7 +16,7 @@
 #
 map:{
     ; driver   = com.mysql.jdbc.Driver
-    ; url      = jdbc:mysql://127.0.0.1:3306/stukerdb?character_set_server=utf8mb4
+    ; url      = jdbc:mysql://127.0.0.1:4306/stukerdb?character_set_server=utf8mb4
     ; schema   = 
     ; user     = stuker
     ; password = scenar10

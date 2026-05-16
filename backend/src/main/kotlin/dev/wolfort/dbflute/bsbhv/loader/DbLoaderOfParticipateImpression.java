@@ -7,35 +7,7 @@ import dev.wolfort.dbflute.exbhv.*;
 import dev.wolfort.dbflute.exentity.*;
 
 /**
- * The referrer loader of PARTICIPATE_IMPRESSION as TABLE. <br>
- * <pre>
- * [primary key]
- *     participate_impression_id
- *
- * [column]
- *     participate_impression_id, participate_id, has_spoiler, disclosure_range, impression, register_datetime, register_trace, update_datetime, update_trace
- *
- * [sequence]
- *     
- *
- * [identity]
- *     participate_impression_id
- *
- * [version-no]
- *     
- *
- * [foreign table]
- *     PARTICIPATE
- *
- * [referrer table]
- *     
- *
- * [foreign property]
- *     participate
- *
- * [referrer property]
- *     
- * </pre>
+ * The referrer loader of PARTICIPATE_IMPRESSION as TABLE.
  * @author DBFlute(AutoGenerator)
  */
 public class DbLoaderOfParticipateImpression {

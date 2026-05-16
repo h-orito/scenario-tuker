@@ -13,53 +13,7 @@ import dev.wolfort.dbflute.allcommon.DbDBMetaInstanceHandler;
 import dev.wolfort.dbflute.exentity.*;
 
 /**
- * The entity of USER_RULE_BOOK as TABLE. <br>
- * <pre>
- * [primary-key]
- *     user_rule_book_id
- *
- * [column]
- *     user_rule_book_id, user_id, rule_book_id, register_datetime, register_trace, update_datetime, update_trace
- *
- * [sequence]
- *     
- *
- * [identity]
- *     user_rule_book_id
- *
- * [version-no]
- *     
- *
- * [foreign table]
- *     RULE_BOOK, USER
- *
- * [referrer table]
- *     
- *
- * [foreign property]
- *     ruleBook, user
- *
- * [referrer property]
- *     
- *
- * [get/set template]
- * /= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
- * Integer userRuleBookId = entity.getUserRuleBookId();
- * Integer userId = entity.getUserId();
- * Integer ruleBookId = entity.getRuleBookId();
- * java.time.LocalDateTime registerDatetime = entity.getRegisterDatetime();
- * String registerTrace = entity.getRegisterTrace();
- * java.time.LocalDateTime updateDatetime = entity.getUpdateDatetime();
- * String updateTrace = entity.getUpdateTrace();
- * entity.setUserRuleBookId(userRuleBookId);
- * entity.setUserId(userId);
- * entity.setRuleBookId(ruleBookId);
- * entity.setRegisterDatetime(registerDatetime);
- * entity.setRegisterTrace(registerTrace);
- * entity.setUpdateDatetime(updateDatetime);
- * entity.setUpdateTrace(updateTrace);
- * = = = = = = = = = =/
- * </pre>
+ * The entity of USER_RULE_BOOK as TABLE.
  * @author DBFlute(AutoGenerator)
  */
 public abstract class DbBsUserRuleBook extends AbstractEntity implements DomainEntity, DbEntityDefinedCommonColumn {

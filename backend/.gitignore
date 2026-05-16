@@ -36,6 +36,11 @@ out/
 ### VS Code ###
 .vscode/
 
+### Local secrets ###
+.env
+.env.*
+!.env.example
+
 /dbflute_stukerdb/log/
 /dbflute_stukerdb/output/
 /dbflute_stukerdb/schema/

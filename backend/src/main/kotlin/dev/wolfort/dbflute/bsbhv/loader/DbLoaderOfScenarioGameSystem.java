@@ -7,35 +7,7 @@ import dev.wolfort.dbflute.exbhv.*;
 import dev.wolfort.dbflute.exentity.*;
 
 /**
- * The referrer loader of SCENARIO_GAME_SYSTEM as TABLE. <br>
- * <pre>
- * [primary key]
- *     scenario_game_system_id
- *
- * [column]
- *     scenario_game_system_id, scenario_id, game_system_id, register_datetime, register_trace, update_datetime, update_trace
- *
- * [sequence]
- *     
- *
- * [identity]
- *     scenario_game_system_id
- *
- * [version-no]
- *     
- *
- * [foreign table]
- *     GAME_SYSTEM, SCENARIO
- *
- * [referrer table]
- *     
- *
- * [foreign property]
- *     gameSystem, scenario
- *
- * [referrer property]
- *     
- * </pre>
+ * The referrer loader of SCENARIO_GAME_SYSTEM as TABLE.
  * @author DBFlute(AutoGenerator)
  */
 public class DbLoaderOfScenarioGameSystem {

@@ -13,53 +13,7 @@ import dev.wolfort.dbflute.allcommon.DbDBMetaInstanceHandler;
 import dev.wolfort.dbflute.exentity.*;
 
 /**
- * The entity of GAME_SYSTEM_DICTIONARY as TABLE. <br>
- * <pre>
- * [primary-key]
- *     game_system_dictionary_id
- *
- * [column]
- *     game_system_dictionary_id, game_system_id, game_system_name, register_datetime, register_trace, update_datetime, update_trace
- *
- * [sequence]
- *     
- *
- * [identity]
- *     game_system_dictionary_id
- *
- * [version-no]
- *     
- *
- * [foreign table]
- *     GAME_SYSTEM
- *
- * [referrer table]
- *     
- *
- * [foreign property]
- *     gameSystem
- *
- * [referrer property]
- *     
- *
- * [get/set template]
- * /= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
- * Integer gameSystemDictionaryId = entity.getGameSystemDictionaryId();
- * Integer gameSystemId = entity.getGameSystemId();
- * String gameSystemName = entity.getGameSystemName();
- * java.time.LocalDateTime registerDatetime = entity.getRegisterDatetime();
- * String registerTrace = entity.getRegisterTrace();
- * java.time.LocalDateTime updateDatetime = entity.getUpdateDatetime();
- * String updateTrace = entity.getUpdateTrace();
- * entity.setGameSystemDictionaryId(gameSystemDictionaryId);
- * entity.setGameSystemId(gameSystemId);
- * entity.setGameSystemName(gameSystemName);
- * entity.setRegisterDatetime(registerDatetime);
- * entity.setRegisterTrace(registerTrace);
- * entity.setUpdateDatetime(updateDatetime);
- * entity.setUpdateTrace(updateTrace);
- * = = = = = = = = = =/
- * </pre>
+ * The entity of GAME_SYSTEM_DICTIONARY as TABLE.
  * @author DBFlute(AutoGenerator)
  */
 public abstract class DbBsGameSystemDictionary extends AbstractEntity implements DomainEntity, DbEntityDefinedCommonColumn {

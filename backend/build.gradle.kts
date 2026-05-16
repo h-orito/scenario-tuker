@@ -1,16 +1,16 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("org.springframework.boot") version "2.7.0"
-    id("io.spring.dependency-management") version "1.0.11.RELEASE"
-    kotlin("jvm") version "1.6.21"
-    kotlin("plugin.spring") version "1.6.21"
-    id("com.google.cloud.tools.jib") version "3.2.1"
+    id("org.springframework.boot") version "3.5.14"
+    id("io.spring.dependency-management") version "1.1.7"
+    kotlin("jvm") version "2.1.20"
+    kotlin("plugin.spring") version "2.1.20"
+    id("com.google.cloud.tools.jib") version "3.4.4"
 }
 
 group = "dev.wolfort"
 version = "0.0.1-SNAPSHOT"
-java.sourceCompatibility = JavaVersion.VERSION_11
+java.sourceCompatibility = JavaVersion.VERSION_21
 
 apply(plugin = "kotlin")
 apply(plugin = "io.spring.dependency-management")
@@ -37,29 +37,25 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-aop")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
-    // dbflute
-    implementation("org.springframework.boot:spring-boot-starter-data-jpa") {
-        exclude("com.zaxxer:HikariCP")
-    }
-    implementation("org.apache.tomcat:tomcat-jdbc:9.0.10")
-    implementation("org.dbflute:dbflute-runtime:1.2.1")
+    // dbflute (uses HikariCP from spring-boot-starter-data-jpa)
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    implementation("org.dbflute:dbflute-runtime:1.3.1")
     // mysql
-    implementation("mysql:mysql-connector-java:8.0.25")
-    // jwt
-    implementation("io.jsonwebtoken:jjwt-api:0.10.7")
-    implementation("io.jsonwebtoken:jjwt-impl:0.10.7")
-    implementation("io.jsonwebtoken:jjwt-jackson:0.10.7")
-    implementation("com.google.firebase:firebase-admin:6.8.1")
+    implementation("com.mysql:mysql-connector-j:9.7.0")
+    // firebase
+    implementation("com.google.firebase:firebase-admin:9.9.0")
     // twitter
-    implementation("io.github.redouane59.twitter:twittered:2.13")
+    implementation("io.github.redouane59.twitter:twittered:2.23")
+    // dotenv (loads .env into Spring property sources for local dev)
+    implementation("me.paulschwarz:spring-dotenv:5.1.0")
     // mockito
-    testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:2.1.0")
+    testImplementation("org.mockito.kotlin:mockito-kotlin:6.3.0")
 }
 
 tasks.withType<KotlinCompile> {
-    kotlinOptions {
-        freeCompilerArgs = listOf("-Xjsr305=strict")
-        jvmTarget = "11"
+    compilerOptions {
+        freeCompilerArgs.add("-Xjsr305=strict")
+        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21)
     }
 }
 
@@ -73,7 +69,7 @@ tasks.withType<Test> {
 
 jib {
     from {
-        image = "arm64v8/openjdk:11"
+        image = "eclipse-temurin:21-jre"
         platforms {
             platform {
                 architecture = "arm64"

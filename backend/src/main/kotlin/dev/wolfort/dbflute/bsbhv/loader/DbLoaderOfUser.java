@@ -9,35 +9,7 @@ import dev.wolfort.dbflute.exentity.*;
 import dev.wolfort.dbflute.cbean.*;
 
 /**
- * The referrer loader of USER as TABLE. <br>
- * <pre>
- * [primary key]
- *     user_id
- *
- * [column]
- *     user_id, user_name, uid, authority, introduction, is_deleted, register_datetime, register_trace, update_datetime, update_trace
- *
- * [sequence]
- *     
- *
- * [identity]
- *     user_id
- *
- * [version-no]
- *     
- *
- * [foreign table]
- *     TWITTER_USER(AsOne)
- *
- * [referrer table]
- *     PARTICIPATE, USER_RULE_BOOK, USER_SCENARIO, TWITTER_USER
- *
- * [foreign property]
- *     twitterUserAsOne
- *
- * [referrer property]
- *     participateList, userRuleBookList, userScenarioList
- * </pre>
+ * The referrer loader of USER as TABLE.
  * @author DBFlute(AutoGenerator)
  */
 public class DbLoaderOfUser {

@@ -9,35 +9,7 @@ import dev.wolfort.dbflute.exentity.*;
 import dev.wolfort.dbflute.cbean.*;
 
 /**
- * The referrer loader of SCENARIO as TABLE. <br>
- * <pre>
- * [primary key]
- *     scenario_id
- *
- * [column]
- *     scenario_id, scenario_name, scenario_type, scenario_url, game_master_requirement, player_num_min, player_num_max, required_hours, register_datetime, register_trace, update_datetime, update_trace
- *
- * [sequence]
- *     
- *
- * [identity]
- *     scenario_id
- *
- * [version-no]
- *     
- *
- * [foreign table]
- *     
- *
- * [referrer table]
- *     PARTICIPATE, SCENARIO_AUTHOR, SCENARIO_DICTIONARY, SCENARIO_GAME_SYSTEM, USER_SCENARIO
- *
- * [foreign property]
- *     
- *
- * [referrer property]
- *     participateList, scenarioAuthorList, scenarioDictionaryList, scenarioGameSystemList, userScenarioList
- * </pre>
+ * The referrer loader of SCENARIO as TABLE.
  * @author DBFlute(AutoGenerator)
  */
 public class DbLoaderOfScenario {
