@@ -46,8 +46,9 @@ dependencies {
     implementation("com.google.firebase:firebase-admin:9.9.0")
     // twitter
     implementation("io.github.redouane59.twitter:twittered:2.23")
-    // dotenv (loads .env into Spring property sources for local dev)
-    implementation("me.paulschwarz:spring-dotenv:5.1.0")
+    // dotenv (loads .env into Spring property sources for local dev only;
+    // production uses real env vars from the k8s manifest)
+    developmentOnly("me.paulschwarz:springboot3-dotenv:5.1.0")
     // mockito
     testImplementation("org.mockito.kotlin:mockito-kotlin:6.3.0")
 }

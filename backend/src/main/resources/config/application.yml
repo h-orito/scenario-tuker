@@ -29,7 +29,7 @@ logging:
     org.springframework: INFO
     root: INFO
     org.seasar.dbflute: ERROR
-  file.name: /var/log/scenario-tuker.log
+  file.name: .log/scenario-tuker.log
 
 firebase:
   adminsdk:
