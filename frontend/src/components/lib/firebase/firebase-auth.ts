@@ -4,7 +4,7 @@ import {
   signInWithPopup,
   linkWithPopup,
   signOut as firebaseSignOut
-} from 'firebase/auth'
+} from '@firebase/auth'
 import { auth } from './firebase-config'
 
 import { postRequest } from '@/components/api/api'
