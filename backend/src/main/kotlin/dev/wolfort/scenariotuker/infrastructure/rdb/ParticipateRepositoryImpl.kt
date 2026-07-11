@@ -162,22 +162,34 @@ class ParticipateRepositoryImpl(
     }
 
     override fun updateRuleBookId(sourceRuleBookId: Int, destRuleBookId: Int) {
-        val participates = findAllByRuleBookId(sourceRuleBookId)
-        participates.list.forEach { participate ->
-            var ruleBookIds = participate.ruleBookIds
-            ruleBookIds = ruleBookIds.filterNot { id -> id == sourceRuleBookId }
-            ruleBookIds = ruleBookIds + destRuleBookId
-            update(participate.copy(ruleBookIds = ruleBookIds.distinct()))
+        // 全件を一度にロードするとメモリを圧迫するため、少しずつ取得して処理する。
+        // 更新済みの参加記録は検索条件から外れるので、常に1ページ目を取得し直せばよい
+        while (true) {
+            val participates =
+                findAllByRuleBookId(sourceRuleBookId, PagingQuery(pageSize = 100, pageCount = 1))
+            if (participates.list.isEmpty()) break
+            participates.list.forEach { participate ->
+                var ruleBookIds = participate.ruleBookIds
+                ruleBookIds = ruleBookIds.filterNot { id -> id == sourceRuleBookId }
+                ruleBookIds = ruleBookIds + destRuleBookId
+                update(participate.copy(ruleBookIds = ruleBookIds.distinct()))
+            }
         }
     }
 
     override fun updateScenarioId(sourceScenarioId: Int, destScenarioId: Int) {
-        val participates = findAllByScenarioId(sourceScenarioId)
-        participates.list.forEach { participate ->
-            val p = DbParticipate()
-            p.scenarioId = destScenarioId
-            participateBhv.queryUpdate(p) {
-                it.query().setParticipateId_Equal(participate.id)
+        // 全件を一度にロードするとメモリを圧迫するため、少しずつ取得して処理する。
+        // 更新済みの参加記録は検索条件から外れるので、常に1ページ目を取得し直せばよい
+        while (true) {
+            val participates =
+                findAllByScenarioId(sourceScenarioId, PagingQuery(pageSize = 100, pageCount = 1))
+            if (participates.list.isEmpty()) break
+            participates.list.forEach { participate ->
+                val p = DbParticipate()
+                p.scenarioId = destScenarioId
+                participateBhv.queryUpdate(p) {
+                    it.query().setParticipateId_Equal(participate.id)
+                }
             }
         }
     }

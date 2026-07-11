@@ -32,6 +32,7 @@ type Props = {
 
 const RuleBookParticipatesTable = ({ ruleBookId, initial }: Props) => {
   const [participates, setParticipates] = useState<ParticipatesResponse>(initial)
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10
@@ -43,15 +44,27 @@ const RuleBookParticipatesTable = ({ ruleBookId, initial }: Props) => {
       isFirstRender.current = false
       return
     }
+    // ページ連打時に古いレスポンスが後着して上書きしないよう破棄する
+    let ignore = false
     const fetch = async () => {
-      const res = await fetchRuleBookParticipates(
-        ruleBookId,
-        pagination.pageIndex + 1,
-        pagination.pageSize
-      )
-      setParticipates(res)
+      try {
+        const res = await fetchRuleBookParticipates(
+          ruleBookId,
+          pagination.pageIndex + 1,
+          pagination.pageSize
+        )
+        if (ignore) return
+        setParticipates(res)
+        setErrorMessage(null)
+      } catch (e) {
+        if (ignore) return
+        setErrorMessage('通過記録の取得に失敗しました')
+      }
     }
     fetch()
+    return () => {
+      ignore = true
+    }
   }, [ruleBookId, pagination])
 
   const displayParticipates = useMemo(() => {
@@ -142,6 +155,7 @@ const RuleBookParticipatesTable = ({ ruleBookId, initial }: Props) => {
           </tbody>
         </table>
       </div>
+      {errorMessage && <p className='text-red-500'>{errorMessage}</p>}
       {participates.all_record_count > 0 && (
         <div className='border-x border-b border-slate-300 px-2 py-2 bg-gray-100 text-xs'>
           <p className='mb-1'>全{participates.all_record_count}件</p>
