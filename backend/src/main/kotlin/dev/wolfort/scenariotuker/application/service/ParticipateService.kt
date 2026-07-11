@@ -1,5 +1,6 @@
 package dev.wolfort.scenariotuker.application.service
 
+import dev.wolfort.scenariotuker.domain.model.paging.PagingQuery
 import dev.wolfort.scenariotuker.domain.model.participate.Participate
 import dev.wolfort.scenariotuker.domain.model.participate.ParticipateRepository
 import dev.wolfort.scenariotuker.domain.model.participate.Participates
@@ -19,9 +20,11 @@ class ParticipateService(
 
     fun findAllByUserId(userId: Int): Participates = participateRepository.findAllByUserId(userId)
 
-    fun findAllByScenarioId(scenarioId: Int): Participates = participateRepository.findAllByScenarioId(scenarioId)
+    fun findAllByScenarioId(scenarioId: Int, paging: PagingQuery? = null): Participates =
+        participateRepository.findAllByScenarioId(scenarioId, paging)
 
-    fun findAllByRuleBookId(ruleBookId: Int): Participates = participateRepository.findAllByRuleBookId(ruleBookId)
+    fun findAllByRuleBookId(ruleBookId: Int, paging: PagingQuery? = null): Participates =
+        participateRepository.findAllByRuleBookId(ruleBookId, paging)
 
     fun findById(id: Int): Participate? = participateRepository.findById(id)
 

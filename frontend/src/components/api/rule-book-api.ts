@@ -51,9 +51,15 @@ export const integrateDeleteRuleBook = async (
 }
 
 export const fetchRuleBookParticipates = async (
-  id: number
+  id: number,
+  pageNum: number = 1,
+  pageSize: number = 10
 ): Promise<ParticipatesResponse> => {
-  return await getRequest<void, ParticipatesResponse>(
-    `rule-books/${id}/participates`
+  return await getRequest<any, ParticipatesResponse>(
+    `rule-books/${id}/participates`,
+    {
+      page_num: pageNum,
+      page_size: pageSize
+    }
   )
 }

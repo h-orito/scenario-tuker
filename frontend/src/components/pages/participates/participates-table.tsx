@@ -21,6 +21,9 @@ export type DisplayParticipate = ParticipateResponse & {}
 export const sortableHeader =
   (headerName: string) =>
   ({ column }: { column: Column<DisplayParticipate, any> }): React.JSX.Element => {
+    if (!column.getCanSort()) {
+      return <div>{headerName}</div>
+    }
     return (
       <div
         className='cursor-pointer'

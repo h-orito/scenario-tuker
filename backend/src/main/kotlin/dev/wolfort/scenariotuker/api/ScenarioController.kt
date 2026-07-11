@@ -199,7 +199,7 @@ class ScenarioController(
     ): ParticipatesResponse {
         val scenario =
             scenarioService.findById(scenarioId) ?: throw SystemException("scenario not found. id: $scenarioId")
-        var participates = participateService.findAllByScenarioId(scenarioId)
+        var participates = participateService.findAllByScenarioId(scenarioId, request.toPagingQuery())
         val authors = authorService.findAllByIds(scenario.authorIds)
         val gameSystems = gameSystemService.findAllByIds(scenario.gameSystemIds)
         val ruleBooks = ruleBookService.findAllByIds(participates.list.flatMap { it.ruleBookIds }.distinct())
@@ -228,6 +228,14 @@ class ScenarioController(
     }
 
     data class ParticipateSearchRequest(
-        val is_twitter_following: Boolean? = null
-    )
+        val is_twitter_following: Boolean? = null,
+        val page_size: Int? = null,
+        val page_num: Int? = null
+    ) {
+        // 全件取得はメモリを圧迫するため、指定がなくてもページングする
+        fun toPagingQuery() = PagingQuery(
+            pageSize = (page_size ?: 10).coerceIn(1, 100),
+            pageCount = (page_num ?: 1).coerceAtLeast(1)
+        )
+    }
 }

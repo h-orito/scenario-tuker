@@ -54,7 +54,10 @@ const RuleBooksIdPage = async ({
         </NormalNotification>
         <div className='mt-6'>
           <h2>{ruleBook.name} の通過記録</h2>
-          <RuleBookParticipatesTable participates={participates.list} />
+          <RuleBookParticipatesTable
+            ruleBookId={ruleBookId}
+            initial={participates}
+          />
         </div>
       </div>
       <div className='mt-8'>
