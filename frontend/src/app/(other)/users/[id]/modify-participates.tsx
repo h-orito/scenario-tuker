@@ -271,7 +271,7 @@ function useSkipper() {
   return [shouldSkip, skip] as const
 }
 
-const inputTextColumn = ({
+const InputTextColumn = ({
   getValue,
   row: { index },
   column: { id },
@@ -623,7 +623,7 @@ const PersonNumColumn = ({
 const gameMasterColumnDef: ColumnDef<DisplayParticipate, any> = {
   accessorKey: 'game_master',
   header: sortableHeader('GM'),
-  cell: inputTextColumn,
+  cell: InputTextColumn,
   sortingFn: (a, b) => {
     const aGM = a.original.game_master || ''
     const bGM = b.original.game_master || ''
@@ -637,7 +637,7 @@ const gameMasterColumnDef: ColumnDef<DisplayParticipate, any> = {
 const playerNamesColumnDef: ColumnDef<DisplayParticipate, any> = {
   accessorKey: 'player_names',
   header: sortableHeader('参加PL'),
-  cell: inputTextColumn,
+  cell: InputTextColumn,
   sortingFn: (a, b) => {
     const aPN = a.original.player_names || ''
     const bPN = b.original.player_names || ''
@@ -651,7 +651,7 @@ const playerNamesColumnDef: ColumnDef<DisplayParticipate, any> = {
 const memoColumnDef: ColumnDef<DisplayParticipate, any> = {
   accessorKey: 'memo',
   header: sortableHeader('メモ'),
-  cell: inputTextColumn,
+  cell: InputTextColumn,
   sortingFn: (a, b) => {
     const aM = a.original.memo || ''
     const bM = b.original.memo || ''

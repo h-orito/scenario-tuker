@@ -1,6 +1,7 @@
 package dev.wolfort.scenariotuker.application.service
 
 import dev.wolfort.scenariotuker.domain.model.gamesystem.GameSystemRepository
+import dev.wolfort.scenariotuker.domain.model.paging.PagingQuery
 import dev.wolfort.scenariotuker.domain.model.participate.ParticipateRepository
 import dev.wolfort.scenariotuker.domain.model.rulebook.RuleBook
 import dev.wolfort.scenariotuker.domain.model.rulebook.RuleBookQuery
@@ -53,9 +54,9 @@ class RuleBookService(
     }
 
     fun deleteCheck(id: Int) {
-        val participates = participateRepository.findAllByRuleBookId(id)
+        val participates = participateRepository.findAllByRuleBookId(id, PagingQuery(pageSize = 1, pageCount = 1))
         val users = userRepository.findAllByRuleBookIds(id)
-        if (participates.list.isNotEmpty() || users.list.isNotEmpty()) {
+        if (participates.allRecordCount > 0 || users.list.isNotEmpty()) {
             throw SystemException("参加記録やユーザーと紐付いたルールブックは削除できません")
         }
     }

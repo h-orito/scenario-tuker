@@ -8,12 +8,14 @@ import dev.wolfort.dbflute.exentity.DbParticipate
 import dev.wolfort.dbflute.exentity.DbParticipateImpression
 import dev.wolfort.dbflute.exentity.DbParticipateRole
 import dev.wolfort.dbflute.exentity.DbParticipateRuleBook
+import dev.wolfort.scenariotuker.domain.model.paging.PagingQuery
 import dev.wolfort.scenariotuker.domain.model.participate.DisclosureRange
 import dev.wolfort.scenariotuker.domain.model.participate.Participate
 import dev.wolfort.scenariotuker.domain.model.participate.ParticipateImpression
 import dev.wolfort.scenariotuker.domain.model.participate.ParticipateRepository
 import dev.wolfort.scenariotuker.domain.model.participate.ParticipateTerm
 import dev.wolfort.scenariotuker.domain.model.participate.Participates
+import org.dbflute.cbean.result.PagingResultBean
 import org.springframework.stereotype.Repository
 
 @Repository
@@ -52,13 +54,18 @@ class ParticipateRepositoryImpl(
         return mappingToParticipate(dbParticipate)
     }
 
-    override fun findAllByScenarioId(scenarioId: Int): Participates {
-        val dbParticipateList = participateBhv.selectList {
+    override fun findAllByScenarioId(scenarioId: Int, paging: PagingQuery?): Participates {
+        val dbParticipateList = participateBhv.selectPage {
             it.setupSelect_ParticipateImpressionAsOne()
             it.query().setScenarioId_Equal(scenarioId)
             it.query().queryUser().setIsDeleted_Equal(false)
             it.query().addOrderBy_DispOrder_Asc()
             it.query().addOrderBy_ParticipateId_Asc()
+            if (paging != null) {
+                it.paging(paging.pageSize, paging.pageCount)
+            } else {
+                it.paging(100000, 1)
+            }
         }
         participateBhv.load(dbParticipateList) {
             it.loadParticipateRole { }
@@ -82,8 +89,8 @@ class ParticipateRepositoryImpl(
         return mappingToParticipates(dbParticipateList)
     }
 
-    override fun findAllByRuleBookId(ruleBookId: Int): Participates {
-        val dbParticipateList = participateBhv.selectList {
+    override fun findAllByRuleBookId(ruleBookId: Int, paging: PagingQuery?): Participates {
+        val dbParticipateList = participateBhv.selectPage {
             it.setupSelect_ParticipateImpressionAsOne()
             it.query().existsParticipateRuleBook { prCB ->
                 prCB.query().setRuleBookId_Equal(ruleBookId)
@@ -91,6 +98,11 @@ class ParticipateRepositoryImpl(
             it.query().queryUser().setIsDeleted_Equal(false)
             it.query().addOrderBy_DispOrder_Asc()
             it.query().addOrderBy_ParticipateId_Asc()
+            if (paging != null) {
+                it.paging(paging.pageSize, paging.pageCount)
+            } else {
+                it.paging(100000, 1)
+            }
         }
         participateBhv.load(dbParticipateList) {
             it.loadParticipateRole { }
@@ -150,22 +162,34 @@ class ParticipateRepositoryImpl(
     }
 
     override fun updateRuleBookId(sourceRuleBookId: Int, destRuleBookId: Int) {
-        val participates = findAllByRuleBookId(sourceRuleBookId)
-        participates.list.forEach { participate ->
-            var ruleBookIds = participate.ruleBookIds
-            ruleBookIds = ruleBookIds.filterNot { id -> id == sourceRuleBookId }
-            ruleBookIds = ruleBookIds + destRuleBookId
-            update(participate.copy(ruleBookIds = ruleBookIds.distinct()))
+        // 全件を一度にロードするとメモリを圧迫するため、少しずつ取得して処理する。
+        // 更新済みの参加記録は検索条件から外れるので、常に1ページ目を取得し直せばよい
+        while (true) {
+            val participates =
+                findAllByRuleBookId(sourceRuleBookId, PagingQuery(pageSize = 100, pageCount = 1))
+            if (participates.list.isEmpty()) break
+            participates.list.forEach { participate ->
+                var ruleBookIds = participate.ruleBookIds
+                ruleBookIds = ruleBookIds.filterNot { id -> id == sourceRuleBookId }
+                ruleBookIds = ruleBookIds + destRuleBookId
+                update(participate.copy(ruleBookIds = ruleBookIds.distinct()))
+            }
         }
     }
 
     override fun updateScenarioId(sourceScenarioId: Int, destScenarioId: Int) {
-        val participates = findAllByScenarioId(sourceScenarioId)
-        participates.list.forEach { participate ->
-            val p = DbParticipate()
-            p.scenarioId = destScenarioId
-            participateBhv.queryUpdate(p) {
-                it.query().setParticipateId_Equal(participate.id)
+        // 全件を一度にロードするとメモリを圧迫するため、少しずつ取得して処理する。
+        // 更新済みの参加記録は検索条件から外れるので、常に1ページ目を取得し直せばよい
+        while (true) {
+            val participates =
+                findAllByScenarioId(sourceScenarioId, PagingQuery(pageSize = 100, pageCount = 1))
+            if (participates.list.isEmpty()) break
+            participates.list.forEach { participate ->
+                val p = DbParticipate()
+                p.scenarioId = destScenarioId
+                participateBhv.queryUpdate(p) {
+                    it.query().setParticipateId_Equal(participate.id)
+                }
             }
         }
     }
@@ -262,6 +286,17 @@ class ParticipateRepositoryImpl(
 
     private fun mappingToParticipates(list: List<DbParticipate>): Participates {
         return Participates(list = list.map { mappingToParticipate(it) })
+    }
+
+    private fun mappingToParticipates(list: PagingResultBean<DbParticipate>): Participates {
+        return Participates(
+            list = list.map { mappingToParticipate(it) },
+            allRecordCount = list.allRecordCount,
+            allPageCount = list.allPageCount,
+            existNextPage = list.existsNextPage(),
+            existPrePage = list.existsPreviousPage(),
+            currentPageNum = list.currentPageNumber
+        )
     }
 
     private fun mappingToParticipate(participate: DbParticipate): Participate {

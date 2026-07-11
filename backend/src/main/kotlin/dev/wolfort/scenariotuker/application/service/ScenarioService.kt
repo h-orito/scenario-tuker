@@ -2,6 +2,7 @@ package dev.wolfort.scenariotuker.application.service
 
 import dev.wolfort.scenariotuker.domain.model.author.AuthorRepository
 import dev.wolfort.scenariotuker.domain.model.gamesystem.GameSystemRepository
+import dev.wolfort.scenariotuker.domain.model.paging.PagingQuery
 import dev.wolfort.scenariotuker.domain.model.participate.ParticipateRepository
 import dev.wolfort.scenariotuker.domain.model.scenario.Scenario
 import dev.wolfort.scenariotuker.domain.model.scenario.ScenarioQuery
@@ -76,9 +77,9 @@ class ScenarioService(
 
     fun deleteCheck(id: Int) {
         val scenario = findById(id) ?: return
-        val participates = participateRepository.findAllByScenarioId(id)
+        val participates = participateRepository.findAllByScenarioId(id, PagingQuery(pageSize = 1, pageCount = 1))
         val users = userRepository.findAllByRuleBookIds(id)
-        if (scenario.authorIds.isNotEmpty() || participates.list.isNotEmpty() || users.list.isNotEmpty()) {
+        if (scenario.authorIds.isNotEmpty() || participates.allRecordCount > 0 || users.list.isNotEmpty()) {
             throw SystemException("製作者や参加記録やユーザーと紐付いたシナリオは削除できません")
         }
     }

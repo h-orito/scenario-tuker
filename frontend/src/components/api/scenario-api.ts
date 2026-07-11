@@ -86,7 +86,9 @@ export const fetchScenarioParticipates = async (
   return await getRequest<any, ParticipatesResponse>(
     `scenarios/${request.scenario_id}/participates`,
     {
-      is_twitter_following: request.is_twitter_following
+      is_twitter_following: request.is_twitter_following,
+      page_num: request.page_num ?? 1,
+      page_size: request.page_size ?? 10
     }
   )
 }
@@ -94,4 +96,6 @@ export const fetchScenarioParticipates = async (
 type ParticipatesFetchRequest = {
   scenario_id: number
   is_twitter_following: boolean
+  page_num?: number
+  page_size?: number
 }

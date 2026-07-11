@@ -100,7 +100,8 @@ const ScenariosIdPage = async ({
         <div className='mt-6'>
           <h2>{scenario.name} の通過記録</h2>
           <ScenarioParticipatesTable
-            participates={participates.list}
+            scenarioId={scenarioId}
+            initial={participates}
             type={scenarioType}
           />
         </div>

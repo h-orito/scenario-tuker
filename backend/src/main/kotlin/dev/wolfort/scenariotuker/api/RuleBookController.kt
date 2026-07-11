@@ -11,6 +11,7 @@ import dev.wolfort.scenariotuker.application.service.ParticipateService
 import dev.wolfort.scenariotuker.application.service.RuleBookService
 import dev.wolfort.scenariotuker.application.service.ScenarioService
 import dev.wolfort.scenariotuker.application.service.UserService
+import dev.wolfort.scenariotuker.domain.model.paging.PagingQuery
 import dev.wolfort.scenariotuker.domain.model.rulebook.RuleBook
 import dev.wolfort.scenariotuker.domain.model.rulebook.RuleBookQuery
 import dev.wolfort.scenariotuker.domain.model.rulebook.RuleBookType
@@ -128,10 +129,13 @@ class RuleBookController(
     )
 
     @GetMapping("/{ruleBookId}/participates")
-    private fun ruleBookParticipates(@PathVariable ruleBookId: Int): ParticipatesResponse {
+    private fun ruleBookParticipates(
+        @PathVariable ruleBookId: Int,
+        request: ParticipatesSearchRequest
+    ): ParticipatesResponse {
         val ruleBook =
             ruleBookService.findById(ruleBookId) ?: throw SystemException("rule_book not found. id: $ruleBookId")
-        var participates = participateService.findAllByRuleBookId(ruleBookId)
+        var participates = participateService.findAllByRuleBookId(ruleBookId, request.toPagingQuery())
         val scenarios = scenarioService.findAllByIds(participates.list.map { it.scenarioId }.distinct())
         val authors = authorService.findAllByIds(scenarios.list.flatMap { it.authorIds }.distinct())
         val gameSystems = gameSystemService.findAllByIds(scenarios.list.flatMap { it.gameSystemIds }.distinct())
@@ -148,6 +152,17 @@ class RuleBookController(
             RuleBooks(list = listOf(ruleBook)),
             authors,
             users
+        )
+    }
+
+    data class ParticipatesSearchRequest(
+        val page_size: Int? = null,
+        val page_num: Int? = null
+    ) {
+        // 全件取得はメモリを圧迫するため、指定がなくてもページングする
+        fun toPagingQuery() = PagingQuery(
+            pageSize = (page_size ?: 10).coerceIn(1, 100),
+            pageCount = (page_num ?: 1).coerceAtLeast(1)
         )
     }
 }

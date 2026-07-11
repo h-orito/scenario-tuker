@@ -7,7 +7,14 @@ import dev.wolfort.scenariotuker.domain.model.rulebook.RuleBooks
 import dev.wolfort.scenariotuker.domain.model.scenario.Scenarios
 import dev.wolfort.scenariotuker.domain.model.user.Users
 
-data class ParticipatesResponse(val list: List<ParticipateResponse>) {
+data class ParticipatesResponse(
+    val list: List<ParticipateResponse>,
+    val allRecordCount: Int = 0,
+    val allPageCount: Int = 0,
+    val existPrePage: Boolean = false,
+    val existNextPage: Boolean = false,
+    val currentPageNum: Int = 0
+) {
 
     constructor(
         participates: Participates,
@@ -24,7 +31,12 @@ data class ParticipatesResponse(val list: List<ParticipateResponse>) {
             val ruleBookList = ruleBooks.list.filter { participate.ruleBookIds.contains(it.id) }
             val authorList = authors.list.filter { scenario.authorIds.contains(it.id) }
             ParticipateResponse(participate, scenario, gameSystems.list, ruleBookList, authorList, user)
-        }
+        },
+        allRecordCount = participates.allRecordCount,
+        allPageCount = participates.allPageCount,
+        existPrePage = participates.existPrePage,
+        existNextPage = participates.existNextPage,
+        currentPageNum = participates.currentPageNum
     )
 
     companion object {
