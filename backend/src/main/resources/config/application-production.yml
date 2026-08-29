@@ -4,6 +4,11 @@ spring:
     username: ${SCENARIO_TUKER_DB_USERNAME}
     password: ${SCENARIO_TUKER_DB_PASSWORD}
     driverClassName: com.mysql.cj.jdbc.Driver
+    hikari:
+      # DB (wolf-db) は 1 コア相当・max_connections=200 を全アプリで共有するため、
+      # プール上限で DB への同時接続数に蓋をする
+      maximum-pool-size: 5
+      minimum-idle: 2
   messages:
     basename: messages
     cache-duration: -1
