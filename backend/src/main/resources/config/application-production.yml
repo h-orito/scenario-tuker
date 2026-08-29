@@ -9,6 +9,8 @@ spring:
       # プール上限で DB への同時接続数に蓋をする
       maximum-pool-size: 5
       minimum-idle: 2
+      # 枯渇時の取得待ち上限（デフォルト 30 秒は長いので tomcat-jdbc 側の max-wait と揃える）
+      connection-timeout: 10000
   messages:
     basename: messages
     cache-duration: -1
