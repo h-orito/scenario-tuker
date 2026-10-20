@@ -35,8 +35,7 @@ class SecurityConfig {
                     // ユーザー登録はまだ登録していないアカウントも呼ぶ
                     .requestMatchers(HttpMethod.POST, "/users")
                     .access { authentication, _ ->
-                        val principal = authentication.get()?.principal
-                        AuthorizationDecision(principal is ScenarioTukerUser || principal is UnregisteredUser)
+                        AuthorizationDecision(authentication.get()?.principal is FirebaseAccount)
                     }
                     // 登録・更新・削除・統合はログイン必須
                     .anyRequest()

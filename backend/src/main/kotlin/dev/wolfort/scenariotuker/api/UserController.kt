@@ -19,8 +19,8 @@ import dev.wolfort.scenariotuker.domain.model.user.User
 import dev.wolfort.scenariotuker.domain.model.user.UserQuery
 import dev.wolfort.scenariotuker.domain.model.user.Users
 import dev.wolfort.scenariotuker.fw.exception.SystemException
+import dev.wolfort.scenariotuker.fw.security.FirebaseAccount
 import dev.wolfort.scenariotuker.fw.security.ScenarioTukerUser
-import dev.wolfort.scenariotuker.fw.security.UnregisteredUser
 import org.hibernate.validator.constraints.Length
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.validation.annotation.Validated
@@ -77,14 +77,10 @@ class UserController(
     }
 
     @PostMapping
-    private fun post(@RequestBody @Validated request: PostRequest, @AuthenticationPrincipal principal: Any?): User {
+    private fun post(@RequestBody @Validated request: PostRequest, @AuthenticationPrincipal account: FirebaseAccount?): User {
+        account ?: throw SystemException("not authenticated.")
         // 他人のアカウントで登録・上書きできないよう、uid はリクエストでなく検証済みのトークンから取る
-        val uid = when (principal) {
-            is ScenarioTukerUser -> principal.uid
-            is UnregisteredUser -> principal.uid
-            else -> throw SystemException("not authenticated.")
-        }
-        return userService.register(request.toUserCreateResource(uid))
+        return userService.register(request.toUserCreateResource(account.uid))
     }
 
     data class PostRequest(

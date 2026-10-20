@@ -33,7 +33,7 @@ class LoginFilter(
     }
 
     // ログインユーザ情報を取得（未登録のアカウントは UnregisteredUser）
-    private fun auth(request: HttpServletRequest): Any? {
+    private fun auth(request: HttpServletRequest): FirebaseAccount? {
 
         // リクエストヘッダからJWTを取り出す
         val token: String = getToken(request) ?: return null
