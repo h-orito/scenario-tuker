@@ -31,7 +31,12 @@ class ParticipateService(
     fun register(participate: Participate): Participate = participateRepository.register(participate)
 
     fun update(participate: Participate): Participate {
-        findById(participate.id) ?: throw SystemException("participate not found. id: ${participate.id}")
+        val existing = findById(participate.id)
+            ?: throw SystemException("participate not found. id: ${participate.id}")
+        // 他人の参加記録を上書きできないよう、既存レコードの持ち主と一致するか確認する
+        if (existing.userId != participate.userId) {
+            throw SystemException("自分のものしか更新できません。 participateId: ${participate.id}")
+        }
         scenarioRepository.findById(participate.scenarioId)
             ?: throw SystemException("scenario not found. id: ${participate.scenarioId}")
         userRepository.findById(participate.userId)
