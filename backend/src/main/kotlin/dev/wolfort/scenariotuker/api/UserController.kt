@@ -257,7 +257,7 @@ class UserController(
 
     @PutMapping("/myself/participates")
     private fun put(
-        @RequestBody request: ParticipatePostRequest,
+        @RequestBody @Validated request: ParticipatePostRequest,
         @AuthenticationPrincipal sTukerUser: ScenarioTukerUser
     ): ParticipateResponse {
         val user = userService.findByUid(sTukerUser.uid)
