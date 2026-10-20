@@ -32,8 +32,12 @@ class SecurityConfig {
                 it
                     .requestMatchers(HttpMethod.GET, "/**").permitAll()
                     .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                    // ユーザー登録はまだ登録していないユーザーが呼ぶので除外する
-                    .requestMatchers(HttpMethod.POST, "/users").permitAll()
+                    // ユーザー登録はまだ登録していないアカウントも呼ぶ
+                    .requestMatchers(HttpMethod.POST, "/users")
+                    .access { authentication, _ ->
+                        val principal = authentication.get()?.principal
+                        AuthorizationDecision(principal is ScenarioTukerUser || principal is UnregisteredUser)
+                    }
                     // 登録・更新・削除・統合はログイン必須
                     .anyRequest()
                     .access { authentication, _ ->

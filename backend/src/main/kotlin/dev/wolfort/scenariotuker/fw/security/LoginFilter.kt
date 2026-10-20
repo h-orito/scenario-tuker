@@ -3,7 +3,6 @@ package dev.wolfort.scenariotuker.fw.security
 import com.google.firebase.auth.FirebaseAuth
 import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.security.core.context.SecurityContextHolder
-import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken
 import org.springframework.stereotype.Component
@@ -33,8 +32,8 @@ class LoginFilter(
         filterChain.doFilter(request, response)
     }
 
-    // ログインユーザ情報を取得
-    private fun auth(request: HttpServletRequest): UserDetails? {
+    // ログインユーザ情報を取得（未登録のアカウントは UnregisteredUser）
+    private fun auth(request: HttpServletRequest): Any? {
 
         // リクエストヘッダからJWTを取り出す
         val token: String = getToken(request) ?: return null
@@ -49,9 +48,8 @@ class LoginFilter(
             return try {
                 userService.loadUserByUsername(uid) as ScenarioTukerUser
             } catch (e: UsernameNotFoundException) {
-                // ユーザを新規作成
-//                userService.register(uid)
-                null
+                // ユーザー登録 API で使うため、検証済みの uid だけ持たせる
+                UnregisteredUser(uid)
             }
         } catch (e: Exception) {
             throw BadCredentialsException(e.message, e)

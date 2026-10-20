@@ -7,7 +7,17 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.MockedStatic
 import org.mockito.Mockito
+import dev.wolfort.scenariotuker.api.UserController
+import dev.wolfort.scenariotuker.application.service.AuthorService
+import dev.wolfort.scenariotuker.application.service.GameSystemService
+import dev.wolfort.scenariotuker.application.service.ParticipateService
+import dev.wolfort.scenariotuker.application.service.RuleBookService
+import dev.wolfort.scenariotuker.application.service.ScenarioService
+import dev.wolfort.scenariotuker.application.service.UserService
 import org.mockito.kotlin.any
+import org.mockito.kotlin.argThat
+import org.mockito.kotlin.never
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
@@ -16,6 +26,7 @@ import org.springframework.boot.SpringBootConfiguration
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.context.annotation.Import
+import org.springframework.http.MediaType
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.test.context.bean.override.mockito.MockitoBean
@@ -39,7 +50,7 @@ class SecurityConfigTest {
     // DB や Firebase を起動しないよう、セキュリティ設定とダミーのコントローラーだけで組み立てる
     @SpringBootConfiguration
     @EnableConfigurationProperties
-    @Import(SecurityConfig::class, LoginFilter::class, DummyController::class)
+    @Import(SecurityConfig::class, LoginFilter::class, DummyController::class, UserController::class)
     class TestConfig
 
     @RestController
@@ -58,9 +69,6 @@ class SecurityConfigTest {
 
         @PutMapping("/scenarios/1/integrate")
         fun integrate() = "ok"
-
-        @PostMapping("/users")
-        fun register() = "ok"
     }
 
     @Autowired
@@ -68,6 +76,20 @@ class SecurityConfigTest {
 
     @MockitoBean
     private lateinit var userDetailService: ScenarioTukerUserDetailService
+
+    // UserController の依存
+    @MockitoBean
+    private lateinit var userService: UserService
+    @MockitoBean
+    private lateinit var participateService: ParticipateService
+    @MockitoBean
+    private lateinit var scenarioService: ScenarioService
+    @MockitoBean
+    private lateinit var gameSystemService: GameSystemService
+    @MockitoBean
+    private lateinit var ruleBookService: RuleBookService
+    @MockitoBean
+    private lateinit var authorService: AuthorService
 
     private lateinit var firebaseAuthStatic: MockedStatic<FirebaseAuth>
 
@@ -143,9 +165,27 @@ class SecurityConfigTest {
             .andExpect(status().isUnauthorized)
     }
 
+    private fun registerRequest(authorization: String?) = post("/users")
+        .contentType(MediaType.APPLICATION_JSON)
+        // 他人の uid を指定しても、トークンの uid で登録される
+        .content("""{"uid": "victim-uid", "name": "なまえ"}""")
+        .apply { authorization?.let { header("Authorization", it) } }
+
     @Test
-    fun `ユーザー登録は未登録のアカウントでもできる`() {
-        mockMvc.perform(post("/users").header("Authorization", "Bearer unregistered"))
-            .andExpect(status().isOk)
+    fun `ユーザー登録は未登録のアカウントでもでき、トークンの uid で登録される`() {
+        mockMvc.perform(registerRequest("Bearer unregistered")).andExpect(status().isOk)
+        verify(userService).register(argThat { uid == "unregistered-uid" })
+    }
+
+    @Test
+    fun `登録済みのアカウントのユーザー登録もトークンの uid で行われる`() {
+        mockMvc.perform(registerRequest("Bearer registered")).andExpect(status().isOk)
+        verify(userService).register(argThat { uid == "registered-uid" })
+    }
+
+    @Test
+    fun `未ログインではユーザー登録できない`() {
+        mockMvc.perform(registerRequest(null)).andExpect(status().isForbidden)
+        verify(userService, never()).register(any())
     }
 }
