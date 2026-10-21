@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:mysql://127.0.0.1:4306/stukerdb?character_set_server=utf8mb4
+    url: jdbc:mysql://127.0.0.1:4307/stukerdb?character_set_server=utf8mb4
     username: stuker # 本番は起動引数で与える
     password: scenar10 # 本番は起動引数で与える
     driverClassName: com.mysql.cj.jdbc.Driver

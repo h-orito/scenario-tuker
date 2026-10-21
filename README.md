@@ -26,7 +26,7 @@ pnpm dev
 ### backend
 ```bash
 cd backend
-docker compose up -d --wait  # ローカル用 MySQL（127.0.0.1:4306、初回起動時にテーブルを作成）
+docker compose up -d --wait  # ローカル用 MySQL（127.0.0.1:4307、初回起動時にテーブルを作成）
 ./gradlew bootRun
 ./gradlew build              # テストも MySQL が起動している必要がある
 ```
