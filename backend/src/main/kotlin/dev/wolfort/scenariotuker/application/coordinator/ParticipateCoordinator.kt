@@ -16,7 +16,7 @@ class ParticipateCoordinator(
     fun findByIdForViewer(participateId: Int, myself: User?): Participate? {
         val participate = participateService.findById(participateId) ?: return null
         if (participate.userId == myself?.id) return participate
-        return participate.copy(impression = participate.impression?.copy(content = ""))
+        return participate.withoutImpressionContent()
     }
 
     fun getImpressionIfAllowed(participateId: Int, myself: User?): ParticipateImpression? {

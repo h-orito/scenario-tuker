@@ -206,7 +206,7 @@ class ScenarioController(
         val users = userService.findAllByIds(participates.list.map { it.userId })
         // 感想の内容は隠す（別途取得させる）
         participates = participates.copy(
-            list = participates.list.map { it.copy(impression = it.impression?.copy(content = "")) }
+            list = participates.list.map { it.withoutImpressionContent() }
         )
         if (request.is_twitter_following == true) {
             val user = sTukerUser?.let { userService.findByUid(it.uid) }

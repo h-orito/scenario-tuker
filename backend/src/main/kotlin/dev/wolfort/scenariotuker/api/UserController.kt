@@ -131,7 +131,7 @@ class UserController(
         // 自分以外の場合感想の内容は隠す（別途取得させる）
         if (users.list.none { it.id == myself?.id }) {
             participates = participates.copy(
-                list = participates.list.map { it.copy(impression = it.impression?.copy(content = "")) }
+                list = participates.list.map { it.withoutImpressionContent() }
             )
         }
 

@@ -42,7 +42,7 @@ internal class ParticipateCoordinatorTest {
 
     private fun coordinator(participate: Participate?) = ParticipateCoordinator(
         participateService = mock<ParticipateService> { on { findById(10) } doReturn participate },
-        userService = mock<UserService> { on { findById(owner.id) } doReturn owner }
+        userService = mock()
     )
 
     @ParameterizedTest

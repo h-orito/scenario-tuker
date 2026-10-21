@@ -18,6 +18,9 @@ data class Participate(
     val requiredHours: Int? = null,
     val memo: String? = null
 ) {
+    // 感想の本文を伏せる（公開範囲・ネタバレ有無は残す）。本文は閲覧可否を確かめる API で別途取得させる
+    fun withoutImpressionContent(): Participate = copy(impression = impression?.copy(content = ""))
+
     fun canViewImpression(
         owner: User,
         myself: User?,
