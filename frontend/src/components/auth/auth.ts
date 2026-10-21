@@ -28,7 +28,7 @@ export const refreshAccessTokenIfNeeded = async (): Promise<string | null> => {
   const now = dayjs()
   if (now.isSameOrAfter(ex)) {
     if (!firebaseAuth.currentUser) return null
-    setAuthorizationCookie(firebaseAuth.currentUser)
+    await setAuthorizationCookie(firebaseAuth.currentUser)
   }
 
   return getAccessToken()

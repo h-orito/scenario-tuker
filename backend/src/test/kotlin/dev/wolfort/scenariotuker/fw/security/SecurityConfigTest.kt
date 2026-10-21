@@ -1,12 +1,7 @@
 package dev.wolfort.scenariotuker.fw.security
 
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseToken
-import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.MockedStatic
-import org.mockito.Mockito
 import dev.wolfort.scenariotuker.api.UserController
 import dev.wolfort.scenariotuker.application.service.AuthorService
 import dev.wolfort.scenariotuker.application.service.GameSystemService
@@ -18,8 +13,6 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.argThat
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
-import org.mockito.kotlin.doReturn
-import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.SpringBootConfiguration
@@ -34,6 +27,7 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.head
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
@@ -91,32 +85,22 @@ class SecurityConfigTest {
     @MockitoBean
     private lateinit var authorService: AuthorService
 
-    private lateinit var firebaseAuthStatic: MockedStatic<FirebaseAuth>
+    @MockitoBean
+    private lateinit var firebaseTokenVerifier: FirebaseTokenVerifier
 
     @BeforeEach
     fun setUp() {
-        val registeredToken = mock<FirebaseToken> { on { uid } doReturn "registered-uid" }
-        val unregisteredToken = mock<FirebaseToken> { on { uid } doReturn "unregistered-uid" }
-        val firebaseAuth = mock<FirebaseAuth>()
-        whenever(firebaseAuth.verifyIdToken(any())).thenAnswer {
+        whenever(firebaseTokenVerifier.verify(any())).thenAnswer {
             when (it.getArgument<String>(0)) {
-                "registered" -> registeredToken
-                "unregistered" -> unregisteredToken
+                "registered" -> "registered-uid"
+                "unregistered" -> "unregistered-uid"
                 else -> throw IllegalArgumentException("invalid token")
             }
         }
-        firebaseAuthStatic = Mockito.mockStatic(FirebaseAuth::class.java)
-        firebaseAuthStatic.`when`<FirebaseAuth> { FirebaseAuth.getInstance() }.thenReturn(firebaseAuth)
-
         whenever(userDetailService.loadUserByUsername("registered-uid"))
             .thenReturn(ScenarioTukerUser("registered-uid", Authority.User))
         whenever(userDetailService.loadUserByUsername("unregistered-uid"))
             .thenThrow(UsernameNotFoundException("not found"))
-    }
-
-    @AfterEach
-    fun tearDown() {
-        firebaseAuthStatic.close()
     }
 
     private val writeRequests: List<() -> MockHttpServletRequestBuilder> = listOf(
@@ -129,6 +113,7 @@ class SecurityConfigTest {
     @Test
     fun `未ログインでも閲覧できる`() {
         mockMvc.perform(get("/scenarios/1")).andExpect(status().isOk)
+        mockMvc.perform(head("/scenarios/1")).andExpect(status().isOk)
     }
 
     @Test

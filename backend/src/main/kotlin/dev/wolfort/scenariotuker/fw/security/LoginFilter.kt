@@ -1,6 +1,5 @@
 package dev.wolfort.scenariotuker.fw.security
 
-import com.google.firebase.auth.FirebaseAuth
 import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.core.userdetails.UsernameNotFoundException
@@ -16,7 +15,8 @@ import jakarta.servlet.http.HttpServletResponse
  */
 @Component
 class LoginFilter(
-    private val userService: ScenarioTukerUserDetailService
+    private val userService: ScenarioTukerUserDetailService,
+    private val firebaseTokenVerifier: FirebaseTokenVerifier
 ) : OncePerRequestFilter() {
 
     override fun doFilterInternal(
@@ -40,9 +40,7 @@ class LoginFilter(
 
         try {
             // JWTを検証、uid取得
-            val firebaseToken = FirebaseAuth.getInstance().verifyIdToken(token)
-                ?: throw BadCredentialsException("改竄リクエストまたはトークン有効期限切れです")
-            val uid = firebaseToken.uid
+            val uid = firebaseTokenVerifier.verify(token)
 
             // ユーザ情報を検索
             return try {

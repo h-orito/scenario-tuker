@@ -1,5 +1,6 @@
 package dev.wolfort.scenariotuker.fw.security
 
+import jakarta.servlet.DispatcherType
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.web.servlet.FilterRegistrationBean
 import org.springframework.context.annotation.Bean
@@ -30,7 +31,10 @@ class SecurityConfig {
             .addFilterBefore(loginFilter, AuthorizationFilter::class.java)
             .authorizeHttpRequests {
                 it
+                    // エラー時の /error への転送では LoginFilter が動かないので、元のリクエストで判定済みとして通す
+                    .dispatcherTypeMatchers(DispatcherType.ERROR).permitAll()
                     .requestMatchers(HttpMethod.GET, "/**").permitAll()
+                    .requestMatchers(HttpMethod.HEAD, "/**").permitAll()
                     .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                     // ユーザー登録はまだ登録していないアカウントも呼ぶ
                     .requestMatchers(HttpMethod.POST, "/users")

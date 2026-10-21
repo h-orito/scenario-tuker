@@ -22,6 +22,7 @@ import dev.wolfort.scenariotuker.fw.exception.SystemException
 import dev.wolfort.scenariotuker.fw.security.FirebaseAccount
 import dev.wolfort.scenariotuker.fw.security.ScenarioTukerUser
 import org.hibernate.validator.constraints.Length
+import org.springframework.security.access.AccessDeniedException
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -78,7 +79,8 @@ class UserController(
 
     @PostMapping
     private fun post(@RequestBody @Validated request: PostRequest, @AuthenticationPrincipal account: FirebaseAccount?): User {
-        account ?: throw SystemException("not authenticated.")
+        // 認可設定で弾いているので通常は来ない
+        account ?: throw AccessDeniedException("not authenticated.")
         // 他人のアカウントで登録・上書きできないよう、uid はリクエストでなく検証済みのトークンから取る
         return userService.register(request.toUserCreateResource(account.uid))
     }

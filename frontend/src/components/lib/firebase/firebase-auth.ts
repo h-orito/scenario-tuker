@@ -25,7 +25,6 @@ export const signInWithTwitter = async () => {
     // ユーザー登録 API はトークンの uid で登録するので、先にトークンを用意する
     await setAuthorizationCookie(user)
     await postRequest<any, User>('users', {
-      uid: user.uid,
       name: user.displayName!,
       twitter: {
         twitter_id: (user as any).reloadUserInfo?.providerUserInfo.find(
@@ -58,7 +57,6 @@ export const signInWithGoogle = async () => {
     await setAuthorizationCookie(user)
     console.log(user)
     await postRequest<any, User>('users', {
-      uid: user.uid,
       name: user.displayName
     })
   } catch (e) {
