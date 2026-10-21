@@ -5,9 +5,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 
 data class ScenarioTukerUser(
-    val uid: String,
+    override val uid: String,
     val authority: Authority
-) : UserDetails {
+) : UserDetails, FirebaseAccount {
 
     override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
         return mutableListOf(SimpleGrantedAuthority(this.authority.name))

@@ -8,6 +8,7 @@ import {
 import { auth } from './firebase-config'
 
 import { postRequest } from '@/components/api/api'
+import { setAuthorizationCookie } from '@/components/auth/auth'
 
 export const signInWithTwitter = async () => {
   let result = null
@@ -21,8 +22,9 @@ export const signInWithTwitter = async () => {
     const credential = TwitterAuthProvider.credentialFromResult(result)
     if (!credential) return
     const user = result.user
+    // ユーザー登録 API はトークンの uid で登録するので、先にトークンを用意する
+    await setAuthorizationCookie(user)
     await postRequest<any, User>('users', {
-      uid: user.uid,
       name: user.displayName!,
       twitter: {
         twitter_id: (user as any).reloadUserInfo?.providerUserInfo.find(
@@ -51,9 +53,10 @@ export const signInWithGoogle = async () => {
     const credential = GoogleAuthProvider.credentialFromResult(result)
     if (!credential) return
     const user = result.user
+    // ユーザー登録 API はトークンの uid で登録するので、先にトークンを用意する
+    await setAuthorizationCookie(user)
     console.log(user)
     await postRequest<any, User>('users', {
-      uid: user.uid,
       name: user.displayName
     })
   } catch (e) {

@@ -19,8 +19,10 @@ import dev.wolfort.scenariotuker.domain.model.user.User
 import dev.wolfort.scenariotuker.domain.model.user.UserQuery
 import dev.wolfort.scenariotuker.domain.model.user.Users
 import dev.wolfort.scenariotuker.fw.exception.SystemException
+import dev.wolfort.scenariotuker.fw.security.FirebaseAccount
 import dev.wolfort.scenariotuker.fw.security.ScenarioTukerUser
 import org.hibernate.validator.constraints.Length
+import org.springframework.security.access.AccessDeniedException
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -76,12 +78,14 @@ class UserController(
     }
 
     @PostMapping
-    private fun post(@RequestBody @Validated request: PostRequest): User =
-        userService.register(request.toUserCreateResource())
+    private fun post(@RequestBody @Validated request: PostRequest, @AuthenticationPrincipal account: FirebaseAccount?): User {
+        // 認可設定で弾いているので通常は来ない
+        account ?: throw AccessDeniedException("not authenticated.")
+        // 他人のアカウントで登録・上書きできないよう、uid はリクエストでなく検証済みのトークンから取る
+        return userService.register(request.toUserCreateResource(account.uid))
+    }
 
     data class PostRequest(
-        @field:NotNull
-        val uid: String = "",
         @field:NotNull
         val name: String = "",
         val twitter: Twitter? = null,
@@ -97,7 +101,7 @@ class UserController(
             val tokenSecret: String = ""
         )
 
-        fun toUserCreateResource() = UserService.UserCreateResource(
+        fun toUserCreateResource(uid: String) = UserService.UserCreateResource(
             uid = uid,
             name = name,
             twitter = twitter?.let {

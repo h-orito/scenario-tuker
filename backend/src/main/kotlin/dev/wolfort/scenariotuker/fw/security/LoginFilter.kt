@@ -1,9 +1,7 @@
 package dev.wolfort.scenariotuker.fw.security
 
-import com.google.firebase.auth.FirebaseAuth
 import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.security.core.context.SecurityContextHolder
-import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken
 import org.springframework.stereotype.Component
@@ -17,7 +15,8 @@ import jakarta.servlet.http.HttpServletResponse
  */
 @Component
 class LoginFilter(
-    private val userService: ScenarioTukerUserDetailService
+    private val userService: ScenarioTukerUserDetailService,
+    private val firebaseTokenVerifier: FirebaseTokenVerifier
 ) : OncePerRequestFilter() {
 
     override fun doFilterInternal(
@@ -33,25 +32,22 @@ class LoginFilter(
         filterChain.doFilter(request, response)
     }
 
-    // ログインユーザ情報を取得
-    private fun auth(request: HttpServletRequest): UserDetails? {
+    // ログインユーザ情報を取得（未登録のアカウントは UnregisteredUser）
+    private fun auth(request: HttpServletRequest): FirebaseAccount? {
 
         // リクエストヘッダからJWTを取り出す
         val token: String = getToken(request) ?: return null
 
         try {
             // JWTを検証、uid取得
-            val firebaseToken = FirebaseAuth.getInstance().verifyIdToken(token)
-                ?: throw BadCredentialsException("改竄リクエストまたはトークン有効期限切れです")
-            val uid = firebaseToken.uid
+            val uid = firebaseTokenVerifier.verify(token)
 
             // ユーザ情報を検索
             return try {
                 userService.loadUserByUsername(uid) as ScenarioTukerUser
             } catch (e: UsernameNotFoundException) {
-                // ユーザを新規作成
-//                userService.register(uid)
-                null
+                // ユーザー登録 API で使うため、検証済みの uid だけ持たせる
+                UnregisteredUser(uid)
             }
         } catch (e: Exception) {
             throw BadCredentialsException(e.message, e)
