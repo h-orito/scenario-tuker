@@ -16,8 +16,6 @@ class ParticipateService(
     private val userRepository: UserRepository
 ) {
 
-    fun findAll(): Participates = participateRepository.findAll()
-
     fun findAllByUserId(userId: Int): Participates = participateRepository.findAllByUserId(userId)
 
     fun findAllByScenarioId(scenarioId: Int, paging: PagingQuery? = null): Participates =

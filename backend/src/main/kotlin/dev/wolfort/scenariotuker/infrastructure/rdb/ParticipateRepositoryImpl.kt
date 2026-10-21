@@ -26,20 +26,6 @@ class ParticipateRepositoryImpl(
     private val participateRuleBookBhv: DbParticipateRuleBookBhv
 ) : ParticipateRepository {
 
-    override fun findAll(): Participates {
-        val dbParticipateList = participateBhv.selectList {
-            it.setupSelect_ParticipateImpressionAsOne()
-            it.query().queryUser().setIsDeleted_Equal(false)
-            it.query().addOrderBy_DispOrder_Asc()
-            it.query().addOrderBy_ParticipateId_Asc()
-        }
-        participateBhv.load(dbParticipateList) {
-            it.loadParticipateRole { }
-            it.loadParticipateRuleBook { }
-        }
-        return mappingToParticipates(dbParticipateList)
-    }
-
     override fun findById(id: Int): Participate? {
         val optDbParticipate = participateBhv.selectEntity {
             it.setupSelect_ParticipateImpressionAsOne()
