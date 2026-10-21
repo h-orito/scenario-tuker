@@ -1,0 +1,25 @@
+# ローカル開発・テスト用の MySQL（application.yml の接続先 127.0.0.1:4306 / stukerdb に合わせている）
+# 起動: docker compose up -d  （backend ディレクトリで実行）
+name: scenario-tuker
+services:
+  mysql:
+    image: mysql:8.4
+    container_name: scenario-tuker-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: stukerdb
+      MYSQL_USER: stuker
+      MYSQL_PASSWORD: scenar10
+      TZ: Asia/Tokyo
+    # 本番 (MySQL 8.4) と同じ文字セット・照合順序
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_0900_ai_ci
+    ports:
+      - "4306:3306"
+    volumes:
+      # 初回起動時にテーブルを作成する（DBFlute の ReplaceSchema と同じ DDL）
+      - ./dbflute_stukerdb/playsql/replace-schema-10-basic.sql:/docker-entrypoint-initdb.d/10-basic.sql:ro
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-ustuker", "-pscenar10"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
