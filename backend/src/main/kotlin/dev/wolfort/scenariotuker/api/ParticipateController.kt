@@ -1,11 +1,9 @@
 package dev.wolfort.scenariotuker.api
 
 import dev.wolfort.scenariotuker.api.response.participate.ParticipateResponse
-import dev.wolfort.scenariotuker.api.response.participate.ParticipatesResponse
 import dev.wolfort.scenariotuker.application.coordinator.ParticipateCoordinator
 import dev.wolfort.scenariotuker.application.service.AuthorService
 import dev.wolfort.scenariotuker.application.service.GameSystemService
-import dev.wolfort.scenariotuker.application.service.ParticipateService
 import dev.wolfort.scenariotuker.application.service.RuleBookService
 import dev.wolfort.scenariotuker.application.service.ScenarioService
 import dev.wolfort.scenariotuker.application.service.UserService
@@ -21,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/participates")
 class ParticipateController(
     private val participateCoordinator: ParticipateCoordinator,
-    private val participateService: ParticipateService,
     private val scenarioService: ScenarioService,
     private val gameSystemService: GameSystemService,
     private val ruleBookService: RuleBookService,
@@ -29,20 +26,13 @@ class ParticipateController(
     private val userService: UserService
 ) {
 
-    @GetMapping
-    private fun list(): ParticipatesResponse {
-        val participates = participateService.findAll()
-        val scenarios = scenarioService.findAllByIds(participates.list.map { it.scenarioId })
-        val gameSystems = gameSystemService.findAllByIds(scenarios.list.flatMap { it.gameSystemIds }.distinct())
-        val ruleBooks = ruleBookService.findAllByIds(participates.list.flatMap { it.ruleBookIds }.distinct())
-        val authors = authorService.findAllByIds(scenarios.list.flatMap { it.authorIds }.distinct())
-        val users = userService.findAllByIds(participates.list.map { it.userId })
-        return ParticipatesResponse(participates, scenarios, gameSystems, ruleBooks, authors, users)
-    }
-
     @GetMapping("/{participateId}")
-    private fun get(@PathVariable participateId: Int): ParticipateResponse? {
-        val participate = participateService.findById(participateId) ?: return null
+    private fun get(
+        @PathVariable participateId: Int,
+        @AuthenticationPrincipal sTukerUser: ScenarioTukerUser?
+    ): ParticipateResponse? {
+        val myself = sTukerUser?.let { userService.findByUid(it.uid) }
+        val participate = participateCoordinator.findByIdForViewer(participateId, myself) ?: return null
         val scenario = scenarioService.findById(participate.scenarioId)!!
         val gameSystem = participate.gameSystemId?.let { gameSystemService.findById(it) }
         val ruleBooks = ruleBookService.findAllByIds(participate.ruleBookIds)

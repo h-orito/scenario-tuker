@@ -4,8 +4,6 @@ import dev.wolfort.scenariotuker.domain.model.paging.PagingQuery
 
 interface ParticipateRepository {
 
-    fun findAll(): Participates
-
     fun findById(id: Int): Participate?
 
     fun findAllByScenarioId(scenarioId: Int, paging: PagingQuery? = null): Participates
