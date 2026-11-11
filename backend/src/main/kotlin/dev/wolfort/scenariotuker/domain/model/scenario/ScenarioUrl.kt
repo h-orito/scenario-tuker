@@ -1,8 +1,8 @@
 package dev.wolfort.scenariotuker.domain.model.scenario
 
 import dev.wolfort.scenariotuker.fw.exception.SystemException
-import java.util.regex.Matcher
-import java.util.regex.Pattern
+import java.net.URI
+import java.net.URISyntaxException
 
 data class ScenarioUrl(
     val value: String
@@ -21,18 +21,26 @@ data class ScenarioUrl(
     )
 
     fun assert() {
-        val domain = getUrlDomain() ?: throw SystemException("許可されていないURLです。 url: $value")
-        if (availableDomains.none { domain.endsWith(it) }) {
+        // 未入力（フロントエンドは空文字を送る）は許可する
+        if (value.isEmpty()) return
+        if (!isAvailable()) {
             throw SystemException("許可されていないURLです。 url: $value")
         }
     }
 
-    private fun getUrlDomain(): String? {
-        val m: Matcher = Pattern.compile("https?://([^/]+)/").matcher(value)
-        return if (m.find()) {
-            m.group(1)
-        } else {
-            null
+    /**
+     * http / https で、ホストが許可ドメインと一致する（またはそのサブドメインである）か
+     */
+    fun isAvailable(): Boolean {
+        val uri = try {
+            URI(value)
+        } catch (e: URISyntaxException) {
+            return false
         }
+        val scheme = uri.scheme?.lowercase() ?: return false
+        if (scheme != "http" && scheme != "https") return false
+        if (uri.rawUserInfo != null) return false
+        val host = uri.host?.lowercase() ?: return false
+        return availableDomains.any { host == it || host.endsWith(".$it") }
     }
 }

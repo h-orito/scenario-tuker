@@ -47,14 +47,17 @@ const availableDomains = [
   'www.drivethrurpg.com'
 ]
 
+// http / https で、ホストが許可ドメインと一致する（またはそのサブドメインである）か
+// サーバー側（ScenarioUrl.isAvailable）と同じ判定にする
 const isAvailableUrl = (url: string): boolean => {
-  const domain = getDomain(url)
-  if (!domain) return false
-  return availableDomains.some((ad) => domain.endsWith(ad))
-}
-
-const getDomain = (url: string): string | null => {
-  const matches = url.match(/^https?:\/{2,}(.*?)(?:\/|\?|#|$)/)
-  if (!matches || matches.length < 2) return null
-  return matches[1]
+  let parsed: URL
+  try {
+    parsed = new URL(url)
+  } catch {
+    return false
+  }
+  if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') return false
+  if (parsed.username !== '' || parsed.password !== '') return false
+  const host = parsed.hostname.toLowerCase()
+  return availableDomains.some((ad) => host === ad || host.endsWith(`.${ad}`))
 }
