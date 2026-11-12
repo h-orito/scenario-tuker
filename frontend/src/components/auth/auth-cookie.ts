@@ -23,9 +23,18 @@ export const setAccessToken = (token: string) => {
   cookies.set(cookieKeys.accessToken, token, options)
 }
 
-export const setRefreshToken = (token: string) => {
+// 認証関連の Cookie をすべて削除する
+// refresh_token は以前のバージョンで保存していたものを消すために残している
+export const removeAuthCookies = () => {
   const cookies = new Cookies()
-  cookies.set(cookieKeys.refreshToken, token, options)
+  cookies.remove(cookieKeys.accessToken, { path: '/' })
+  cookies.remove(cookieKeys.refreshToken, { path: '/' })
+  cookies.remove(cookieKeys.tokenExpired, { path: '/' })
+}
+
+export const removeLegacyRefreshToken = () => {
+  const cookies = new Cookies()
+  cookies.remove(cookieKeys.refreshToken, { path: '/' })
 }
 
 export const getTokenExpired = (): string | null => {

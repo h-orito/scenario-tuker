@@ -46,6 +46,7 @@ class ScenarioService(
     fun findById(id: Int): Scenario? = scenarioRepository.findById(id)
 
     fun register(scenario: Scenario): Scenario {
+        scenario.assert()
         if (gameSystemRepository.findAllByIds(scenario.gameSystemIds).list.size != scenario.gameSystemIds.size) {
             throw SystemException("game_system not found. ids: ${scenario.gameSystemIds}")
         }
@@ -53,6 +54,7 @@ class ScenarioService(
     }
 
     fun update(scenario: Scenario): Scenario {
+        scenario.assert()
         val existing =
             scenarioRepository.findById(scenario.id) ?: throw SystemException("scenario not found. id: ${scenario.id}")
         val authors = authorRepository.findAllByIds(scenario.authorIds)
